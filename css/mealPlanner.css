@@ -7,29 +7,268 @@
 :root {
     --main-color: rgb(191, 227, 196);
     --secondary-color: #009353;
-    --third-color:#FAF9F6;
+    --third-color: #FAF9F6;
+    --green: #16a34a;
+    --green-700: #15803d;
+    --mint: #eafff3;
+    --ink: #0f172a;
+    --muted: #475569;
+    --ring: #e2e8f0;
+    --bg: #ffffff;
+    --light: #f8fafc;
 }
 
 body {
     background-color: var(--main-color);
+    margin-top: 75px;
 }
-body >h1{
+
+body>h1 {
     color: var(--secondary-color);
 }
-main{
-    height: 90vh;
+
+#navbar a {
+    text-decoration: none;
+    color: inherit;
+}
+
+#navbar button {
+    font: inherit;
+    background: none;
+}
+
+#navbar {
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 10;
+    height: 72px;
+    background: #fff;
+    border-bottom: 1px solid var(--ring);
+    box-shadow: 0 6px 20px rgba(2, 8, 23, .06);
+    transition: box-shadow .18s ease, background .18s ease, padding .18s ease;
+}
+
+#navbar.scrolled {
+    background: #fff;
+    padding: 10px 0;
+    border-bottom-color: var(--ring);
+    box-shadow: 0 4px 18px rgba(2, 8, 23, .06);
+}
+
+.nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 72px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.nav-logo img {
+    height: 48px;
+    width: auto;
+    display: block;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 36px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 1.05rem;
+    padding: 8px 2px;
+    position: relative;
+    transition: color .18s ease;
+}
+
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -8px;
+    height: 2px;
+    background: transparent;
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: background .18s ease, transform .18s ease;
+}
+
+.nav-links a:hover {
+    color: var(--green);
+}
+
+.nav-links a:hover::after {
+    background: var(--green);
+    transform: scaleX(1);
+}
+
+.nav-links a.active {
+    color: var(--green);
+}
+
+.nav-links a.active::after {
+    background: var(--green);
+    transform: scaleX(1);
+}
+
+.btn {
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    border: 2px solid transparent;
+    padding: 5px 13px;
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    cursor: pointer;
+    line-height: 1;
+    transition: filter .12s ease, transform .12s ease, box-shadow .12s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, .25);
+}
+
+.btn.primary {
+    background: var(--green) !important;
+    color: #fff !important;
+    border-color: var(--green) !important;
+    box-shadow: 0 8px 18px rgba(22, 163, 74, .22) !important;
+}
+
+.btn.primary:hover {
+    filter: brightness(.96);
+}
+
+.btn.light {
+    background: #fff;
+    color: var(--green);
+    border-color: var(--green) ;
+}
+
+.btn.light:hover {
+    background: #f7fff9;
+}
+
+.nav-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+#menu-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 10px;
+    position: relative;
+    z-index: 1500;
+}
+
+#menu-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--ink);
+}
+
+#menu-toggle span:nth-child(2) {
+    margin: 6px 0;
+}
+
+@media (max-width:940px) {
+    .nav-actions {
+        display: none;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    #menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-links.show {
+        z-index: 1400;
+        display: flex;
+        position: fixed;
+        top: 72px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 16px;
+        background: #fff;
+        padding: 16px 0;
+        text-align: center;
+        border-bottom: 1px solid var(--ring);
+        box-shadow: 0 14px 30px rgba(2, 8, 23, .08);
+        animation: slideDown .22s ease;
+    }
+
+    .nav-links.show a {
+        padding: 12px 0;
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: var(--ink);
+    }
+
+    body.menu-open {
+        overflow: hidden;
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(-10px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+}
+
+
+main {
+    height: 70vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-main >div{
+
+main>div {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
 }
 
-section {
+main section {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -39,21 +278,25 @@ section {
     flex-shrink: 1;
 }
 
-section div:first-child {
+main ection div:first-child {
     text-align: center;
     position: relative;
     top: 30px;
 }
-section div:first-child p:first-child{
+
+main section div:first-child p:first-child {
     font-size: 18px;
 }
-section div:first-child p:nth-child(2){
+
+main section div:first-child p:nth-child(2) {
     font-size: 15px;
 }
-section div:first-child h4 {
+
+main section div:first-child h4 {
     font-weight: 100;
 }
-button {
+
+main button {
     outline: none;
     cursor: pointer;
     border: none;
@@ -74,19 +317,19 @@ button {
     white-space: nowrap;
 }
 
-button span {
+main button span {
     position: relative;
     z-index: 10;
     transition: color 0.4s;
     color: var(--secondary-color);
 }
 
-button:hover span {
+main button:hover span {
     color: var(--third-color);
 }
 
-button::before,
-button::after {
+main button::before,
+main button::after {
     position: absolute;
     top: 0;
     left: 0;
@@ -95,7 +338,7 @@ button::after {
     z-index: 0;
 }
 
-button::before {
+main button::before {
     content: "";
     background: var(--third-color);
     width: 120%;
@@ -104,17 +347,17 @@ button::before {
     transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
 }
 
-button:hover::before {
+main button:hover::before {
     transform: translate3d(100%, 0, 0);
 }
 
-section button:active {
+main section button:active {
     transform: scale(0.95);
 }
 
 .categories div:not(.hidden) {
     padding: 30px 0px;
-    background-color: rgba(250, 249, 246,0.5);
+    background-color: rgba(250, 249, 246, 0.5);
     width: 130px;
     display: flex;
     justify-content: center;
@@ -122,19 +365,71 @@ section button:active {
     border-radius: 6px;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
+.saved-meal {
+  padding: 30px 0;
+  width: 130px;
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 
+  background-color: var(--secondary-color);
+  color: #fff;
+  border-radius: 14px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.25s ease-in-out;
+  cursor: pointer;
+}
+
+/* Hover and focus feedback */
+.saved-meal:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* Optional: subtle click animation */
+.saved-meal:active {
+  transform: scale(0.97);
+}
+
+/* Optional tooltip when user hovers to remove/change */
+.saved-meal::after {
+  content: "Click to remove";
+  position: absolute;
+  opacity: 0;
+  transform: translateY(8px);
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+
+.saved-meal:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
 .overlay {
-    
+
     position: absolute;
     width: 100vw;
     height: 100vh;
     top: 0;
     left: 0;
-    display: none ;
+    display: none;
     align-items: center;
     justify-content: center;
     z-index: 10;
-    background-color: rgba(0, 0, 0,0.3);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .model {
@@ -144,12 +439,14 @@ section button:active {
     padding: 15px 20px;
     border-radius: 10px;
 }
-.model div:first-child{
+
+.model div:first-child {
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: var(--secondary-color);
 }
+
 .model .input-group {
     display: flex;
     align-items: center;
@@ -161,7 +458,8 @@ section button:active {
     justify-content: center;
     width: 100%;
 }
-.model .input-group  input {
+
+.model .input-group input {
     width: 80%;
     border: none;
     margin-bottom: 10px;
@@ -169,20 +467,23 @@ section button:active {
     border-radius: 5px;
     background-color: white;
     color: var(--secondary-color);
-    border: 1px solid ;
+    border: 1px solid;
 }
-.model .input-group  input:focus,
-.model .input-group  input:hover {
+
+.model .input-group input:focus,
+.model .input-group input:hover {
     outline: none;
     box-shadow: 0 0 0 2px #00935330;
 }
-.model .input-group  i{
+
+.model .input-group i {
     position: relative;
     left: 25px;
     bottom: 5.5px;
     color: var(--secondary-color);
 }
-.model div:first-child i{
+
+.model div:first-child i {
     font-size: 20px;
     cursor: pointer;
 }
@@ -190,10 +491,12 @@ section button:active {
 ::placeholder {
     color: #009353;
 }
-.hidden{
+
+.hidden {
     opacity: 0;
 }
-.recipes{
+
+.recipes {
     width: 100%;
     height: 250px;
     overflow-y: scroll;
@@ -201,13 +504,15 @@ section button:active {
     position: relative;
     padding-right: 10px;
 }
-.recipes p{
+
+.recipes p {
     color: var(--secondary-color);
     font-weight: 500;
     font-size: 18px;
     margin-bottom: 5px;
 }
-.recipes div{
+
+.recipes div {
     border: 1px solid black;
     margin-bottom: 10px;
     padding: 5px;
@@ -216,31 +521,39 @@ section button:active {
     background-color: white;
     cursor: pointer;
 }
+
 .recipes::-webkit-scrollbar {
-  width: 8px; 
+    width: 8px;
 }
+
 .recipes::-webkit-scrollbar-track {
-  background: #e5f2e7; /* track color */
-  border-radius: 10px;
+    background: #e5f2e7;
+    /* track color */
+    border-radius: 10px;
 }
 
 .recipes::-webkit-scrollbar-thumb {
-  background: #1f774f; /* scroll thumb color */
-  border-radius: 10px;
+    background: #1f774f;
+    /* scroll thumb color */
+    border-radius: 10px;
 }
-@media screen and (max-width:1190px){
-    section{
+
+@media screen and (max-width:1190px) {
+    main section {
         margin-right: 5px;
     }
 }
-@media screen and (max-width:1080px){
-    main > div{
+
+@media screen and (max-width:1080px) {
+    main>div {
         height: 70vh;
     }
-    button{
+
+    main button {
         padding: 25px 30px;
     }
-    .categories div:not(.hidden){
+
+    .categories div:not(.hidden),.saved-meal {
         padding: 25px 0;
         width: 110px;
     }

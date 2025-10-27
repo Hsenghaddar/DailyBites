@@ -5,15 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/mealPlanner.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css"
-        integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css" integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <script src="../js/mealPlanner.js" defer></script>
     <title>Plan Your Meals</title>
 </head>
 
 <body>
+    <header id="navbar">
+        <nav class="nav-inner">
+            <a href="/" class="nav-logo" aria-label="DailyBites home">
+                <img src="../assets/logo.png" alt="DailyBites Logo">
+            </a>
+
+            <ul class="nav-links" id="primary-navigation">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#recipes">Recipes</a></li>
+                <li><a href="../html/mealPlanner.html">Meal Planner</a></li>
+                <li><a href="../html/about.html">About us</a></li>
+                <li><a href="#subs">Subscription</a></li>
+            </ul>
+
+            <section class="nav-actions">
+                <a href="././auth.html"><button class="btn light" type="button">Sign In</button></a>
+                <button class="btn primary" type="button">Get Started</button>
+            </section>
+
+            <button id="menu-toggle" type="button" aria-label="Toggle menu" aria-controls="primary-navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+    </header>
     <h1>Weekly Meal Planner</h1>
     <main>
         <div>

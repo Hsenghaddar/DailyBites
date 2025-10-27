@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
   const navbar = document.getElementById('navbar');
   const toggle = document.getElementById('menu-toggle');
