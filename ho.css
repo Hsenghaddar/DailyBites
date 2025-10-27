@@ -1,0 +1,127 @@
+:root{
+    --green:#0b9a6d;       /* icon */
+    --green-dark:#07885f;
+    --text:#0f172a;        /* near-black */
+    --muted:#5b6b7d;       /* gray text */
+    --bg:#ffffff;          /* page background */
+    --card:#ffffff;        /* cards */
+    --card-border:#e5e7eb; /* light borders */
+  }
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    line-height:1.6;
+}
+
+/* container for each screen length scroll*/
+.container{
+    height: 100vh;
+    max-width: 1120px;
+    padding:0 16px;
+    margin:0 auto;
+}
+
+ /* nav bar */
+nav{
+    border-bottom:1px solid var(--border);
+    background:#fff;
+}
+
+nav .row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:60px;
+}
+
+.logo img{
+    height:34px;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--brand),#a1d8e0);
+    color:rgb(6, 141, 82); 
+    box-shadow:0 6px 20px rgba(20,184,166,.35);
+}
+
+.links a{
+    margin:0 10px;
+    text-decoration:none;
+    color:var(--text);
+}
+
+.links a:hover{
+    text-decoration:solid;
+}
+
+.actions a{
+    text-decoration:none;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:8px 12px;
+    color:var(--text);
+    margin-left:8px;
+    display:inline-block;
+}
+
+.actions .primary{
+    background:var(--green);
+    border-color:var(--green);
+    color:#fff;
+}
+.actions .primary:hover{
+    background:var(--green-dark);
+}
+
+.cover{
+    color:#fff;
+    background:
+      linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),
+      url("https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1600&auto=format&fit=crop") center/cover no-repeat;
+      /*url("Uni\Project\cover.jpg")*/
+      /* url("https://img.freepik.com/premium-photo/fresh-assorted-vegetables-fruits-kitchen-countertop-healthy-eating-concept-home-kitchen-interior-bright-organic-nutritious-ingredients-ai_372197-10185.jpg") center/cover no-repeat;       */
+    padding:56px 0;
+    text-align:center;
+}
+.cover h1{
+    margin:0 0 8px;
+    line-height:1.2;
+    font-size:40px;
+}
+.cover p{
+    margin:0 auto 18px;
+    color:var(--card);
+    max-width:720px;
+}
+
+.pill{
+    display:inline-block;
+    padding:10px 14px;
+    border-radius:10px;
+    font-weight:600;
+}
+
+.btn{
+background:var(--green);
+color:#fff;
+border:0;
+text-decoration:none;
+margin:6px 6px
+}
+.btn:hover{
+    background:var(--green-dark);
+}
+.btn.outline{
+    background:transparent;
+    color:var(--card-border);
+    border:1px solid var(--card-border);
+}
+.btn.outline:hover{
+    border-color:var(--text);
+}
+

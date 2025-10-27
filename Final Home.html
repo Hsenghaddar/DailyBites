@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MealPlan</title>
+  <style>
+    :root {
+      --logo: #0b9a6d;
+      --txt: #0f172a;
+      --muted: #5b6b7d;
+      --line: #e5e7eb;
+      --bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: clamp(16px, 13px + 0.6vw, 19px);
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--txt);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    h1,h2,h3 {
+      line-height: 1.2;
+      margin: 0 0 12px;
+    }
+
+    .wrap {
+      max-width: clamp(1040px, 92vw, 1320px);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 2px 3px var(--line);
+
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .btn {
+      background: var(--logo);
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 2px solid #fff;
+    }
+
+    /* nav */
+    nav {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 1px 0 var(--line);
+      z-index: 1000;
+    }
+
+    .nav-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 10px 0;
+      min-height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      flex: 1 1 160px;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--logo);
+    }
+
+    .nav-ltxts {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      flex: 2 1 320px;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      flex: 1 1 220px;
+    }
+
+    .nav-actions a {
+      border: 1px solid var(--line);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    .nav-actions a.primary {
+      background: var(--logo);
+      color: #fff;
+      border-color: var(--logo);
+    }
+
+    nav > .hamburger {
+      display: none;                 /* desktop: hidden */
+      position: absolute;            /* sit inside the sticky bar */
+      right: 16px;                   /* align with container padding */
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1001;                 /* above links */
+      background: none;
+      border: 0;
+      padding: 6px;
+    }
+
+    /* cover */
+    header {
+      color: #fff;
+      background:
+        linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
+        url("https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1600&auto=format&fit=crop")
+        center / cover no-repeat;
+        /* url("https://img.freepik.com/premium-photo/fresh-assorted-vegetables-fruits-kitchen-countertop-healthy-eating-concept-home-kitchen-interior-bright-organic-nutritious-ingredients-ai_372197-10185.jpg") center/cover no-repeat;*/
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      background-size: cover;
+    }
+
+    .cover {
+      text-align: center;
+      padding: 80px 16px;
+       display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cover h1{
+      font-size: clamp(2.3em,5vw,3em);
+    }
+    .cover p {
+      max-width: 820px;
+      margin: 12px auto 24px;
+      font-size: 1.3em;
+    }
+
+    .cover-cta {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    main > section{
+      margin-bottom: 25px;
+    }
+
+    /* features */
+    .features {
+      background: #f8fafc;
+      text-align: center;
+      /* height: 100vh; */
+      padding-block: clamp(60px, 4vh, 40px);
+    }
+
+    .feat-head{
+      max-width: 80%;
+      position: relative;
+      left: 10%;
+      font-size: clamp(1em, 2vw, 1em);
+    }
+
+    .feat-head h2{
+      font-size: clamp(1em, 2vw, 2em);;
+    }
+
+    .feature-list {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      gap: clamp(12px, 4vw, 20px);
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .feature {
+      flex: 1 1 320px;
+      max-width: 480px;
+    }
+
+    .feature.card {
+      padding: clamp(12px, 3vh, 20px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-height: 180px;
+    }
+
+    .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 1000px;
+      background: #d1fae5;
+      color: #065f46;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 8px;
+      align-self: center;
+    }
+
+    /* stats */
+    .stats {
+      background: var(--logo);
+      color: #fff;
+      /* height: 20vh; */
+      padding-top: 15px;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .stat {
+      flex: 1 1 200px;
+      padding: 8px;
+    }
+
+    .stat h3, .stat small{
+      font-size: 1.4em;
+      display: block;
+    }
+
+    /* how it works */
+    .how {
+      padding: 40px 0;
+      text-align: center;
+      /* height: 70vh; */
+      padding-block: clamp(20px, 6vh, 48px);
+      min-height: 70vh;
+      display: grid;
+      align-items: center;
+    }
+
+    .steps {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      justify-content: center;
+      gap: clamp(12px, 4vw, 20px);
+      align-items: stretch;
+    }
+
+    .step {
+      flex: 1 1 280px;
+      max-width: 480px;
+    }
+
+    .num {
+      width: 45px;
+      height: 45px;
+      border-radius: 1000px;
+      background: #d1fae5;
+      color: #065f46;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin: 0 auto 10px;
+    }
+
+    /* testimonials */
+    .testimonials {
+      background: #f8fafc;
+      padding: 40px 0;
+      text-align: center;
+      /* height: 50vh; */
+      padding-block: clamp(20px, 6vh, 48px);
+      min-height: 70vh;
+      display: grid;
+      align-items: center;      
+    }
+
+    .tgrid {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      justify-content: center;
+      gap: clamp(12px, 4vw, 20px);
+      align-items: stretch;
+    }
+
+    .tcard {
+      flex: 1 1 300px;
+      text-align: left;
+      max-width: 480px;
+    }
+
+    .who {
+      margin-top: 10px;
+      font-weight: 700;
+    }
+
+    .role {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* email cta */
+    .cta-band {
+      background: var(--logo);
+      color: #fff;
+      text-align: center;
+      /* height: 40vh; */
+    }
+
+    .cta-box {
+      padding: 32px 0;
+    }
+
+    .emailbox {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .emailbox input {
+      padding: 12px 14px;
+      border: 0;
+      border-radius: 8px;
+      min-width: 260px;
+      max-width: 360px;
+      flex: 1 1 260px;
+    }
+
+    .emailbox button {
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 0 0 auto;      
+    }
+
+    /* footer */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 0;
+      color: var(--muted);
+      /* height: 40vh; */
+    }
+
+    .fcols {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .fcol {
+      flex: 1 1 220px;
+      min-width: 200px;
+    }
+
+    .fcol h4 {
+      color: var(--txt);
+      margin: 0 0 8px;
+    }
+
+    .fcol a {
+      display: block;
+      margin: 4px 0;
+    }
+
+    @media screen and (max-width: 992px) {
+
+      body.no-scroll { overflow: hidden; }
+      
+      /* full-screen feel on desktop */
+      header {
+        min-height: 100vh;
+        padding: 0;
+        background-size: max(110%, cover); /* feels closer like your screenshots */
+      }
+
+      /* scale so layout stays aligned */
+      header .wrap {
+        transform: scale(1.08);
+        transform-origin: top center;
+      }
+
+      .features .wrap,
+      .how .wrap,
+      .testimonials .wrap,
+      .cta-band .wrap {
+        transform: scale(1.05);
+        transform-origin: top center;
+      }
+
+      .feat-head{
+        font-size: 20px;
+      }
+      .feat-head h2{
+        font-size: 30px;
+      }
+
+      /* add real bottom room so the scaled blocks never collide */
+      header,
+      .features,
+      .how,
+      .testimonials,
+      .cta-band {
+        padding-bottom: 72px;
+        overflow: visible;
+      }
+
+      /* a hair wider container for the “out of screen” vibe */
+      .wrap {
+        max-width: 1320px;
+      }
+
+
+      .nav-ltxts, .nav-actions {
+        display: none;
+      }
+
+      .nav-ltxts.open {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: absolute;
+        top: 100%; /* right below nav bar */
+        right: 0;
+        left: 0;
+        background: #fff;
+        padding: 15px 20px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        border-top: 1px solid #e5e7eb;
+        z-index: 1002;
+        height: auto;
+        bottom: auto; 
+      }
+
+      .nav-ltxts.open .nav-actions {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-top: 8px;
+        gap: 10px;
+        flex: 0 0 auto;
+      }
+
+      nav > .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: none;
+        border: 0;
+        cursor: pointer;
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1003;
+      }
+
+      .hamburger span {
+        width: 30px;
+        height: 4px;
+        background: #000;
+        border-radius: 2px;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+      
+    ::-webkit-scrollbar-track {
+      color:transparent;
+    }
+      
+    ::-webkit-scrollbar-thumb {
+      background: var(--logo);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <nav aria-label="Main">
+    <div class="wrap nav-row" id="nav-desc">
+      <div class="logo">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span>MealPlan</span>
+      </div>
+      <div class="nav-ltxts" role="navigation">
+        <a href="#home">Home</a>
+        <a href="#recipes">Recipes</a>
+        <a href="#planner">Meal Planner</a>
+      </div>
+      <div class="nav-actions">
+        <a href="#signin">Sign In</a>
+        <a class="primary" href="#get-started">Get Started</a>
+      </div>
+    </div>
+    <!-- burger -->
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span> <!-- 3 spans for the burger -->
+    </button>
+  </nav>
+
+  <header id="home" role="banner">
+    <div class="wrap cover">
+      <h1>
+        Plan Your Perfect Meals,<br>
+        <span style="color: rgb(52 211 153)">Live Healthier</span>
+      </h1>
+      <p>
+        Discover personalized meal planning for students, professionals, and families. Create weekly plans, find amazing recipes, and maintain a balanced diet effortlessly.
+      </p>
+      <div class="cover-cta">
+        <a class="pill btn" href="#get-started">Start Planning Free</a>
+        <a class="pill btn-outline" href="#demo">Watch Demo</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="features" id="features" aria-labelledby="feat-title">
+      <div class="wrap">
+        <div class="feat-head">
+          <h2 id="feat-title">Everything You Need for Healthy Eating</h2>
+          <p class="muted">From meal planning to recipe discovery, we provide all the tools you need to maintain a nutritious and delicious diet.</p>
+        </div>
+        <div class="feature-list">
+          <article class="card feature">
+            <div class="icon">📅</div>
+            <h3>Smart Meal Planning</h3>
+            <p class="muted">Create personalized weekly meal plans based on your dietary preferences, schedule, and nutritional goals.</p>
+          </article>
+          <article class="card feature">
+            <div class="icon">🔎</div>
+            <h3>Recipe Discovery</h3>
+            <p class="muted">Search and filter thousands of recipes by cuisine, diet type, prep time, and nutritional content.</p>
+          </article>
+          <article class="card feature">
+            <div class="icon">➕</div>
+            <h3>Custom Recipes</h3>
+            <p class="muted">Add your own family recipes with detailed ingredients, steps, and nutritional information.</p>
+          </article>
+          <article class="card feature">
+            <div class="icon">💚</div>
+            <h3>Save Favorites</h3>
+            <p class="muted">Build your personal recipe collection and access your favorite meals anytime, anywhere.</p>
+          </article>
+          <article class="card feature">
+            <div class="icon">👤</div>
+            <h3>Personal Profile</h3>
+            <p class="muted">Set dietary restrictions, allergies, and calorie goals for personalized meal suggestions.</p>
+          </article>
+          <article class="card feature">
+            <div class="icon">💡</div>
+            <h3>Ingredient Suggestions</h3>
+            <p class="muted">Get recipe recommendations based on ingredients you already have at home.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Stats">
+      <div class="wrap">
+        <div class="stats-row">
+          <div class="stat">
+            <h3>50,000+</h3>
+            <small>Recipes Available</small>
+          </div>
+          <div class="stat">
+            <h3>25,000+</h3>
+            <small>Happy Users</small>
+          </div>
+          <div class="stat">
+            <h3>1M+</h3>
+            <small>Meals Planned</small>
+          </div>
+          <div class="stat">
+            <h3>4.9/5</h3>
+            <small>User Rating</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <h2 id="how-title">How MealPlan Works</h2>
+        <p class="muted">Healthy meal planning in three simple steps.</p>
+        <div class="steps">
+          <article class="card step">
+            <div class="num">1</div>
+            <h3>Set Your Preferences</h3>
+            <p class="muted">Tell us about your needs, allergies, and goals to get recommendations.</p>
+          </article>
+          <article class="card step">
+            <div class="num">2</div>
+            <h3>Discover & Plan</h3>
+            <p class="muted">Browse recipes and create a weekly menu that fits your schedule.</p>
+          </article>
+          <article class="card step">
+            <div class="num">3</div>
+            <h3>Cook & Enjoy</h3>
+            <p class="muted">Follow clear instructions and enjoy balanced meals every day.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials" aria-labelledby="t-title">
+      <div class="wrap">
+        <h2 id="t-title">What Our Users Say</h2>
+        <p class="muted">Join thousands who improved their eating habits.</p>
+        <div class="tgrid">
+          <article class="card tcard">
+            <p>"MealPlan transformed how I eat at university. I can plan healthy meals on a budget and never run out of ideas!"</p>
+            <div class="who">Sarah Chen</div>
+            <div class="role">University Student</div>
+          </article>
+          <article class="card tcard">
+            <p>"With a busy work schedule, the planning feature saves me hours every week. The recipes are delicious and easy."</p>
+            <div class="who">Michael Rodriguez</div>
+            <div class="role">Young Professional</div>
+          </article>
+          <article class="card tcard">
+            <p>"Planning meals for my family of four used to be stressful. Now I can create balanced plans in minutes."</p>
+            <div class="who">Emily Johnson</div>
+            <div class="role">Working Mother</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band" id="get-started" aria-labelledby="cta-title">
+      <div class="wrap cta-box">
+        <h2 id="cta-title">Ready to Transform Your Eating Habits?</h2>
+        <p>Join thousands already planning healthier meals.</p>
+        <form class="emailbox" onsubmit="event.preventDefault(); alert('Thanks! We will be in touch.');">
+          <input type="email" placeholder="Enter your email address" aria-label="Email address" required>
+          <button class="btn" type="submit">Start Free Trial</button>
+        </form>
+        <p style="margin-top:8px; font-size:14px; opacity:.9">No credit card required • Free 14-day trial • Cancel anytime</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="fcols">
+        <section class="fcol" aria-label="About">
+          <div class="logo">
+            <span class="logo-mark" aria-hidden="true"></span>
+            <span>MealPlan</span>
+          </div>
+          <p class="muted">Your meal planning companion: plan, cook, and enjoy nutritious meals every day.</p>
+        </section>
+        <nav class="fcol" aria-label="Product">
+          <h4>PRODUCT</h4>
+          <a href="#planner">Meal Planner</a>
+          <a href="#recipes">Recipe Search</a>
+          <a href="#">Nutrition Tracker</a>
+          <a href="#">Shopping List</a>
+        </nav>
+        <nav class="fcol" aria-label="Company">
+          <h4>COMPANY</h4>
+          <a href="#">About Us</a>
+          <a href="#">Contact</a>
+          <a href="#">Blog</a>
+          <a href="#">Careers</a>
+        </nav>
+        <nav class="fcol" aria-label="Support">
+          <h4>SUPPORT</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </nav>
+      </div>
+      <p class="muted" style="margin-top:20px">© MealPlan. All rights reserved.</p>
+    </div>
+  </footer>
+<script>
+  const hamburger = document.querySelector('.hamburger');
+  const navLinks = document.querySelector('.nav-ltxts');
+  const navActions = document.querySelector('.nav-actions');
+  const breakpoint = 992;
+
+  function toggleMenu() {
+    const isOpen = navLinks.classList.contains('open');
+    if (!isOpen) {
+      navLinks.appendChild(navActions);
+    } else {
+      // move back to normal place on close (desktop position)
+      const navRow = document.getElementById('nav-desc');
+      navRow.appendChild(navActions);
+    }
+    navLinks.classList.toggle('open');
+    document.body.classList.toggle('no-scroll');
+  }
+
+  function closeMenu() {
+    navLinks.classList.remove('open');
+    document.body.classList.remove('no-scroll');
+    const navRow = document.getElementById('nav-desc');
+    if (navActions.parentNode !== navRow) navRow.appendChild(navActions);
+  }
+
+  hamburger.addEventListener('click', toggleMenu);
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > breakpoint) closeMenu();
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('nav') && window.innerWidth <= breakpoint) closeMenu();
+  });
+</script>
+
+
+
+</body>
+</html>
