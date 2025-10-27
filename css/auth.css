@@ -55,12 +55,11 @@ main {
 
 .auth img {
     position: absolute;
-    width: 150px;
-    top: -12px;
-    left: px;
+    width: 200px;
 }
 
 .auth h2 {
+    white-space: nowrap;
     color: var(--heading-color);
     font-size: 32px;
     margin-bottom: 20px;
@@ -71,7 +70,7 @@ main {
     display: none;
 }
 
-.auth p {
+.txt {
     color: white;
     margin-bottom: 40px;
 }
@@ -97,7 +96,8 @@ main {
 }
 
 .btn-17 {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
     color: black;
     background-image: none;
     cursor: pointer;
@@ -108,30 +108,12 @@ main {
     margin: 0;
     padding: 0;
     width: 50%;
-}
-
-.btn-17:disabled {
-    cursor: default;
-}
-
-.btn-17:-moz-focusring {
-    outline: auto;
-}
-
-.btn-17 svg {
-    display: block;
-    vertical-align: middle;
-}
-
-.btn-17 [hidden] {
-    display: none;
-}
-.btn-17 {
     border-radius: 99rem;
     border-width: 2px;
     padding: 0.8rem 3rem;
     z-index: 0;
 }
+
 .btn-17,
 .btn-17 .text-container {
     overflow: hidden;
@@ -154,7 +136,7 @@ main {
 .btn-17:after,
 .btn-17:before {
     --skew: 0.2;
-    background: var(--secondary-color);
+    background: #00935380;
     content: "";
     display: block;
     height: 102%;
@@ -173,10 +155,12 @@ main {
     top: 102%;
     z-index: -1;
 }
-.btn-17:hover{
+
+.btn-17:hover {
     color: white;
 }
-.btn-17:hover:before {    
+
+.btn-17:hover:before {
     --progress: 100%;
 }
 
@@ -188,19 +172,115 @@ input {
     width: 80%;
     border: none;
     margin-bottom: 20px;
-    padding: 15px 10px;
+    padding: 15px 35px;
     border-radius: 5px;
     background-color: rgb(215, 249, 219);
     color: var(--secondary-color);
 }
 
-input:focus {
-    outline: var(--secondary-color) 1px solid;
+input:focus,
+input:hover {
+    outline: none;
+    box-shadow: 0 0 0 4px #00935330;
 }
 
 ::placeholder {
     color: #009353;
 }
+
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.input-group i:first-child {
+    position: relative;
+    left: 25px;
+    bottom: 10.5px;
+    color: var(--secondary-color);
+    font-size: 16px;
+}
+
+[class^="bi-eye"] {
+    right: 10%;
+    position: absolute;
+    color: var(--secondary-color);
+    font-size: 25px;
+    top: 12px;
+    cursor: pointer;
+}
+.show-pass{
+    display: none;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.error {
+    color: red;
+    display: none;
+    background-color: #ffe6e6;
+    /* soft red background */
+    border: 1px solid #ff4d4d;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+@media screen and (max-width:1350px) {
+    main {
+        width: 80%;
+    }
+
+    .auth h2 {
+        font-size: 27px;
+    }
+}
+
+@media screen and (max-width:950px) {
+    main {
+        justify-content: center;
+        align-items: center;
+        width: 400px;
+        height: fit-content;
+    }
+
+    .display {
+        display: none;
+    }
+
+    .auth {
+        width: 100%;
+    }
+
+    .auth h2 {
+        font-size: 25px;
+    }
+}
+
+@media screen and (max-width:400px) {
+    main {
+        width: 350px;
+    }
+
+    .auth h2 {
+        font-size: 23px;
+    }
+
+    .btn-17 {
+        width: fit-content;
+        z-index: 90;
+    }
+}
+
 @-webkit-keyframes move-up-alternate {
     0% {
         transform: translateY(0);

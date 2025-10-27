@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/auth.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css"
+        integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="../js/auth.js" defer></script>
-    <title>Login - Signin</title>
+    <title>Login - Signup</title>
 </head>
 
 <body>
@@ -17,27 +21,52 @@
         <section class="auth login">
             <img src="../assets/logo.png" alt="DailyBites">
             <h2>Welcome Back to DailyBites</h2>
-            <p>Dont have an account? <button class="signupPageBtn">Sign up</button></p>
-            <input class="email" type="Email" placeholder="Email" required>
-            <input class="password" type="password" placeholder="Password" required>
-            <button class="btn-17 loginBtn">
-                <span class="text-container">
-                    <span  class="text">Log in</span>
-                </span>
-            </button>
+            <p class="txt">Dont have an account? <button class="signupPageBtn">Sign up</button></p>
+            <form class="loginForm">
+                <div class="input-group">
+                    <i class="bi bi-envelope"></i>
+                    <input class="email" type="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="bi bi-lock"></i>
+                    <input class="password" type="password" placeholder="Password" required>
+                    <i class="bi-eye bi  show-pass"></i>
+                    <i class="bi-eye-slash bi  hide-pass"></i>
+                </div>
+                <p class="error"></p>
+                <button class="btn-17 loginBtn">
+                    <span class="text-container">
+                        <span class="text">Log in</span>
+                    </span>
+                </button>
+            </form>
         </section>
         <section class="auth signup">
             <img src="../assets/logo.png" alt="DailyBites">
             <h2>Create an Account</h2>
-            <p>Already have an account? <button class="loginPageBtn">Log in</button></p>
-            <input type="text" placeholder="Username" required>
-            <input class="email" type="Email" placeholder="Email" required>
-            <input class="password" type="password" placeholder="Password" required>
-            <button class="btn-17 loginBtn">
-                <span class="text-container">
-                    <span  class="text">Sign up</span>
-                </span>
-            </button>
+            <p class="txt">Already have an account? <button class="loginPageBtn">Log in</button></p>
+            <form class="signupForm">
+                <div class="input-group">
+                    <i class="bi bi-person"></i>
+                    <input class="username" type="text" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="bi bi-envelope"></i>
+                    <input class="email" type="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="bi bi-lock"></i>
+                    <input class="password" type="password" placeholder="Password" required>
+                    <i class="bi-eye bi show-pass"></i>
+                    <i class="bi-eye-slash bi hide-pass"></i>
+                </div>
+                <p class="error"></p>
+                <button class="btn-17 signupBtn">
+                    <span class="text-container">
+                        <span class="text">Sign up</span>
+                    </span>
+                </button>
+            </form>
         </section>
     </main>
 </body>
