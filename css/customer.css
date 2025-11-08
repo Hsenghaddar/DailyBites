@@ -1,0 +1,398 @@
+:root{
+    --gap:14px; --radius:12px; --bg:#fafafa; --card:#fff; --border:#e5e7eb;
+    --ink:#111; --muted:#666;
+    --accent:#f59e0b;
+    --container: 1000px;
+}
+
+*{ 
+    box-sizing:border-box 
+}
+
+body{ 
+    margin:0; 
+    font:16px/1.5 system-ui,Segoe UI,Roboto,Arial; 
+    background:var(--bg); 
+    color:var(--ink) 
+}
+
+.wrap{ 
+    max-width:var(--container); 
+    margin:32px auto; 
+    padding:16px 
+}
+
+h1{ 
+    font-size:1.35rem; 
+    margin:0 0 12px 
+}
+
+.panel{ 
+    background:var(--card); 
+    border:1px solid var(--border); 
+    border-radius:var(--radius); 
+    padding:12px; 
+    margin-bottom:14px 
+}
+
+form{ 
+    display:grid; 
+    grid-template-columns:1fr 1fr; 
+    gap:10px
+}
+
+label{ 
+    display:flex; 
+    flex-direction:column; 
+    gap:6px; 
+    font-size:.92rem 
+}
+
+input, textarea, select, button{ 
+    padding:10px; 
+    border-radius:10px; 
+    border:1px solid #bbb; 
+    background:#fff 
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+.secondary{
+    background-color: rgba(188, 178, 178, 0.4);
+}
+
+.primary{
+    background-color: rgba(155, 214, 134, 0.9);
+}
+
+textarea{ 
+    min-height:90px;
+    grid-column:1/-1 
+}
+
+.actions{ 
+    display:flex; 
+    gap:8px; 
+    flex-wrap:wrap; 
+    margin-top:6px;
+}
+
+.grid{ 
+    display:grid; 
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); 
+    gap:var(--gap); 
+    margin-top:12px 
+}
+.card{ 
+    background:#fff; 
+    border:1px solid var(--border); 
+    border-radius:14px; 
+    overflow:hidden; 
+    display:flex; 
+    flex-direction:column 
+}
+.media{ 
+    aspect-ratio:4/3; 
+    background:#f2f2f2; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center 
+}
+
+.media img{ 
+    max-width:100%; 
+    max-height:100%; 
+    object-fit:cover 
+}
+
+.placeholder{ 
+    font:600 3rem/1.2 system-ui;
+    color:#777 
+}
+
+.body{ 
+    padding:12px; 
+    display:flex; 
+    flex-direction:column; 
+    gap:6px 
+}
+
+.body h3{ 
+    margin:0; 
+    font-size:1rem 
+}
+
+.col-span-2{ 
+    grid-column:1/-1 
+}
+
+.kv{ 
+    display:grid; 
+    grid-template-columns:1fr 1fr 1fr 1fr; 
+    gap:10px 
+}
+
+@media (max-width:800px){ 
+    .kv{ 
+        grid-template-columns:1fr 1fr 
+    } 
+}
+
+/* ===== Modal base ===== */
+#modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;           /* blocked until .open */
+}
+
+/* dark translucent backdrop */
+#modal .backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.52);
+  opacity: 0.5;
+  transition: opacity .2s ease;
+}
+
+/* dialog panel */
+#modal .dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(680px, calc(100% - 2rem));
+  max-height: min(85vh, 900px);
+  transform: translate(-50%, -46%) scale(.98);
+  background: var(--surface, #505748);
+  color: var(--text, #f5f5f5);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  opacity: 0;
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+#modal .dialog > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: 16px 20px;
+  border-bottom: 1px solid color-mix(in oklab, currentColor 14%, transparent);
+}
+
+#modal .dialog > .content {
+  padding: 16px 20px 20px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+#modal .dialog > .content #mImg {
+  display: block;
+  width: 100%;
+  max-height: 280px;         /* a hair taller */
+  object-fit: cover;
+  border-bottom: 1px solid color-mix(in oklab, currentColor 12%, transparent);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+#modal .dialog > .content .modal-body-inner > * + * {
+  margin-top: 10px;
+}
+
+/* enable interactions when opened */
+#modal.open { pointer-events: auto; }
+#modal.open .backdrop { opacity: 1; }
+#modal.open .dialog { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+/* ===== Header ===== */
+#modal .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: 14px 18px;
+  border-bottom: 1px solid color-mix(in oklab, currentColor 14%, transparent);
+}
+#modal .modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+/* close button (any element with [data-close]) */
+#modal [data-close] {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 6px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#modal [data-close]:hover { background: color-mix(in oklab, currentColor 10%, transparent); }
+#modal [data-close]:focus-visible {
+  outline: 2px solid color-mix(in oklab, currentColor 50%, #6cf);
+  outline-offset: 2px;
+}
+
+/* ===== Body ===== */
+#modal .modal-body {
+  padding: 18px 18px 20px;
+  overflow: auto;                 /* scroll long content */
+  overscroll-behavior: contain;
+}
+
+/* modal lead image */
+#modal #mImg {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-bottom: 1px solid color-mix(in oklab, currentColor 12%, transparent);
+}
+
+#modal #mDesc {
+  margin-top: .35rem;
+  line-height: 1.55;
+}
+
+/* compact meta line */
+#modal #mMeta {
+  margin-top: .4rem;
+  font-size: .95rem;
+  opacity: .85;
+}
+
+#modal #mDetails {
+  margin-top: 1rem;
+}
+
+#modal #mDetails.details-grid {
+  display: grid;
+  gap: 18px;
+}
+
+#modal .msec { padding: 14px 16px; }
+
+/* two columns on wider screens */
+@media (min-width: 720px) {
+  #modal #mDetails.details-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ===== Buttons inside cards (View) ===== */
+.grid .card button[data-action="view"] {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+  background: color-mix(in oklab, currentColor 4%, transparent);
+  color: inherit;
+  cursor: pointer;
+}
+.grid .card button[data-action="view"]:hover {
+  background: color-mix(in oklab, currentColor 10%, transparent);
+}
+.grid .card button[data-action="view"]:focus-visible {
+  outline: 2px solid color-mix(in oklab, currentColor 50%, #6cf);
+  outline-offset: 2px;
+}
+
+/* ===== Mobile tweaks ===== */
+@media (max-width: 480px) {
+  #modal .dialog {
+    width: calc(100% - 1.25rem);
+    border-radius: 14px;
+    max-height: 88vh;
+  }
+  #modal .dialog > header { padding: 12px 14px; }
+  #modal .dialog > .content { padding: 12px 14px 14px; }
+  #modal .msec { padding: 12px 13px; }
+
+  #modal #mImg { max-height: 200px; }
+}
+
+/* ===== Motion preference ===== */
+@media (prefers-reduced-motion: reduce) {
+  #modal .backdrop,
+  #modal .dialog {
+    transition: none;
+  }
+}
+
+/* Section card */
+#modal .msec {
+  border: 1px solid color-mix(in oklab, currentColor 14%, transparent);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: color-mix(in oklab, currentColor 4%, transparent);
+}
+
+#modal .msec h4 {
+  margin: 0 0 .5rem;
+  font-size: 1.02rem;
+  letter-spacing: .2px;
+}
+
+/* Key–value pairs */
+#modal .kv {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 12px;
+  align-items: baseline;
+}
+#modal .kv dt {
+  opacity: .8;
+}
+#modal .kv dd {
+  margin: 0;
+}
+
+/* Bulleted lists (ingredients) */
+#modal .bullets {
+  margin: .25rem 0 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: .35rem;
+}
+
+/* Steps as ordered list */
+#modal ol.steps {
+  margin: .25rem 0 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: .4rem;
+}
+
+/* Chips (tags) */
+#modal .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: .25rem;
+}
+#modal .chip {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: .88rem;
+  border: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+  background: color-mix(in oklab, currentColor 6%, transparent);
+  opacity: .95;
+}
+
+/* Tighten section layout on small screens */
+@media (max-width: 480px) {
+  #modal .msec { padding: 10px 12px; }
+  #modal .kv { gap: 4px 10px; }
+}

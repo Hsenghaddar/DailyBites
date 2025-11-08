@@ -1,0 +1,332 @@
+:root {
+    --logo: #0b9a6d;
+    --txt: #0f172a;
+    --muted: #5b6b7d;
+    --line: #e5e7eb;
+    --bg: #ffffff;
+
+    /* motion */
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --dur-sm: 220ms;
+    --dur-md: 360ms;
+}
+
+/* Keyframes */
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hb-pop {
+  from { opacity: 0; transform: translateY(-50%) scale(0.92); }
+  to   { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+
+@keyframes menu-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {height: 100%;}
+
+body {
+    margin: 0;
+    font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    color: var(--txt);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.site {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+main { 
+    flex: 1 1 auto; 
+}
+
+/* nav */
+nav .wrap, footer .wrap {
+    max-width: clamp(1040px, 92vw, 1320px);
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+nav a {
+    color: inherit;
+    text-decoration: none;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 1px 0 var(--line);
+    z-index: 1000;
+    transition: box-shadow var(--dur-md) var(--ease), transform var(--dur-md) var(--ease);
+}
+
+nav.scrolled {
+  box-shadow: 0 6px 18px rgba(0,0,0,.06), 0 1px 0 var(--line);
+}
+
+.nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 0;
+    min-height: 64px;
+}
+
+nav .logo, footer .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    flex: 1 1 160px;
+}
+
+nav .logo-mark, footer .logo-mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--logo);
+    transform: translateZ(0);
+    transition: transform var(--dur-sm) var(--ease);
+}
+
+nav .logo:hover .logo-mark { 
+    transform: rotate(6deg) scale(1.05); 
+}
+
+.nav-ltxts {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex: 2 1 320px;
+}
+
+.nav-ltxts a {
+  position: relative; padding: 6px 8px; border-radius: 8px; outline-offset: 3px;
+  transition: background var(--dur-sm) var(--ease), color var(--dur-sm) var(--ease);
+}
+.nav-ltxts a::after {
+  content: ""; position: absolute; left: 8px; right: 8px; bottom: 4px; height: 2px;
+  background: var(--logo); transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-md) var(--ease);
+}
+.nav-ltxts a:hover::after, .nav-ltxts a:focus-visible::after { transform: scaleX(1); }
+
+
+.nav-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex: 1 1 220px;
+}
+
+.nav-actions a {
+    border: 1px solid var(--line);
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: transform var(--dur-sm) var(--ease), box-shadow var(--dur-sm) var(--ease), background var(--dur-sm) var(--ease);
+    will-change: transform;
+}
+
+.nav-actions a.primary {
+    background: var(--logo);
+    color: #fff;
+    border-color: var(--logo);
+}
+
+.nav-actions a:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,.06); }
+.nav-actions a:active { transform: translateY(0); }
+.nav-actions a.primary { background: var(--logo); color: #fff; border-color: var(--logo); }
+
+nav > .hamburger {
+    display: none;                 /* desktop: hidden */
+    position: absolute;            /* sit inside the sticky bar */
+    right: 16px;                   /* align with container padding */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1001;                 /* above links */
+    background: none;
+    border: 0;
+    padding: 6px;
+    cursor: pointer; 
+    border-radius: 8px;
+}
+
+.hamburger span { 
+    width: 30px; 
+    height: 4px; 
+    background: #000; 
+    border-radius: 2px; 
+    display: block; 
+    /* motion */
+    transition: transform var(--dur-md) var(--ease), opacity var(--dur-md) var(--ease);
+}
+
+.hamburger:focus-visible { outline: 2px solid var(--logo); outline-offset: 2px; }
+.hamburger:active { transform: translateY(-50%) scale(0.98); }
+
+.hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(8px) rotate(45deg); transition: transform var(--dur-md) var(--ease); }
+.hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; transition: opacity var(--dur-md) var(--ease); }
+.hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); transition: transform var(--dur-md) var(--ease); }
+.hamburger[aria-expanded="true"] span:nth-child(1),
+.hamburger[aria-expanded="true"] span:nth-child(3) {
+  transition-delay: 30ms;
+}
+
+/* footer */
+footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 0;
+    color: var(--muted);
+    position: sticky;
+    bottom: 0;
+    margin-left: 8%;;
+}
+
+.fcols {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.fcol {
+    flex: 1 1 220px;
+    min-width: 200px;
+}
+
+.fcol h4 {
+    color: var(--txt);
+    margin: 0 0 8px;
+    font-weight: 700; 
+    letter-spacing: 0.4px;
+}
+
+.fcol a {
+    display: block;
+    margin: 4px 0;
+}
+
+footer .logo { 
+    font-weight: 600; 
+}
+
+.skip-link {
+  position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden;
+}
+.skip-link:focus {
+  position: fixed; left: 16px; top: 16px; width: auto; height: auto; padding: 10px 12px;
+  background: #fff; border: 2px solid var(--logo); border-radius: 10px; z-index: 1100;
+}
+
+@media screen and (max-width: 992px) {
+
+    body.no-scroll { overflow: hidden; }
+
+    /* wider container for the “out of screen” vibe */
+    nav .wrap {
+    max-width: 1320px;
+    }
+
+    .nav-ltxts, .nav-actions {
+    display: none;
+    }
+
+    .nav-ltxts.open {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    top: 100%; /* right below nav bar */
+    right: 0;
+    left: 0;
+    background: #fff;
+    padding: 15px 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border-top: 1px solid #e5e7eb;
+    z-index: 1002;
+    /* animation */
+    animation: menu-in calc(var(--dur-md) + 80ms) var(--ease) both;
+    }
+
+    /* When closing, keep it visible but run the reverse animation */
+    .nav-ltxts.open.closing {
+    animation: menu-out var(--dur-md) var(--ease) both;
+    }
+
+    .nav-ltxts.open .nav-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 8px;
+    gap: 10px;
+    flex: 0 0 auto;
+    }
+
+    nav > .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1003;
+    }
+
+    .hamburger span {
+    width: 30px;
+    height: 4px;
+    background: #000;
+    border-radius: 2px;
+    /* motion */
+    transition: transform var(--dur-md) var(--ease), opacity var(--dur-md) var(--ease);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+.hamburger.open-anim { animation: hb-pop var(--dur-md) var(--ease); }
+
+/* reveal animation utility any section can use */
+.reveal { opacity:0; transform: translateY(12px); transition: opacity var(--dur-md) var(--ease), transform var(--dur-md) var(--ease); }
+.reveal.is-inview { opacity:1; transform: none; }
+
+/* scroll bar - aka - reem's signature move */
+::-webkit-scrollbar {
+    width: 10px;
+}
+    
+::-webkit-scrollbar-track {
+    background-color:transparent;
+}
+    
+::-webkit-scrollbar-thumb {
+    background: var(--logo);
+    border-radius: 10px;
+}
