@@ -1,68 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/mealPlanner.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css"
-        integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer">
-    <script src="../js/mealPlanner.js" defer></script>
-    <title>Plan Your Meals</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/mealPlanner.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css"
+    integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <script src="../js/mealPlanner.js" defer></script>
+  <title>Plan Your Meals</title>
 </head>
 
 <body>
-    <header id="navbar">
-        <nav class="nav-inner">
-            <a href="../html/home.html" class="nav-logo" aria-label="DailyBites home">
-                <img src="../assets/logo.png" alt="DailyBites Logo">
-            </a>
+  <header id="navbar">
+    <nav class="nav-inner">
+      <a href="../html/home.html" class="nav-logo" aria-label="DailyBites home">
+        <img src="../assets/logo.png" alt="DailyBites Logo" />
+      </a>
 
-            <ul class="nav-links" id="primary-navigation">
-                <li><a href="#hero">Home</a></li>
-                <li><a href="#recipes">Recipes</a></li>
-                <li><a href="../html/mealPlanner.html">Meal Planner</a></li>
-                <li><a href="../html/about.html">About us</a></li>
-                <li><a href="#subs">Subscription</a></li>
-            </ul>
+      <ul class="nav-links" id="primary-navigation">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#recipes">Recipes</a></li>
+        <li><a href="../html/mealPlanner.html">Meal Planner</a></li>
+        <li><a href="../html/about.html">About us</a></li>
+        <li><a href="#subs">Subscription</a></li>
+      </ul>
 
-            <section class="nav-actions">
-                <a href="././auth.html"><button class="btn light" type="button">Sign In</button></a>
-                <button class="btn primary" type="button">Get Started</button>
-            </section>
+      <section class="nav-actions">
+        <a href="././auth.html"><button class="btn light" type="button">Sign In</button></a>
+        <button class="btn primary" type="button">Get Started</button>
+      </section>
 
-            <button id="menu-toggle" type="button" aria-label="Toggle menu" aria-controls="primary-navigation"
-                aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
-        </nav>
-    </header>
+      <button
+        id="menu-toggle"
+        type="button"
+        aria-label="Toggle menu"
+        aria-controls="primary-navigation"
+        aria-expanded="false"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
 
-    <h1>Weekly Meal Planner</h1>
+  <h1>Weekly Meal Planner</h1>
 
-    <main>
-        <div>
+  <div class="planner-bar">
+    <button id="clear-plan" type="button" class="clear-plan-btn">
+      <i class="bi bi-trash3"></i>
+      <span>Clear plan</span>
+    </button>
+  </div>
 
-        </div>
-    </main>
+  <main>
+    <div></div>
+  </main>
 
-    <div class="overlay">
-        <div class="model">
-            <div>
-                <div></div>
-                <h2>Add Meal</h2>
-                <i class="close bi bi-x-lg"></i>
-            </div>
-            <div class="input-group">
-                <i class="bi bi-search"></i>
-                <input class="search" type="text" placeholder="Search Recipes">
-            </div>
-            <div class="recipes"></div>
-        </div>
+  <div class="overlay">
+    <div class="model">
+      <div class="modal-header">
+        <h2 class="modal-title">Choose a recipe</h2>
+        <i class="close bi bi-x-lg"></i>
+      </div>
+
+      <div class="input-group">
+        <i class="bi bi-search"></i>
+        <input class="search" type="text" placeholder="Search Recipes" />
+      </div>
+
+      <div class="recipes"></div>
     </div>
-    
-</body>
+  </div>
 
+  <footer>
+    <div class="wrap">
+      <div class="fcols">
+        <section class="fcol" aria-label="About">
+          <div class="logo">
+            <span class="logo-mark" aria-hidden="true"></span>
+            <span>MealPlan</span>
+          </div>
+          <p class="muted">Your meal planning companion.</p>
+        </section>
+
+        <nav class="fcol" aria-label="Product">
+          <h4>PRODUCT</h4>
+          <a href="/mealPlanner.html">Meal Planner</a>
+          <a href="/home.html#recipes">Recipe Search</a>
+          <a href="#">Nutrition Tracker</a>
+          <a href="#">Shopping List</a>
+        </nav>
+
+        <nav class="fcol" aria-label="Company">
+          <h4>COMPANY</h4>
+          <a href="/about.html">About Us</a>
+          <a href="#">Contact</a>
+          <a href="#">Blog</a>
+          <a href="#">Careers</a>
+        </nav>
+
+        <nav class="fcol" aria-label="Support">
+          <h4>SUPPORT</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </nav>
+      </div>
+      <p class="muted" style="margin-top: 20px">© MealPlan. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
 </html>
