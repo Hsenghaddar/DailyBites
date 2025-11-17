@@ -32,7 +32,12 @@ closeBtn.addEventListener("click", () => {
   document.querySelector("body").classList.remove("overlayOpen");
 });
 
-let main = document.querySelector("main > div");
+closeBtn.addEventListener("click", () => {
+  overlay.style.display = "none"
+  document.querySelector("body").classList.remove("overlayOpen")
+})
+
+let main = document.querySelector("main > div")
 
 function getThisWeek() {
   let today = new Date();
@@ -137,7 +142,14 @@ function fetchAllRecipes() {
     .then((data) => (recipes = data.recipes))
     .catch(() => console.error("error fetching"));
 }
-fetchAllRecipes();
+
+function fetchAllRecipes() {
+  fetch("../js/data.json")
+    .then((res) => res.json())
+    .then((data) => (recipes = data.recipes))
+    .catch(() => console.error("error fetching"))
+}
+fetchAllRecipes()
 
 function renderLayout() {
   let html = "";
@@ -150,7 +162,7 @@ function renderLayout() {
       <div class="day-info">
         <p>${dayName}</p>
         <p>${dateLabel}</p>
-      </div>`;
+      </div>`
 
     mealNames.forEach((mealType) => {
       html += `

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="../base.css">
+    <script defer src="../inject.js"></script>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+  <!-- <nav aria-label="Main">
+    <div class="wrap nav-row" id="nav-desc">
+      <div class="logo">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span>MealPlan</span>
+      </div>
+      <div class="nav-ltxts" role="navigation">
+        <a href="#home">Home</a>
+        <a href="#recipes">Recipes</a>
+        <a href="#planner">Meal Planner</a>
+      </div>
+      <div class="nav-actions">
+        <a href="#signin">Sign In</a>
+        <a class="primary" href="#get-started">Get Started</a>
+      </div>
+    </div>
+    <-- burger ->
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span> <-- 3 spans for the burger ->
+    </button>
+  </nav> -->
+
+  <div class="site">
+  <div data-include="nav"></div>
+
+  <header id="home" role="banner">
+    <div class="wrap cover">
+      <h1>
+        Plan Your Perfect Meals,<br>
+        <span style="color: rgb(52 211 153)">Live Healthier</span>
+      </h1>
+      <p>
+        Discover personalized meal planning for students, professionals, and families. Create weekly plans, find amazing recipes, and maintain a balanced diet effortlessly.
+      </p>
+      <div class="cover-cta">
+        <a class="pill btn" href="#get-started">Start Planning Free</a>
+        <a class="pill btn-outline" href="#demo">Watch Demo</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="features" id="features" aria-labelledby="feat-title">
+      <div class="wrap">
+        <div class="feat-head">
+          <h2 id="feat-title">Everything You Need for Healthy Eating</h2>
+          <p class="muted">From meal planning to recipe discovery, we provide all the tools you need to maintain a nutritious and delicious diet.</p>
+        </div>
+        <div class="feature-list">
+          <article class="card feature reveal">
+            <div class="icon">📅</div>
+            <h3>Smart Meal Planning</h3>
+            <p class="muted">Create personalized weekly meal plans based on your dietary preferences, schedule, and nutritional goals.</p>
+          </article>
+          <article class="card feature reveal">
+            <div class="icon">🔎</div>
+            <h3>Recipe Discovery</h3>
+            <p class="muted">Search and filter thousands of recipes by cuisine, diet type, prep time, and nutritional content.</p>
+          </article>
+          <article class="card feature reveal">
+            <div class="icon">➕</div>
+            <h3>Custom Recipes</h3>
+            <p class="muted">Add your own family recipes with detailed ingredients, steps, and nutritional information.</p>
+          </article>
+          <article class="card feature reveal">
+            <div class="icon">💚</div>
+            <h3>Save Favorites</h3>
+            <p class="muted">Build your personal recipe collection and access your favorite meals anytime, anywhere.</p>
+          </article>
+          <article class="card feature reveal">
+            <div class="icon">👤</div>
+            <h3>Personal Profile</h3>
+            <p class="muted">Set dietary restrictions, allergies, and calorie goals for personalized meal suggestions.</p>
+          </article>
+          <article class="card feature reveal">
+            <div class="icon">💡</div>
+            <h3>Ingredient Suggestions</h3>
+            <p class="muted">Get recipe recommendations based on ingredients you already have at home.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Stats">
+      <div class="wrap">
+        <div class="stats-row">
+          <div class="stat">
+            <h3>50,000+</h3>
+            <small>Recipes Available</small>
+          </div>
+          <div class="stat">
+            <h3>25,000+</h3>
+            <small>Happy Users</small>
+          </div>
+          <div class="stat">
+            <h3>1M+</h3>
+            <small>Meals Planned</small>
+          </div>
+          <div class="stat">
+            <h3>4.9/5</h3>
+            <small>User Rating</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <h2 id="how-title">How MealPlan Works</h2>
+        <p class="muted">Healthy meal planning in three simple steps.</p>
+        <div class="steps">
+          <article class="card step reveal">
+            <div class="num">1</div>
+            <h3>Set Your Preferences</h3>
+            <p class="muted">Tell us about your needs, allergies, and goals to get recommendations.</p>
+          </article>
+          <article class="card step reveal">
+            <div class="num">2</div>
+            <h3>Discover & Plan</h3>
+            <p class="muted">Browse recipes and create a weekly menu that fits your schedule.</p>
+          </article>
+          <article class="card step reveal">
+            <div class="num">3</div>
+            <h3>Cook & Enjoy</h3>
+            <p class="muted">Follow clear instructions and enjoy balanced meals every day.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials" aria-labelledby="t-title">
+      <div class="wrap">
+        <h2 id="t-title">What Our Users Say</h2>
+        <p class="muted">Join thousands who improved their eating habits.</p>
+        <div class="tgrid">
+          <article class="card tcard reveal">
+            <p>"MealPlan transformed how I eat at university. I can plan healthy meals on a budget and never run out of ideas!"</p>
+            <div class="who">Sarah Chen</div>
+            <div class="role">University Student</div>
+          </article>
+          <article class="card tcard reveal">
+            <p>"With a busy work schedule, the planning feature saves me hours every week. The recipes are delicious and easy."</p>
+            <div class="who">Michael Rodriguez</div>
+            <div class="role">Young Professional</div>
+          </article>
+          <article class="card tcard reveal">
+            <p>"Planning meals for my family of four used to be stressful. Now I can create balanced plans in minutes."</p>
+            <div class="who">Emily Johnson</div>
+            <div class="role">Working Mother</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band" id="get-started" aria-labelledby="cta-title">
+      <div class="wrap cta-box">
+        <h2 id="cta-title">Ready to Transform Your Eating Habits?</h2>
+        <p>Join thousands already planning healthier meals.</p>
+        <form class="emailbox" onsubmit="event.preventDefault(); alert('Thanks! We will be in touch.');">
+          <input type="email" placeholder="Enter your email address" aria-label="Email address" required>
+          <button class="btn" type="submit">Start Free Trial</button>
+        </form>
+        <p style="margin-top:8px; font-size:14px; opacity:.9">No credit card required • Free 14-day trial • Cancel anytime</p>
+      </div>
+    </section>
+  </main>
+  <div data-include="footer"></div>
+  </div>
+
+  <!-- <footer>
+    <div class="wrap">
+      <div class="fcols">
+        <section class="fcol" aria-label="About">
+          <div class="logo">
+            <span class="logo-mark" aria-hidden="true"></span>
+            <span>MealPlan</span>
+          </div>
+          <p class="muted">Your meal planning companion: plan, cook, and enjoy nutritious meals every day.</p>
+        </section>
+        <nav class="fcol" aria-label="Product">
+          <h4>PRODUCT</h4>
+          <a href="#planner">Meal Planner</a>
+          <a href="#recipes">Recipe Search</a>
+          <a href="#">Nutrition Tracker</a>
+          <a href="#">Shopping List</a>
+        </nav>
+        <nav class="fcol" aria-label="Company">
+          <h4>COMPANY</h4>
+          <a href="#">About Us</a>
+          <a href="#">Contact</a>
+          <a href="#">Blog</a>
+          <a href="#">Careers</a>
+        </nav>
+        <nav class="fcol" aria-label="Support">
+          <h4>SUPPORT</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </nav>
+      </div>
+      <p class="muted" style="margin-top:20px">© MealPlan. All rights reserved.</p>
+    </div>
+  </footer> -->
+</body>
+</html>
