@@ -75,80 +75,6 @@ h1,h2,h3 {
     border: 2px solid #fff;
 }
 
-/* nav */
-nav {
-    position: sticky;
-    top: 0;
-    background: #fff;
-    border-bottom: 1px solid var(--line);
-    box-shadow: 0 1px 0 var(--line);
-    z-index: 1000;
-}
-
-.nav-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-    padding: 10px 0;
-    min-height: 64px;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 500;
-    flex: 1 1 160px;
-}
-
-.logo-mark {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    background: var(--logo);
-}
-
-.nav-ltxts {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-    flex: 2 1 320px;
-}
-
-.nav-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    flex: 1 1 220px;
-}
-
-.nav-actions a {
-    border: 1px solid var(--line);
-    padding: 8px 12px;
-    border-radius: 8px;
-}
-
-.nav-actions a.primary {
-    background: var(--logo);
-    color: #fff;
-    border-color: var(--logo);
-}
-
-nav > .hamburger {
-    display: none;                 /* desktop: hidden */
-    position: absolute;            /* sit inside the sticky bar */
-    right: 16px;                   /* align with container padding */
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1001;                 /* above links */
-    background: none;
-    border: 0;
-    padding: 6px;
-}
 
 /* cover */
 header {
@@ -391,35 +317,6 @@ main > section{
     flex: 0 0 auto;      
 }
 
-/* footer */
-footer {
-    border-top: 1px solid var(--line);
-    padding: 28px 0;
-    color: var(--muted);
-    /* height: 40vh; */
-}
-
-.fcols {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-}
-
-.fcol {
-    flex: 1 1 220px;
-    min-width: 200px;
-}
-
-.fcol h4 {
-    color: var(--txt);
-    margin: 0 0 8px;
-}
-
-.fcol a {
-    display: block;
-    margin: 4px 0;
-}
-
 @media screen and (max-width: 992px) {
 
     body.no-scroll { overflow: hidden; }
@@ -466,69 +363,4 @@ footer {
     .wrap {
     max-width: 1320px;
     }
-
-
-    .nav-ltxts, .nav-actions {
-    display: none;
-    }
-
-    .nav-ltxts.open {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: absolute;
-    top: 100%; /* right below nav bar */
-    right: 0;
-    left: 0;
-    background: #fff;
-    padding: 15px 20px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    border-top: 1px solid #e5e7eb;
-    z-index: 1002;
-    height: auto;
-    bottom: auto; 
-    }
-
-    .nav-ltxts.open .nav-actions {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin-top: 8px;
-    gap: 10px;
-    flex: 0 0 auto;
-    }
-
-    nav > .hamburger {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    background: none;
-    border: 0;
-    cursor: pointer;
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1003;
-    }
-
-    .hamburger span {
-    width: 30px;
-    height: 4px;
-    background: #000;
-    border-radius: 2px;
-    }
-}
-
-::-webkit-scrollbar {
-    width: 10px;
-}
-    
-::-webkit-scrollbar-track {
-    color:transparent;
-}
-    
-::-webkit-scrollbar-thumb {
-    background: var(--logo);
-    border-radius: 10px;
 }

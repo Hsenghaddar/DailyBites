@@ -2,7 +2,7 @@
     --gap:14px; --radius:12px; --bg:#fafafa; --card:#fff; --border:#e5e7eb;
     --ink:#111; --muted:#666;
     --accent:#f59e0b;
-    --container: 1000px;
+    --container: 80vw;
 }
 
 *{ 
@@ -16,36 +16,89 @@ body{
     color:var(--ink) 
 }
 
-.wrap{ 
-    max-width:var(--container); 
-    margin:32px auto; 
-    padding:16px 
+.site {
+  justify-content: flex-start;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1080px;
+  min-width: 0;
+  margin: 32px auto 40px;
+  padding: 0 16px 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr);
+  grid-template-rows: auto auto 1fr;
+  gap: 18px 20px;
+}
+
+.wrap > h1,
+.wrap > #who {
+  grid-column: 1 / -1;
+}
+
+#who {
+  margin: 4px 0 12px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Left = form, right = preview panel */
+.wrap > section.panel:nth-of-type(1) {
+  grid-column: 1;
+  grid-row: 3;
+}
+.wrap > section.panel:nth-of-type(2) {
+  grid-column: 2;
+  grid-row: 3;
 }
 
 h1{ 
     font-size:1.35rem; 
-    margin:0 0 12px 
+    margin:0 0 12px;
+    color: #16a34a;
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: left;
+    margin: 30px 0 0.5rem;
 }
 
 .panel{ 
     background:var(--card); 
     border:1px solid var(--border); 
     border-radius:var(--radius); 
-    padding:12px; 
-    margin-bottom:14px 
+    padding: 16px 18px 18px;
+    margin-bottom: 0;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+.panel h2,
+.panel h3 {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #15803d;
+  letter-spacing: 0.2px;
 }
 
 form{ 
     display:grid; 
     grid-template-columns:1fr 1fr; 
-    gap:10px
+    gap: 12px 16px;
 }
 
 label{ 
     display:flex; 
     flex-direction:column; 
     gap:6px; 
-    font-size:.92rem 
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+label input,
+label textarea,
+label select {
+  font-size: 0.9rem;
 }
 
 input, textarea, select, button{ 
@@ -57,13 +110,15 @@ input, textarea, select, button{
 
 button:hover{
     cursor: pointer;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
 }
 
 .secondary{
     background-color: rgba(188, 178, 178, 0.4);
 }
 
-.primary{
+button.primary{
     background-color: rgba(155, 214, 134, 0.9);
 }
 
@@ -76,7 +131,32 @@ textarea{
     display:flex; 
     gap:8px; 
     flex-wrap:wrap; 
-    margin-top:6px;
+    margin-top: 10px;
+}
+
+.actions button {
+  flex: 1 1 auto;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition:
+    transform var(--dur-sm) var(--ease),
+    box-shadow var(--dur-sm) var(--ease),
+    background var(--dur-sm) var(--ease),
+    border-color var(--dur-sm) var(--ease);
+}
+
+@media (max-width: 900px) {
+  .wrap {
+    display: block;
+    max-width: 720px;
+    padding-inline: 16px;
+  }
+
+  .panel {
+    margin-top: 14px;
+  }
 }
 
 .grid{ 
@@ -91,11 +171,37 @@ textarea{
     border-radius:14px; 
     overflow:hidden; 
     display:flex; 
-    flex-direction:column 
+    flex-direction:column;
+    position: relative;
+    transition:
+      transform var(--dur-sm) var(--ease),
+      box-shadow var(--dur-sm) var(--ease),
+      border-color var(--dur-sm) var(--ease);
 }
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.16);
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+/* Placeholder avatar for preview (“DB”) */
+#pPH {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111827;
+  color: #f9fafb;
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+}
+
 .media{ 
     aspect-ratio:4/3; 
-    background:#f2f2f2; 
+    background: radial-gradient(circle at 30% 18%, rgba(245, 158, 11, 0.18), transparent 55%),
+    #f3f4f6;
     display:flex; 
     align-items:center; 
     justify-content:center 
@@ -116,7 +222,32 @@ textarea{
     padding:12px; 
     display:flex; 
     flex-direction:column; 
-    gap:6px 
+    gap:8px 
+}
+
+.card .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.card .meta span {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f3f4f6;
+}
+
+#pTags {
+  background: transparent;
+  padding: 0;
+}
+
+#pDesc {
+  margin-top: 2px;
+  font-size: 0.9rem;
+  color: var(--muted);
 }
 
 .body h3{ 
@@ -131,7 +262,7 @@ textarea{
 .kv{ 
     display:grid; 
     grid-template-columns:1fr 1fr 1fr 1fr; 
-    gap:10px 
+    gap: 10px 12px;
 }
 
 @media (max-width:800px){ 

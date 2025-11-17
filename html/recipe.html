@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe Collection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../base.css">
+    <script type="module" src="../inject.js" defer></script>
+    <link rel="stylesheet" href="../css/recipe.css">
+    <script type="module" src="../js/recipe.js" defer></script>
+
+</head>
+
+<body>
+    <div class="site">
+    <div data-include="nav"></div>
+    <header>
+        <h1>Recipe Collection</h1>
+        <p>Discover delicious recipes for every meal and diet.</p>
+    </header>
+
+    <main>
+        <section class="filter-bar">
+
+            <section class="filter-search">
+                <input id="searchInput" type="text" placeholder="Search recipes or ingredients…">
+            </section>
+
+            <section class="filter-dropdown">
+                <button class="filter-btn" data-target="dd-meal">Meal Type</button>
+
+                <section class="dropdown-panel" id="dd-meal">
+                    <ul class="panel-list" data-group="meal">
+                        <li class="panel-card" data-value="Breakfast">Breakfast</li>
+                        <li class="panel-card" data-value="Lunch">Lunch</li>
+                        <li class="panel-card" data-value="Dinner">Dinner</li>
+                        <li class="panel-card" data-value="Snacks">Snacks</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section class="filter-dropdown">
+                <button class="filter-btn" data-target="dd-diet">Dietary</button>
+
+                <section class="dropdown-panel" id="dd-diet">
+                    <ul class="panel-list" data-group="diet">
+                        <li class="panel-card" data-value="Vegan">Vegan</li>
+                        <li class="panel-card" data-value="Vegetarian">Vegetarian</li>
+                        <li class="panel-card" data-value="Keto">Keto</li>
+                        <li class="panel-card" data-value="Low-Carb">Low-Carb</li>
+              
+                    </ul>
+                </section>
+            </section>
+
+            <section class="filter-dropdown">
+                <button class="filter-btn" data-target="dd-time">Time & Difficulty</button>
+
+                <section class="dropdown-panel" id="dd-time">
+                    <ul class="panel-list" data-group="time">
+                        <li class="panel-card" data-value="Easy">Easy</li>
+                        <li class="panel-card" data-value="Medium">Medium</li>
+                        <li class="panel-card" data-value="Hard">Hard</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section class="filter-dropdown">
+                <button class="filter-btn" data-target="dd-ing">Ingredients</button>
+
+                <section class="dropdown-panel" id="dd-ing">
+                    <input class="ingredient-input" id="ingredientInput" type="text" placeholder="Type an ingredient…">
+                </section>
+            </section>
+
+        </section>
+
+        <output id="count">Showing 0 of 0 recipes</output>
+
+        <ul id="recipes" class="recipes"></ul>
+
+        <template id="card">
+            <li>
+                <article class="card">
+                    <figure class="thumb">
+                        <picture>
+                            <img alt="" loading="lazy">
+                        </picture>
+                        <button type="button" class="fav" title="Save">&#9825;</button>
+                        <span class="badge"></span>
+                    </figure>
+
+                    <section class="content">
+                        <h3 class="title"></h3>
+                        <p class="desc"></p>
+
+                        <ul class="meta">
+                            <li title="Total time">⏱ <time></time></li>
+                            <li title="Calories">🔥 <output></output> cal</li>
+                            <li title="Rating">⭐ <output></output></li>
+                        </ul>
+
+                        <nav class="tags"></nav>
+                    </section>
+
+                    <footer class="actions">
+                        <a href="#" rel="recipe" class="primary">View Recipe</a>
+                        <button type="button" class="ghost">Add to Plan</button>
+                    </footer>
+                </article>
+            </li>
+        </template>
+    </main>
+    
+  <div data-include="footer"></div>
+</div>
+
+    <dialog id="modal">
+
+    <section class="modal-hero-container">
+        <img id="mImg" alt="">
+        <button id="mClose" class="modal-close">✕</button>
+        <button class="modal-fav">♡</button>
+    </section>
+
+    <section class="modal-content">
+        
+        <h2 id="mTitle"></h2>
+
+        <p id="mDesc" class="modal-desc"></p>
+
+        <ul class="modal-stats">
+            <li>
+                <strong id="mPrep"></strong>
+                <span>Prep Time</span>
+            </li>
+            <li>
+                <strong id="mCook"></strong>
+                <span>Cook Time</span>
+            </li>
+            <li>
+                <strong id="mServ"></strong>
+                <span>Servings</span>
+            </li>
+            <li>
+                <strong id="mCal"></strong>
+                <span>Calories</span>
+            </li>
+        </ul>
+
+        <section class="modal-body-grid">
+            <section>
+                <h3>Ingredients</h3>
+                <ul id="mIngr" class="modal-list"></ul>
+            </section>
+
+            <section>
+                <h3>Instructions</h3>
+                <ol id="mSteps" class="modal-list num"></ol>
+            </section>
+            <p><strong>Rating:</strong> <span id="mRating"></span> ★</p>
+            <p><strong>Views:</strong> <span id="mViews"></span></p>
+
+            <p><strong>Meal:</strong> <span id="mMeal"></span></p>
+            <p><strong>Diet:</strong> <span id="mDiet"></span></p>
+            <p><strong>Difficulty:</strong> <span id="mDiff"></span></p>
+
+            <div class="tag-row" id="mTags"></div>
+
+            <ul class="macros">
+            <li>Protein: <span id="mProt"></span></li>
+            <li>Carbs: <span id="mCarbs"></span></li>
+            <li>Fat: <span id="mFat"></span></li>
+            </ul>
+            <ul id="mMicros"></ul>
+        </section>
+
+    </section>
+
+</dialog>
+</body>
+
+</html>

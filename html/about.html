@@ -5,18 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>About • DailyBites</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/about.css" />
+  <link rel="stylesheet" href="../base.css">
+  <script defer src="../inject.js"></script>
+  <link rel="stylesheet" href="/css/about.css">
 </head>
 <body>
-
+  <div class="site">
   <!-- NAVBAR -->
- <header id="navbar" >
-  <nav class="nav-inner">
+  <!-- <nav class="nav-inner"
     <a href="" class="nav-logo" >
       <img src="../assets/logo.png" alt="DailyBites Logo">
     </a>
 
-    <!-- add id -->
+    <-- add id ->
     <ul class="nav-links" id="primary-navigation">
       <li><a href="#hero">Home</a></li>
       <li><a href="#recipes">Recipes</a></li>
@@ -30,164 +31,159 @@
       <button class="btn primary" type="button">Get Started</button>
     </section>
 
-    <!-- a11y on the burger -->
+    <-- a11y on the burger ->
     <button id="menu-toggle" type="button">
       <span></span><span></span><span></span>
     </button>
-  </nav>
-</header>
-
-
+  </nav> -->
+  <div data-include="nav"></div>
   <main>
 
-    <!-- HERO / WHO WE ARE COMBINED -->
-<section id="hero" class="hero">
-  <article class="hero-copy">
-    <h1>Healthy eating,<br><span class="accent">simplified.</span></h1>
-    
-    <!-- Intro from Who We Are -->
-    <section class="intro">
-      <h2 class="sub">Get to Know Us</h2>
+  <!-- HERO / WHO WE ARE COMBINED -->
+  <section id="hero" class="hero">
+    <article class="hero-copy">
+      <h1>Healthy eating,<br><span class="accent">simplified.</span></h1>
+      
+      <!-- Intro from Who We Are -->
+      <section class="intro">
+        <h2 class="sub">Get to Know Us</h2>
+        <p>
+          We blend nutrition guidance, recipe discovery, and a flexible weekly planner to help you eat better
+          without the stress. Our focus is on practical, repeatable habits: balanced templates, smart grocery lists,
+          and suggestions that use what you already have.
+        </p>
+        <ul class="pills">
+          <li>Balanced weekly templates</li>
+          <li>Pantry-aware suggestions</li>
+          <li>Diet filters</li>
+          <li>Auto grocery lists</li>
+        </ul>
+      </section>
+
+
+    </article>
+
+    <!-- Hero Image -->
+    <figure class="about-hero">
+    <img src="../assets/gettoknowus.png" alt="Get to know us image">
+  </figure>
+
+  </section>
+
+  <!-- THE PROBLEM -->
+  <section id="problem" class="problem">
+    <img src="../assets/pic2.png" alt="People planning meals and preparing healthy food" class="problem-img">
+
+    <article class="problem-copy">
+      <h2>The Problem</h2>
       <p>
-        We blend nutrition guidance, recipe discovery, and a flexible weekly planner to help you eat better
-        without the stress. Our focus is on practical, repeatable habits: balanced templates, smart grocery lists,
-        and suggestions that use what you already have.
+        Eating well is harder than it should be. Between busy schedules, meal indecision,
+        and confusing nutrition info, most people end up skipping meals or rotating the same few dishes.
       </p>
-      <ul class="pills">
-        <li>Balanced weekly templates</li>
-        <li>Pantry-aware suggestions</li>
-        <li>Diet filters</li>
-        <li>Auto grocery lists</li>
+      <ul class="pains">
+        <li><strong>Decision fatigue:</strong> What to cook, again?</li>
+        <li><strong>Time pressure:</strong> Planning feels like a chore.</li>
+        <li><strong>Nutrition fog:</strong> Macros and calories aren't clear.</li>
+        <li><strong>Waste & cost:</strong> Ingredients go unused.</li>
       </ul>
-    </section>
+    </article>
+  </section>
 
+  <!-- OUR APPROACH -->
+  <section id="approach" class="approach-section">
+    <header class="center">
+      <h2>Our Approach</h2>
+      <p class="muted">Turning planning into a guided, stress-free experience.</p>
+    </header>
 
-  </article>
+    <article class="approach-content">
+      <p>
+        DailyBites transforms how people organize their meals. Instead of overwhelming choices,
+        users receive guided plans built on preferences, nutrition, and available ingredients.
+        We combine smart suggestions, pantry-based recipes, and personalized diet profiles to
+        create a seamless experience across all devices.
+      </p>
+      <p>
+        With real-time recipe discovery, ingredient-based ideas, and nutrition breakdowns,
+        DailyBites makes healthy eating enjoyable and achievable every day.
+      </p>
+    </article>
+  </section>
 
-  <!-- Hero Image -->
-  <figure class="about-hero">
-  <img src="images/gettoknowus.png" alt="Get to know us image">
-</figure>
+  <!-- SUBSCRIPTION -->
+  <section id="subs" class="subs">
+    <header class="center">
+      <h2>Go Further with Subscription</h2>
+      <p class="muted">Unlock advanced features that help you stay consistent and level up your meals.</p>
+    </header>
 
-</section>
+    <section class="plans">
+      <article class="plan">
+        <h3>Starter</h3>
+        <p class="price">$4.99 / month</p>
+        <ul class="features">
+          <li>Weekly meal planner</li>
+          <li>Recipe search & filters</li>
+          <li>Save favorites (up to 20)</li>
+        </ul>
+        <p><a class="btn primary" href="#">Get Started</a></p>
+      </article>
 
+      <article class="plan">
+        <h3>Plus</h3>
+        <p class="price">$6.99 / month</p>
+        <ul class="features">
+          <li>Unlimited favorites</li>
+          <li>Ingredient-based ideas</li>
+          <li>Nutrition panel & macros</li>
+        </ul>
+        <p><a class="btn primary" href="#">Upgrade to Plus</a></p>
+      </article>
 
-
-<!-- THE PROBLEM -->
-<section id="problem" class="problem">
-  <img src="images/pic2.png" alt="People planning meals and preparing healthy food" class="problem-img">
-
-  <article class="problem-copy">
-    <h2>The Problem</h2>
-    <p>
-      Eating well is harder than it should be. Between busy schedules, meal indecision,
-      and confusing nutrition info, most people end up skipping meals or rotating the same few dishes.
-    </p>
-    <ul class="pains">
-      <li><strong>Decision fatigue:</strong> What to cook, again?</li>
-      <li><strong>Time pressure:</strong> Planning feels like a chore.</li>
-      <li><strong>Nutrition fog:</strong> Macros and calories aren't clear.</li>
-      <li><strong>Waste & cost:</strong> Ingredients go unused.</li>
-    </ul>
-  </article>
-</section>
-
-
-    <!-- OUR APPROACH -->
-    <section id="approach" class="approach-section">
-      <header class="center">
-        <h2>Our Approach</h2>
-        <p class="muted">Turning planning into a guided, stress-free experience.</p>
-      </header>
-
-      <article class="approach-content">
-        <p>
-          DailyBites transforms how people organize their meals. Instead of overwhelming choices,
-          users receive guided plans built on preferences, nutrition, and available ingredients.
-          We combine smart suggestions, pantry-based recipes, and personalized diet profiles to
-          create a seamless experience across all devices.
-        </p>
-        <p>
-          With real-time recipe discovery, ingredient-based ideas, and nutrition breakdowns,
-          DailyBites makes healthy eating enjoyable and achievable every day.
-        </p>
+      <article class="plan">
+        <h3>Pro</h3>
+        <p class="price">$12.99 / month</p>
+        <ul class="features">
+          <li>Auto-generate plans</li>
+          <li>Advanced diet presets (keto, vegan, etc.)</li>
+          <li>Smart shopping list</li>
+        </ul>
+        <p><a class="btn primary" href="#">Go Pro</a></p>
       </article>
     </section>
+  </section>
 
-    <!-- SUBSCRIPTION -->
-    <section id="subs" class="subs">
-      <header class="center">
-        <h2>Go Further with Subscription</h2>
-        <p class="muted">Unlock advanced features that help you stay consistent and level up your meals.</p>
-      </header>
+  <!-- REVIEWS -->
+  <section id="reviews" class="reviews">
+    <header class="center">
+      <h2>The Reviews</h2>
+      <p class="muted">Real stories from people planning better with DailyBites.</p>
+    </header>
 
-      <section class="plans">
-        <article class="plan">
-          <h3>Starter</h3>
-          <p class="price">$4.99 / month</p>
-          <ul class="features">
-            <li>Weekly meal planner</li>
-            <li>Recipe search & filters</li>
-            <li>Save favorites (up to 20)</li>
-          </ul>
-          <p><a class="btn primary" href="#">Get Started</a></p>
-        </article>
+    <section class="review-grid">
+      <article class="review">
+        <blockquote>“I finally stopped asking 'what's for dinner?' every day. Planning takes five minutes now.”</blockquote>
+        <p class="reviewer"><span class="stars">★★★★★</span> Lina — Student</p>
+      </article>
 
-        <article class="plan">
-          <h3>Plus</h3>
-          <p class="price">$6.99 / month</p>
-          <ul class="features">
-            <li>Unlimited favorites</li>
-            <li>Ingredient-based ideas</li>
-            <li>Nutrition panel & macros</li>
-          </ul>
-          <p><a class="btn primary" href="#">Upgrade to Plus</a></p>
-        </article>
+      <article class="review">
+        <blockquote>“Ingredient suggestions use what's already in my fridge. Less waste, better meals.”</blockquote>
+        <p class="reviewer"><span class="stars">★★★★★</span> Karim — Young Professional</p>
+      </article>
 
-        <article class="plan">
-          <h3>Pro</h3>
-          <p class="price">$12.99 / month</p>
-          <ul class="features">
-            <li>Auto-generate plans</li>
-            <li>Advanced diet presets (keto, vegan, etc.)</li>
-            <li>Smart shopping list</li>
-          </ul>
-          <p><a class="btn primary" href="#">Go Pro</a></p>
-        </article>
-      </section>
+      <article class="review">
+        <blockquote>“The nutrition panel made it easy to hit our family's goals without overthinking.”</blockquote>
+        <p class="reviewer"><span class="stars">★★★★☆</span> Rania — Parent</p>
+      </article>
     </section>
-
-    <!-- REVIEWS -->
-    <section id="reviews" class="reviews">
-      <header class="center">
-        <h2>The Reviews</h2>
-        <p class="muted">Real stories from people planning better with DailyBites.</p>
-      </header>
-
-      <section class="review-grid">
-        <article class="review">
-          <blockquote>“I finally stopped asking 'what's for dinner?' every day. Planning takes five minutes now.”</blockquote>
-          <p class="reviewer"><span class="stars">★★★★★</span> Lina — Student</p>
-        </article>
-
-        <article class="review">
-          <blockquote>“Ingredient suggestions use what's already in my fridge. Less waste, better meals.”</blockquote>
-          <p class="reviewer"><span class="stars">★★★★★</span> Karim — Young Professional</p>
-        </article>
-
-        <article class="review">
-          <blockquote>“The nutrition panel made it easy to hit our family's goals without overthinking.”</blockquote>
-          <p class="reviewer"><span class="stars">★★★★☆</span> Rania — Parent</p>
-        </article>
-      </section>
-    </section>
+  </section>
 
   </main>
 
-<footer class="foot" >
-  <!-- top brand + columns -->
+<!-- <footer class="foot" >
+  <-- top brand + columns ->
   <section class="foot-wrap">
-    <!-- Brand / blurb -->
+    <-- Brand / blurb ->
     <section class="foot-brand">
       <strong style="font-size: xx-large;">DailyBites</strong>
       <p class="muted">
@@ -195,30 +191,30 @@
         Plan, cook, and enjoy nutritious meals every day.
       </p>
 
-      <!-- Socials (inline SVG, no external libs) -->
+      <-- Socials (inline SVG, no external libs)->
       <ul class="social">
         <li>
           <a href="#"  class="soc">
-            <!-- twitter -->
+            <-- twitter ->
             <svg viewBox="0 0 24 24" ><path d="M19.633 7.997c.013.18.013.36.013.54 0 5.49-4.18 11.82-11.82 11.82-2.35 0-4.54-.68-6.38-1.86.33.04.64.05.98.05 1.94 0 3.73-.66 5.16-1.77-1.81-.03-3.34-1.23-3.87-2.86.25.04.5.06.77.06.37 0 .74-.05 1.08-.14-1.9-.38-3.32-2.06-3.32-4.07v-.05c.56.31 1.2.5 1.88.52-1.12-.75-1.86-2.02-1.86-3.46 0-.76.2-1.46.56-2.07 2.06 2.53 5.14 4.2 8.61 4.38-.07-.3-.11-.61-.11-.94 0-2.24 1.82-4.06 4.06-4.06 1.17 0 2.23.5 2.98 1.3.92-.18 1.78-.52 2.56-.98-.3.94-.94 1.73-1.77 2.23.82-.09 1.6-.31 2.33-.63-.54.8-1.22 1.5-2 2.06z"/></svg>
           </a>
         </li>
         <li>
           <a href="#"  class="soc">
-            <!-- instagram -->
+            <-- instagram ->
             <svg viewBox="0 0 24 24" ><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 1.9.25 2.35.42.59.23 1.01.51 1.45.95.44.44.72.86.95 1.45.17.45.36 1.15.42 2.35.07 1.33.07 1.69.07 4.9s0 3.56-.07 4.9c-.06 1.2-.25 1.9-.42 2.35a3.8 3.8 0 0 1-.95 1.45 3.8 3.8 0 0 1-1.45.95c-.45.17-1.15.36-2.35.42-1.33.07-1.69.07-4.9.07s-3.56 0-4.9-.07c-1.2-.06-1.9-.25-2.35-.42a3.8 3.8 0 0 1-1.45-.95 3.8 3.8 0 0 1-.95-1.45c-.17-.45-.36-1.15-.42-2.35C2.2 15.56 2.2 15.2 2.2 12s0-3.56.07-4.9c.06-1.2.25-1.9.42-2.35.23-.59.51-1.01.95-1.45.44-.44.86-.72 1.45-.95.45-.17 1.15-.36 2.35-.42C8.44 2.2 8.8 2.2 12 2.2zm0 1.8c-3.14 0-3.51 0-4.74.07-.99.05-1.52.21-1.87.35-.47.18-.8.39-1.16.76-.36.36-.57.69-.76 1.16-.14.35-.3.88-.35 1.87-.07 1.23-.07 1.6-.07 4.74s0 3.51.07 4.74c.05.99.21 1.52.35 1.87.18.47.39.8.76 1.16.36.36.69.57 1.16.76.35.14.88.3 1.87.35 1.23.07 1.6.07 4.74.07s3.51 0 4.74-.07c.99-.05 1.52-.21 1.87-.35.47-.18.8-.39 1.16-.76.36-.36.57-.69.76-1.16.14-.35.3-.88.35-1.87.07-1.23.07-1.6.07-4.74s0-3.51-.07-4.74c-.05-.99-.21-1.52-.35-1.87-.18-.47-.39-.8-.76-1.16a2.6 2.6 0 0 0-1.16-.76c-.35-.14-.88-.3-1.87-.35-1.23-.07-1.6-.07-4.74-.07zm0 3.1a6.9 6.9 0 1 1 0 13.8 6.9 6.9 0 0 1 0-13.8zm0 1.8a5.1 5.1 0 1 0 0 10.2 5.1 5.1 0 0 0 0-10.2zm5.5-.97a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>
           </a>
         </li>
         <li>
           <a href="#"  class="soc">
-            <!-- youtube -->
+            <-- youtube ->
             <svg viewBox="0 0 24 24" ><path d="M23.5 7.2a4 4 0 0 0-2.8-2.8C18.8 4 12 4 12 4s-6.8 0-8.7.4A4 4 0 0 0 .5 7.2 41 41 0 0 0 0 12a41 41 0 0 0 .5 4.8 4 4 0 0 0 2.8 2.8C5.2 20 12 20 12 20s6.8 0 8.7-.4a4 4 0 0 0 2.8-2.8c.4-1.9.5-4.8.5-4.8s0-2.9-.5-4.8zM9.6 15.2V8.8l6 3.2-6 3.2z"/></svg>
           </a>
         </li>
       </ul>
     </section>
 
-    <!-- Columns -->
+    <-- Columns ->
     <nav class="foot-col" >
       <h3>Product</h3>
       <ul>
@@ -250,13 +246,12 @@
     </nav>
   </section>
 
-  <!-- bottom bar -->
+  <-- bottom bar ->
   <section class="foot-bottom">
     <small>© <span id="year"></span> DailyBites. All rights reserved.</small>
   </section>
-</footer>
-
-
-  <script src="../js/about.js" ></script>
+</footer> -->
+  <div data-include="footer"></div>
+  </div>
 </body>
 </html>

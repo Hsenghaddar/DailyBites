@@ -124,7 +124,7 @@ function render(){
         viewBtn.setAttribute('data-action', 'view')
         viewBtn.setAttribute('data-id', String(r.id))
 
-        viewBtn.addEventListener("click", ()=>{ openModal(r)}) 
+        viewBtn.addEventListener("click", ()=>{ openModal(r);}) 
 
         footer.appendChild(viewBtn)
         body.append(h3, meta, p, footer)
@@ -274,9 +274,11 @@ function placeholderInitials(s){
 
 // reset
 document.getElementById('resetForm').addEventListener('click', () => {
-    myRecipes = []
-    save()
-    render() 
+    if(confirm("clear all your customized recipes?")){
+        myRecipes = []
+        save()
+        render() 
+    }
 })
 
 function createRecipe(){
@@ -295,7 +297,7 @@ function createRecipe(){
     }
 
     // id: keep numeric like your file use timestamp to avoid collision
-    let id = Math.random()
+    let id = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000
     console.log("added ",id)
 
     return {
@@ -329,7 +331,7 @@ form.addEventListener('submit', e=>{
     myRecipes.push(recipe)
     save()
     render()
-    alert('Saved to My Recipes for this user.')
+    confirm('Saved to My Recipes for this user.')
     form.reset() 
 })
 

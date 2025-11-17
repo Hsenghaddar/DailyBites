@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-    <link rel="stylesheet" href="home.css">
-    <script src="home.js" defer></script>
+    <link rel="stylesheet" href="../base.css">
+    <script defer src="../inject.js"></script>
+    <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
-  <nav aria-label="Main">
+  <!-- <nav aria-label="Main">
     <div class="wrap nav-row" id="nav-desc">
       <div class="logo">
         <span class="logo-mark" aria-hidden="true"></span>
@@ -24,11 +25,14 @@
         <a class="primary" href="#get-started">Get Started</a>
       </div>
     </div>
-    <!-- burger -->
+    <-- burger ->
     <button class="hamburger" id="hamburger" aria-label="Menu">
-        <span></span><span></span><span></span> <!-- 3 spans for the burger -->
+        <span></span><span></span><span></span> <-- 3 spans for the burger ->
     </button>
-  </nav>
+  </nav> -->
+
+  <div class="site">
+  <div data-include="nav"></div>
 
   <header id="home" role="banner">
     <div class="wrap cover">
@@ -171,8 +175,10 @@
       </div>
     </section>
   </main>
+  <div data-include="footer"></div>
+  </div>
 
-  <footer>
+  <!-- <footer>
     <div class="wrap">
       <div class="fcols">
         <section class="fcol" aria-label="About">
@@ -206,6 +212,6 @@
       </div>
       <p class="muted" style="margin-top:20px">© MealPlan. All rights reserved.</p>
     </div>
-  </footer>
+  </footer> -->
 </body>
 </html>

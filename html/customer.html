@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>x user page</title>
-    <link rel="stylesheet" href="customer.css">
-    <script src="customer.js" defer></script>
+    <link rel="stylesheet" href="../base.css">
+    <script defer src="../inject.js"></script>
+    <link rel="stylesheet" href="/css/customer.css">
+    <script src="../js/customer.js" defer></script>
 </head>
 <body>
-    <div class="wrap">
+        <div data-include="nav"></div>
+        <div class="site">
+        <div class="wrap">
         <h1>Create Custome Recipe</h1>
         <p id="who"></p>
 
@@ -124,7 +128,9 @@
                 </article>
             </div>
         </section>
+        </div>
     </div>
+    <div data-include="footer"></div>
     <!-- Modal -->
     <div class="modal" id="modal" aria-hidden="true">
       <div class="backdrop" data-close></div>
