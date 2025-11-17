@@ -61,14 +61,48 @@ let searchInput = document.querySelector(".search");
 let recipesContainer = document.querySelector(".recipes");
 let modalTitle = document.querySelector(".modal-title");
 let clearBtn = document.getElementById("clear-plan");
+let generateBtn = document.getElementById("generate-plan");
 
-clearBtn?.addEventListener("click", () => {
+clearBtn.addEventListener("click", () => {
   let confirmed = confirm("Clear your entire weekly plan?");
   if (!confirmed) return;
   localStorage.removeItem("mealPlanner");
   renderLayout();
 });
+generateBtn.addEventListener("click", () => {
+  if (!recipes || !recipes.length) {
+    alert("Recipes are still loading. Try again in a moment.");
+    return;
+  }
 
+  const existing = JSON.parse(localStorage.getItem("mealPlanner")) || {};
+  if (
+    Object.keys(existing).length > 0 &&
+    !confirm("This will replace your current weekly plan with a random one. Continue?")
+  ) {
+    return;
+  }
+  const newPlan = {};
+  const sections = document.querySelectorAll("main section.day-section");
+
+  sections.forEach((section) => {
+    const day = section.getAttribute("data-day");
+
+    mealNames.forEach((mealType) => {
+      if (mealType === "Notes") return;
+      const randomMeal =
+        recipes[Math.floor(Math.random() * recipes.length)];
+
+      newPlan[`${day}-${mealType}`] = {
+        name: randomMeal.name,
+        image: randomMeal.image,
+      };
+    });
+  });
+
+  localStorage.setItem("mealPlanner", JSON.stringify(newPlan));
+  loadSavedMeals();
+});
 function renderRecipeCard(meal) {
   return `
     <div class="recipe-item" 
@@ -86,13 +120,12 @@ function renderRecipeCard(meal) {
           </div>
           <span class="meta-calories">${meal.calories} cal</span>
         </div>
-        ${
-          meal.diet_category
-            ? `<div class="recipe-tags">
+        ${meal.diet_category
+      ? `<div class="recipe-tags">
                  <span class="recipe-tag">${meal.diet_category}</span>
                </div>`
-            : ""
-        }
+      : ""
+    }
       </div>
     </div>
   `;
