@@ -1,3 +1,4 @@
+
 async function fetchAllRecipes() {
     try {
         let res = await fetch(`../js/data.json`)
@@ -8,7 +9,8 @@ async function fetchAllRecipes() {
         return []
     }
 }
-let RECIPES = await fetchAllRecipes()
+
+let RECIPES = await fetchAllRecipes();
 
 let FAVORITES = JSON.parse(localStorage.getItem("FAV_RECIPES") || "[]")
 
@@ -17,392 +19,291 @@ function saveFavs() {
 }
 
 
-/* 
-   FILTERS OBJECT
- */
 let filters = {
-    meal: [],
+    search: "",
+    meal: null,
     diet: [],
-    time: []
+    difficulty: null,
+    pill: null
+};
+
+/* =============================
+   SIMPLE QUICK PILL RULES
+============================= */
+function matchPill(r) {
+    if (!filters.pill) return true;
+
+    if (filters.pill === "Quick & Easy") {
+        return r.difficulty === "Easy" && (r.prep_time + r.cook_time) <= 30;
+    }
+    if (filters.pill === "Healthy") return r.calories <= 450;
+    if (filters.pill === "Vegetarian") return r.diet_category === "Vegetarian";
+    if (filters.pill === "High Protein") return r.protein >= 20;
+    if (filters.pill === "Low Carb") return r.carbs <= 20;
+
+    return true;
 }
 
+/* =============================
+   UNIVERSAL SEARCH
+============================= */
+function matchesSearch(r) {
+    if (!filters.search) return true;
+    let t = filters.search.toLowerCase();
 
-/* 
-   MATCH FILTER FUNCTION
- */
-function recipeMatchesFilters(recipe, term, ingTerm) {
+    return `
+        ${r.name}
+        ${r.description}
+        ${r.meal_category}
+        ${r.diet_category}
+        ${r.difficulty}
+        ${(r.tags||[]).join(" ")}
+        ${(r.ingredients||[]).join(" ")}
+    `.toLowerCase().includes(t);
+}
 
-    /* search field */
-    if (term) {
-        let text = `
-          ${recipe.name}
-          ${recipe.description}
-          ${(recipe.ingredients || []).join(" ")}
-        `.toLowerCase()
+/* =============================
+   MAIN FILTER
+============================= */
+function passesAll(r) {
+    if (!matchesSearch(r)) return false;
+    if (!matchPill(r)) return false;
 
-        if (!text.includes(term)) return false
-    }
+    if (filters.meal && r.meal_category !== filters.meal) return false;
 
-    /* ingredient search */
-    if (ingTerm) {
-        let pile = (recipe.ingredients || []).join(" ").toLowerCase()
-        if (!pile.includes(ingTerm)) return false
-    }
-
-    /* meal filter */
-    if (filters.meal.length > 0) {
-        if (!filters.meal.includes(recipe.meal_category)) return false
-    }
-
-    /* diet filter */
     if (filters.diet.length > 0) {
-        let diet = (recipe.diet_category || "").toLowerCase()
-        let tags = (recipe.tags || []).map(function (t) { return t.toLowerCase() })
-
-        let ok = filters.diet.some(function (f) {
-            return f.toLowerCase() === diet || tags.includes(f.toLowerCase())
-        })
-
-        if (!ok) return false
+        let diag = (r.diet_category || "").toLowerCase();
+        let tags = (r.tags || []).map(t => t.toLowerCase());
+        let ok = filters.diet.some(d => d.toLowerCase() === diag || tags.includes(d.toLowerCase()));
+        if (!ok) return false;
     }
 
-    /* time difficulty filter */
-    if (filters.time.length > 0) {
-        let total = recipe.prep_time + recipe.cook_time
+    if (filters.difficulty && r.difficulty !== filters.difficulty) return false;
 
-        for (let f of filters.time) {
-            if (f === "Quick" && total > 30) return false
-            if (f === "One-Pot" && !(recipe.tags || []).includes("one-pot")) return false
-            if (["Easy", "Medium", "Hard"].includes(f) && recipe.difficulty !== f) return false
-        }
-    }
-
-    return true
+    return true;
 }
 
+/* =============================
+   SUMMARY BAR
+============================= */
+function updateSummary() {
+    let sum = document.getElementById("filterCount");
+    let parts = [];
 
-/* 
-   RENDER RECIPES
- */
+    if (filters.pill) parts.push("Pill: " + filters.pill);
+    if (filters.meal) parts.push("Meal: " + filters.meal);
+    if (filters.diet.length) parts.push("Diet: " + filters.diet.join(", "));
+    if (filters.difficulty) parts.push("Difficulty: " + filters.difficulty);
+
+    sum.textContent = parts.length
+        ? `${parts.length} filters applied | ${parts.join(" | ")}`
+        : "0 filters applied | All cuisines";
+}
+
+/* =============================
+   RENDER
+============================= */
 function renderRecipes() {
+    let list = document.getElementById("recipes");
+    let tpl = document.getElementById("card");
+    list.innerHTML = "";
 
-    /* get elements */
-    let list = document.getElementById("recipes")
-    let template = document.getElementById("card")
-    let searchInput = document.getElementById("searchInput")
-    let ingredientInput = document.getElementById("ingredientInput")
-    let countBox = document.getElementById("count")
+    let items = RECIPES.filter(passesAll);
 
-    let term = searchInput.value.toLowerCase().trim()
-    let ingTerm = ingredientInput.value.toLowerCase().trim()
+    document.getElementById("count").textContent =
+        `Showing ${items.length} of ${RECIPES.length} recipes`;
 
-    list.innerHTML = ""
+    updateSummary();
 
-    let results = RECIPES.filter(function (r) {
-        return recipeMatchesFilters(r, term, ingTerm)
-    })
+    items.forEach(r => {
+        let node = tpl.content.cloneNode(true);
+        let li = node.querySelector("li");
+        li.dataset.id = r.id;
 
-    countBox.textContent = `Showing ${results.length} of ${RECIPES.length} recipes`
+        node.querySelector("img").src = r.image;
+        node.querySelector(".badge").textContent = r.difficulty;
+        node.querySelector(".title").textContent = r.name;
+        node.querySelector(".desc").textContent = r.description;
+        node.querySelector("time").textContent = (r.prep_time + r.cook_time) + " min";
 
-    if (!RECIPES) {
-                list.innerHTML += `<div>Loading recipes...</div>`
-            }
-    else{
-    /* Build cards */
-    results.forEach(function (r) {
+        let outs = node.querySelectorAll(".meta output");
+        outs[0].value = r.calories;
+        outs[1].value = r.rating;
 
-        let node = template.content.cloneNode(true)
-        let li = node.querySelector("li")
+        let tags = node.querySelector(".tags");
+        tags.innerHTML = "";
+        [r.meal_category, r.diet_category, ...(r.tags||[])].slice(0, 4).forEach(t => {
+            let s = document.createElement("span");
+            s.textContent = t;
+            tags.appendChild(s);
+        });
 
-        /* Needed for syncing favorites */
-        li.setAttribute("data-id", r.id)
+        node.querySelector(".primary").onclick = e => { e.preventDefault(); openModal(r); };
 
-        /* image */
-        let img = node.querySelector("img")
-        img.src = r.image
-        img.alt = r.name
+        let fav = node.querySelector(".fav");
+        fav.classList.toggle("active", FAVORITES.includes(r.id));
+        fav.onclick = () => {
+            fav.classList.toggle("active");
+            FAVORITES.includes(r.id)
+                ? FAVORITES = FAVORITES.filter(id => id !== r.id)
+                : FAVORITES.push(r.id);
+            saveFavs();
+        };
 
-        /* badge */
-        node.querySelector(".badge").textContent = r.difficulty
-
-        /* info */
-        node.querySelector(".title").textContent = r.name
-        node.querySelector(".desc").textContent = r.description
-        node.querySelector("time").textContent = (r.prep_time + r.cook_time) + " min"
-
-        /* meta */
-        let outs = node.querySelectorAll(".meta output")
-        outs[0].value = r.calories
-        outs[1].value = r.rating
-
-        /* tags */
-        let tbox = node.querySelector(".tags")
-        tbox.innerHTML = ""
-
-        let pack = []
-        if (r.meal_category) pack.push(r.meal_category)
-        if (r.diet_category) pack.push(r.diet_category)
-        (r.tags || []).slice(0, 3).forEach(function (t) { pack.push(t) })
-
-        pack.forEach(function (t) {
-            let s = document.createElement("span")
-            s.textContent = t
-            tbox.appendChild(s)
-        })
-
-        /* open modal */
-        let btn = node.querySelector(".primary")
-        btn.addEventListener("click", function (e) {
-            e.preventDefault()
-            openModal(r)
-        })
-
-        /* FAVORITE BUTTON (CARD) */
-        let favBtn = node.querySelector(".fav")
-
-        if (FAVORITES.includes(r.id)) {
-            favBtn.classList.add("active")
-        }
-
-        favBtn.addEventListener("click", function () {
-            favBtn.classList.toggle("active")
-
-            let active = favBtn.classList.contains("active")
-
-            if (active) {
-                FAVORITES.push(r.id)
-            } else {
-                FAVORITES = FAVORITES.filter(function (id) { return id !== r.id })
-            }
-
-            saveFavs()
-        })
-
-        list.appendChild(node)
-    })}
+        list.appendChild(node);
+    });
 }
 
-
-/* 
-   OPEN MODAL
- */
+/* =============================
+   MODAL
+============================= */
 function openModal(r) {
+    let modal = document.getElementById("modal");
+    modal.showModal();
 
-    let modal = document.getElementById("modal")
-    modal.showModal()
+    document.getElementById("mTitle").textContent = r.name;
+    document.getElementById("mDesc").textContent = r.description;
+    document.getElementById("mImg").src = r.image;
 
-    /* basic info */
-    let mTitle = document.getElementById("mTitle")
-    if (mTitle) mTitle.textContent = r.name
+    document.getElementById("mPrep").textContent = r.prep_time + " min";
+    document.getElementById("mCook").textContent = r.cook_time + " min";
+    document.getElementById("mServ").textContent = r.servings;
+    document.getElementById("mCal").textContent = r.calories;
 
-    let mImg = document.getElementById("mImg")
-    if (mImg) {
-        mImg.src = r.image
-        mImg.alt = r.name
-    }
+    let ingr = document.getElementById("mIngr");
+    ingr.innerHTML = "";
+    r.ingredients.forEach(i => ingr.innerHTML += `<li>${i}</li>`);
 
-    let mDesc = document.getElementById("mDesc")
-    if (mDesc) mDesc.textContent = r.description
+    let steps = document.getElementById("mSteps");
+    steps.innerHTML = "";
+    r.instructions.forEach(s => steps.innerHTML += `<li>${s}</li>`);
 
-    let mPrep = document.getElementById("mPrep")
-    if (mPrep) mPrep.textContent = r.prep_time + " min"
+    document.getElementById("mClose").onclick = () => modal.close();
 
-    let mCook = document.getElementById("mCook")
-    if (mCook) mCook.textContent = r.cook_time + " min"
-
-    let mServ = document.getElementById("mServ")
-    if (mServ) mServ.textContent = r.servings
-
-    let mCal = document.getElementById("mCal")
-    if (mCal) mCal.textContent = r.calories
-
-    /* NEW: rating & views */
-    let mRating = document.getElementById("mRating")
-    if (mRating && r.rating != null) {
-        mRating.textContent = r.rating.toFixed ? r.rating.toFixed(1) : r.rating
-    }
-
-    let mViews = document.getElementById("mViews")
-    if (mViews && r.views != null) {
-        mViews.textContent = r.views.toLocaleString ? r.views.toLocaleString() : r.views
-    }
-
-    /* meta – meal, diet, difficulty */
-    let mMeal = document.getElementById("mMeal")
-    if (mMeal) mMeal.textContent = r.meal_category || ""
-
-    let mDiet = document.getElementById("mDiet")
-    if (mDiet) mDiet.textContent = r.diet_category || ""
-
-    let mDiff = document.getElementById("mDiff")
-    if (mDiff) mDiff.textContent = r.difficulty || ""
-
-    /* tags list in modal (full list) */
-    let mTags = document.getElementById("mTags")
-    if (mTags) {
-        mTags.innerHTML = ""
-        let pack = []
-
-        if (r.meal_category) pack.push(r.meal_category)
-        if (r.diet_category) pack.push(r.diet_category)
-        (r.tags || []).forEach(function (t) { pack.push(t) })
-
-        pack.forEach(function (t) {
-            let span = document.createElement("span")
-            span.textContent = t
-            mTags.appendChild(span)
-        })
-    }
-
-    /*macros (protein / carbs / fat) */
-    let mProt = document.getElementById("mProt")
-    if (mProt && r.protein != null) mProt.textContent = r.protein + " g"
-
-    let mCarbs = document.getElementById("mCarbs")
-    if (mCarbs && r.carbs != null) mCarbs.textContent = r.carbs + " g"
-
-    let mFat = document.getElementById("mFat")
-    if (mFat && r.fat != null) mFat.textContent = r.fat + " g"
-
-    /* micronutrients object as list */
-    let mMicros = document.getElementById("mMicros")
-    if (mMicros) {
-        mMicros.innerHTML = ""
-
-        let micros = r.micronutrients || {}
-        Object.keys(micros).forEach(function (key) {
-            let li = document.createElement("li")
-            // simple label formatting: "vitaminC" -> "VitaminC"
-            let label = key.charAt(0).toUpperCase() + key.slice(1)
-            li.textContent = label + ": " + micros[key]
-            mMicros.appendChild(li)
-        })
-    }
-
-    /* ingredients */
-    let ingrBox = document.getElementById("mIngr")
-    if (ingrBox) {
-        ingrBox.innerHTML = ""
-        (r.ingredients || []).forEach(function (i) {
-            let li = document.createElement("li")
-            li.textContent = i
-            ingrBox.appendChild(li)
-        })
-    }
-
-    /* instructions */
-    let stepsBox = document.getElementById("mSteps")
-    if (stepsBox) {
-        stepsBox.innerHTML = ""
-        (r.instructions || []).forEach(function (step) {
-            let li = document.createElement("li")
-            li.textContent = step
-            stepsBox.appendChild(li)
-        })
-    }
-
-    /* close modal */
-    let x = document.getElementById("mClose")
-    if (x) {
-        x.onclick = function () {
-            modal.close()
-        }
-    }
-
-    /* MODAL FAVORITE BUTTON */
-    let modalFav = document.querySelector(".modal-fav")
-
-    if (modalFav) {
-        modalFav.classList.remove("active")
-
-        if (FAVORITES.includes(r.id)) {
-            modalFav.classList.add("active")
-        }
-
-        modalFav.onclick = function () {
-            modalFav.classList.toggle("active")
-
-            let active = modalFav.classList.contains("active")
-
-            if (active) {
-                FAVORITES.push(r.id)
-            } else {
-                FAVORITES = FAVORITES.filter(function (id) { return id !== r.id })
-            }
-
-            saveFavs()
-
-            /* Sync outside card */
-            let cardBtn = document.querySelector(`[data-id="${r.id}"] .fav`)
-            if (cardBtn) {
-                if (active) cardBtn.classList.add("active")
-                else cardBtn.classList.remove("active")
-            }
-            openModal()
-        }
-    }
+    let mFav = document.querySelector(".modal-fav");
+    mFav.classList.toggle("active", FAVORITES.includes(r.id));
+    mFav.onclick = () => {
+        mFav.classList.toggle("active");
+        FAVORITES.includes(r.id)
+            ? FAVORITES = FAVORITES.filter(id => id !== r.id)
+            : FAVORITES.push(r.id);
+        saveFavs();
+        let btn = document.querySelector(`[data-id="${r.id}"] .fav`);
+        if (btn) btn.classList.toggle("active");
+    };
 }
 
+/* =============================
+   DROPDOWNS
+============================= */
 
+document.addEventListener("click", e => {
+    // open / close dropdown
+    if (e.target.classList.contains("dd-btn")) {
+        let panel = e.target.nextElementSibling;
 
-/* 
-   DROPDOWN HANDLING
- */
-document.addEventListener("click", function (e) {
+        document.querySelectorAll(".dd-panel").forEach(p => {
+            if (p !== panel) p.style.display = "none";
+        });
 
-    let isBtn = e.target.classList.contains("filter-btn")
-    let isCard = e.target.classList.contains("panel-card")
-
-    /* open dropdown */
-    if (isBtn) {
-        let btn = e.target
-        let panel = document.getElementById(btn.dataset.target)
-
-        let allPanels = document.querySelectorAll(".dropdown-panel")
-        let allBtns = document.querySelectorAll(".filter-btn")
-
-        allPanels.forEach(function (p) { if (p !== panel) p.style.display = "none" })
-        allBtns.forEach(function (b) { if (b !== btn) b.classList.remove("active") })
-
-        let open = panel.style.display === "block"
-        panel.style.display = open ? "none" : "block"
-        btn.classList.toggle("active", !open)
-        return
+        panel.style.display = panel.style.display === "block" ? "none" : "block";
+        return;
     }
 
-    /* selecting filter card */
-    if (isCard) {
-        let card = e.target
-        let group = card.parentElement.dataset.group
-        let value = card.dataset.value
+    // selecting an item
+    if (e.target.classList.contains("dd-item")) {
 
-        card.classList.toggle("active")
+        let panel = e.target.closest(".dd-panel");
+        let btn   = e.target.closest(".dd-box").querySelector(".dd-btn");
+        let label = btn.textContent.trim();
+        let value = e.target.textContent.trim();
+        let items = panel.querySelectorAll(".dd-item");
 
-        if (card.classList.contains("active")) {
-            if (!filters[group].includes(value)) filters[group].push(value)
-        } else {
-            filters[group] = filters[group].filter(function (v) { return v !== value })
+        /* ---------------------
+           MEAL (single toggle)
+        ----------------------*/
+        if (label.includes("Meal")) {
+            // clicked same? => remove selection
+            if (filters.meal === value) {
+                filters.meal = null;
+                items.forEach(i => i.classList.remove("active"));
+            } 
+            else {
+                filters.meal = value;
+                items.forEach(i => i.classList.toggle("active", i === e.target));
+            }
         }
 
-        renderRecipes()
-        return
+        /* ---------------------
+           DIET (multi toggle)
+        ----------------------*/
+        else if (label.includes("Diet")) {
+            if (filters.diet.includes(value)) {
+                filters.diet = filters.diet.filter(v => v !== value);
+                e.target.classList.remove("active");
+            } else {
+                filters.diet.push(value);
+                e.target.classList.add("active");
+            }
+        }
+
+        /* ---------------------
+           DIFFICULTY (single toggle)
+        ----------------------*/
+        else if (label.includes("Difficulty") || label.includes("Time")) {
+            if (filters.difficulty === value) {
+                filters.difficulty = null;
+                items.forEach(i => i.classList.remove("active"));
+            } 
+            else {
+                filters.difficulty = value;
+                items.forEach(i => i.classList.toggle("active", i === e.target));
+            }
+        }
+
+        // close dropdowns
+        document.querySelectorAll(".dd-panel").forEach(p => p.style.display = "none");
+
+        renderRecipes();
+        return;
     }
 
-    /* click outside dropdown = close */
-    if (!e.target.closest(".filter-dropdown")) {
-        let allPanels = document.querySelectorAll(".dropdown-panel")
-        let allBtns = document.querySelectorAll(".filter-btn")
-
-        allPanels.forEach(function (p) { p.style.display = "none" })
-        allBtns.forEach(function (b) { b.classList.remove("active") })
+    // click outside dropdowns
+    if (!e.target.closest(".dd-box")) {
+        document.querySelectorAll(".dd-panel").forEach(p => p.style.display = "none");
     }
-})
+});
 
 
-/* inputs */
-document.getElementById("searchInput").addEventListener("input", renderRecipes)
-document.getElementById("ingredientInput").addEventListener("input", renderRecipes)
 
+/* =============================
+   QUICK PILLS
+============================= */
+document.querySelectorAll(".quick-pill").forEach(pill => {
+    pill.onclick = () => {
+        document.querySelectorAll(".quick-pill").forEach(p => p.classList.remove("active"));
+        let val = pill.textContent.trim();
 
-/* FIRST RENDER */
-renderRecipes()
+        if (filters.pill === val) {
+            filters.pill = null;
+        } else {
+            filters.pill = val;
+            pill.classList.add("active");
+        }
+
+        renderRecipes();
+    };
+});
+
+/* =============================
+   SEARCH INPUT
+============================= */
+document.getElementById("searchInput").oninput = e => {
+    filters.search = e.target.value.trim().toLowerCase();
+    renderRecipes();
+};
+
+/* =============================
+   FIRST RENDER
+============================= */
+renderRecipes();
