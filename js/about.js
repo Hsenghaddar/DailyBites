@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let toggle = document.getElementById('menu-toggle');
   window.addEventListener('scroll', onScroll);
 
+  let links = document.querySelector('.nav-links');
+
   if (toggle && links) {
     toggle.addEventListener('click', () => {
       let open = links.classList.toggle('show');
@@ -18,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  let links = document.querySelector('.nav-links');
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       let id = a.getAttribute('href');
