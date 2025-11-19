@@ -1,44 +1,50 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const navbar = document.getElementById('navbar');
-  const toggle = document.getElementById('menu-toggle');
-  const links  = document.getElementById('primary-navigation');
+  let navbar = document.getElementById('navbar');
 
-  // quick sanity checks in the console
-  if (!toggle) console.warn('[DailyBites] #menu-toggle not found');
-  if (!links)  console.warn('[DailyBites] #primary-navigation not found');
-
-  // header style on scroll (optional)
-  const onScroll = () => {
-    if (window.scrollY > 60) navbar?.classList.add('scrolled');
-    else navbar?.classList.remove('scrolled');
+  let onScroll = () => {
+    if (window.scrollY > 60) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
   };
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
 
-  // open/close mobile menu
-  function setMenu(open){
-    if (!links || !toggle) return;
-    links.classList.toggle('show', open);
-    toggle.setAttribute('aria-expanded', String(open));
-    document.body.classList.toggle('menu-open', open);
+  onScroll();
+
+  let toggle = document.getElementById('menu-toggle');
+  window.addEventListener('scroll', onScroll);
+
+  if (toggle && links) {
+    toggle.addEventListener('click', () => {
+      let open = links.classList.toggle('show');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
   }
 
-  // toggle click
-  toggle?.addEventListener('click', () => {
-    setMenu(!links.classList.contains('show'));
-  });
+  let links = document.querySelector('.nav-links');
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      let id = a.getAttribute('href');
+      let el = document.querySelector(id);
+      if (!el) return;
 
-  // close on link click (mobile)
-  links?.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => setMenu(false));
-  });
+      e.preventDefault();
+      let top = el.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight;
+      window.scrollTo({ top, behavior: 'smooth' });
 
-  // close on Escape
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') setMenu(false);
+      links.classList.remove('show');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
   });
-
-  // close if resized to desktop
-  window.matchMedia('(min-width: 861px)').addEventListener('change', () => setMenu(false));
 });
 
+let reveals = document.querySelectorAll('.reveal, .text-reveal');
+
+let observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+    } else {
+      entry.target.classList.remove('active');
+    }
+  });
+}, { threshold: 0.3 });
+
+reveals.forEach(r => observer.observe(r));
