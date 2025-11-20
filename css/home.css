@@ -16,7 +16,6 @@ html {
 
 body {
     margin: 0;
-    font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
     color: var(--txt);
     background: var(--bg);
     line-height: 1.6;

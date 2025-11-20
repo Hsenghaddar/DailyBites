@@ -21,7 +21,6 @@
 html, body { margin: 0; padding: 0; }
 
 body {
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
   background: var(--bg);
   color: var(--ink);
   line-height: 1.55;
