@@ -25,8 +25,9 @@
 }
 
 body {
-  background-color: var(--main-color);
+  background-color: var(--main-color) !important;
   margin-top: 80px;
+  overflow-x: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -42,6 +43,8 @@ body>h1 {
 
 body>h1::after {
   content: "";
+  position: relative;
+  z-index: 1;
   display: block;
   width: 80px;
   height: 3px;
@@ -95,6 +98,7 @@ body>h1::after {
 .nav-links {
   list-style: none;
   display: flex;
+  z-index: 100;
   gap: 36px;
 }
 
@@ -217,7 +221,36 @@ body>h1::after {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 12px;
+}
+.planner-bar button{
+  white-space: nowrap;
+}
+.export-plan-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid var(--secondary-color);
+  background: #ffffff;
+  color: var(--secondary-color);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.export-plan-btn i {
+  font-size: 1rem;
+}
+
+.export-plan-btn:hover {
+  background: #f7fff9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
 }
 
 .generate-plan-btn {
@@ -236,9 +269,11 @@ body>h1::after {
   box-shadow: 0 8px 18px rgba(22, 163, 74, 0.22);
   transition: filter 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
 }
+
 .generate-plan-btn i {
   font-size: 1rem;
 }
+
 .generate-plan-btn:hover {
   transform: translateY(-1px);
 }
@@ -258,14 +293,17 @@ body>h1::after {
   cursor: pointer;
   transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
 }
+
 .clear-plan-btn i {
   font-size: 1rem;
 }
+
 .clear-plan-btn:hover {
-  background: #f7fff9; 
+  background: #f7fff9;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
 }
+
 main {
   max-width: 1200px;
   margin: 0 auto 40px;
@@ -389,7 +427,6 @@ main>div {
   background: #fff;
   color: var(--secondary-color);
   font-style: italic;
-  border: 2px dashed var(--secondary-color);
   display: flex;
   align-items: center;
 }
@@ -663,124 +700,7 @@ body.overlayOpen {
   overflow-y: hidden;
 }
 
-<<<<<<< HEAD
-/* === Generic dialog styling === */
-dialog {
-  border: none;
-  padding: 0;
-  border-radius: 12px;
-  max-width: 320px;
-  width: 90%;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
-  background: #ffffff;
-  font: inherit;
-  align-self: center;
-  justify-self: center;
-}
 
-/* dim background behind dialog */
-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(2px);
-}
-
-/* === Inner confirm layout === */
-.mini-confirm {
-  padding: 1.25rem 1.5rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.mini-confirm p {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
-/* buttons row */
-.mini-confirm menu {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
-
-/* base button style – neutral, minimal */
-.mini-confirm button {
-  border: none;
-  border-radius: 999px;
-  padding: 0.45rem 0.9rem;
-  font-size: 0.85rem;
-  cursor: pointer;
-  background: #e4e7ec;
-}
-
-/* primary action (OK) – last button */
-.mini-confirm button:last-of-type {
-  background: var(--logo);
-  color: #ffffff;
-}
-
-/* hover states */
-.mini-confirm button:hover {
-  opacity: 0.9;
-=======
-
-footer {
-  border-top: 1px solid var(--line);
-  padding: 28px 0;
-  color: var(--muted);
-  background-color: white;
-  margin-top: 50px;
-}
-
-footer .wrap {
-  max-width: clamp(1040px, 92vw, 1320px);
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-footer .logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-}
-
-footer .logo-mark {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  background: var(--logo);
-  transform: translateZ(0);
-  transition: transform var(--dur-sm) var(--ease);
-}
-
-.fcols {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.fcol {
-  flex: 1 1 220px;
-  min-width: 200px;
-}
-
-.fcol h4 {
-  color: var(--txt);
-  margin: 0 0 8px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-}
-
-.fcol a {
-  display: block;
-  margin: 4px 0;
->>>>>>> 18ddb859c9b5fc73d4aa574cac64a88c2d83511e
-}
 
 
 @media screen and (max-width: 1250px) {
@@ -802,8 +722,6 @@ footer .logo-mark {
 
   main section {
     width: 100%;
-<<<<<<< HEAD
-=======
   }
 }
 
@@ -843,6 +761,117 @@ footer .logo-mark {
     font-weight: 700;
     font-size: 1.05rem;
     color: var(--ink);
->>>>>>> 18ddb859c9b5fc73d4aa574cac64a88c2d83511e
   }
+}
+footer a{
+  color: #5b6b7d;
+}
+#pdf-layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1000px;
+  padding: 24px 32px;
+  background: #ffffff;
+  color: #0f172a;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  transform: translateX(-9999px);
+}
+
+#pdf-layout h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--secondary-color);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+#pdf-layout .pdf-date-range {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+}
+
+.pdf-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pdf-day {
+  flex: 1 1 calc(33.33% - 12px);
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+}
+
+.pdf-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.pdf-day-header h2 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+}
+
+.pdf-day-header span {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.pdf-meals {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pdf-meal {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.pdf-meal-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  min-width: 60px;
+}
+
+.pdf-meal-body {
+  flex: 1;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.pdf-meal-body img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+}
+
+.pdf-meal-body span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.pdf-note {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: #16a34a;
+  padding-top: 4px;
+  border-top: 1px dashed #e2e8f0;
 }

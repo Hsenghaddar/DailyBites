@@ -40,6 +40,7 @@ body {
     background: var(--bg);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
 .muted {
@@ -158,7 +159,6 @@ nav {
     background: #fff;
     border-bottom: 1px solid var(--line);
     box-shadow: 0 1px 0 var(--line);
-    z-index: 1000;
     transition: box-shadow var(--dur-md) var(--ease), transform var(--dur-md) var(--ease);
     min-height: 64px;
 }
@@ -328,7 +328,8 @@ footer {
     border-top: 1px solid var(--line);
     padding: 28px 0;
     color: var(--muted);
-    margin-left: 8%;
+    padding-left: 8%;
+    background-color: white;
 }
 
 .fcols {
