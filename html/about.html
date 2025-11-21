@@ -12,216 +12,166 @@
   <link rel="stylesheet" href="../css/about.css" />
 </head>
 
-<body>
+<body>  
+    <main>
 
-  <!-- NAVBAR -->
-  <!-- <header id="navbar">
-    <nav class="nav-inner" aria-label="Primary">
-      <a href="index.html" class="nav-logo" aria-label="DailyBites Home">
-        <img src="../assets/logo.png" alt="DailyBites Logo">
-      </a>
+      <!-- HERO SECTION -->
+      <section id="hero" class="hero">
 
-      <ul class="nav-links">
-        <li><a href="#hero">Home</a></li>
-        <li><a href="#recipes">Recipes</a></li>
-        <li><a href="#mealplan">Meal Planner</a></li>
-        <li><a href="#about">About us</a></li>
-        <li><a href="#subs">Subscription</a></li>
-      </ul>
+        <article class="hero-copy">
 
-      <section class="nav-actions">
-        <button class="btn light" type="button">Sign In</button>
-        <button class="btn primary" type="button">Get Started</button>
+          <h1 class="text-reveal">Healthy eating,<br><span class="accent">simplified.</span></h1>
+
+          <section class="intro text-reveal">
+            <h2 class="sub">Who We Are</h2>
+            <p>
+              We blend nutrition guidance, recipe discovery, and a flexible weekly planner to help you eat better
+              without the stress.
+            </p>
+
+            <ul class="pills">
+              <li class="text-reveal">Balanced weekly templates</li>
+              <li class="text-reveal">Pantry-aware suggestions</li>
+              <li class="text-reveal">Diet filters</li>
+              <li class="text-reveal">Auto grocery lists</li>
+            </ul>
+          </section>
+        </article>
+
+        <figure class="about-hero rotate-img reveal">
+          <img src="../assets/plate.png" alt="Rotating Plate">
+        </figure>
+
       </section>
 
-      <button id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </nav>
-  </header> -->
-<div data-include="nav"></div> 
-  <main>
 
-    <!-- HERO SECTION -->
-    <section id="hero" class="hero">
 
-      <article class="hero-copy">
+      <!-- PROBLEM SECTION -->
+      <section id="problem" class="problem">
 
-        <h1 class="text-reveal">Healthy eating,<br><span class="accent">simplified.</span></h1>
+        <img src="../assets/pic2.png" class="problem-img reveal" alt="Meal planning image">
 
-        <section class="intro text-reveal">
-          <h2 class="sub">Who We Are</h2>
-          <p>
-            We blend nutrition guidance, recipe discovery, and a flexible weekly planner to help you eat better
-            without the stress.
+        <article class="problem-copy">
+          <h2 class="text-reveal"> The Problem</h2>
+
+          <p class="text-reveal">
+            Between busy schedules, meal indecision, and confusing nutrition info,
+            most people end up skipping meals or rotating the same few dishes.
           </p>
 
-          <ul class="pills">
-            <li class="text-reveal">Balanced weekly templates</li>
-            <li class="text-reveal">Pantry-aware suggestions</li>
-            <li class="text-reveal">Diet filters</li>
-            <li class="text-reveal">Auto grocery lists</li>
+          <ul class="pains text-reveal">
+            <li><strong>Decision fatigue</strong>: What to cook every day?</li>
+            <li><strong>Time pressure</strong>: Planning takes effort.</li>
+            <li><strong>Nutrition fog</strong>: Hard to track macros.</li>
+            <li><strong>Waste & cost</strong>: Ingredients go unused.</li>
           </ul>
+        </article>
+
+      </section>
+
+
+
+      <!-- APPROACH SECTION -->
+      <section id="approach" class="approach-section">
+        <div class="center">
+
+          <h2 class="text-reveal">Our Approach</h2>
+
+        </div>
+
+        <article class="approach-content">
+          <p class="text-reveal">
+            DailyBites transforms how people organize their meals.
+            Instead of overwhelming choices, users receive guided plans built on preferences, nutrition, and available
+            ingredients.
+          </p>
+
+          <p class="text-reveal">
+            With real-time recipe discovery, ingredient-based ideas, and nutrition breakdowns,
+            DailyBites makes healthy eating enjoyable and achievable.
+          </p>
+        </article>
+      </section>
+
+      <!-- SUBSCRIPTION SECTION -->
+      <section id="subs" class="subs">
+        <div class="center">
+          <h2 class="text-reveal">Choose the Plan That Fits You</h2>
+          <p>DailyBites is built for different lifestyles—find the plan that matches your needs.</p>
+        </div>
+
+        <section class="plans">
+          <article class="plan reveal text-reveal">
+            <h3>Beginner</h3>
+            <p class="price">Just getting started</p>
+            <ul class="features">
+              <li>Learn basic meal planning</li>
+              <li>Explore simple recipes</li>
+              <li>Save your first favorites</li>
+            </ul>
+          </article>
+
+          <article class="plan reveal text-reveal">
+            <h3>Intermediate</h3>
+            <p class="price">Cooking with confidence</p>
+            <ul class="features">
+              <li>Use ingredient-based suggestions</li>
+              <li>Track nutrition and goals</li>
+              <li>Build weekly plans</li>
+            </ul>
+          </article>
+
+          <article class="plan reveal text-reveal">
+            <h3>Expert</h3>
+            <p class="price">Master your meals</p>
+            <ul class="features">
+              <li>Auto-generate plans</li>
+              <li>Customize diet presets</li>
+              <li>Streamline shopping lists</li>
+            </ul>
+          </article>
         </section>
-      </article>
-
-      <figure class="about-hero rotate-img reveal">
-        <img src="../assets/plate.png" alt="Rotating Plate">
-      </figure>
-
-    </section>
-
-
-
-    <!-- PROBLEM SECTION -->
-    <section id="problem" class="problem">
-
-      <img src="../assets/pic2.png" class="problem-img reveal" alt="Meal planning image">
-
-      <article class="problem-copy">
-        <h2 class="text-reveal"> The Problem</h2>
-
-        <p class="text-reveal">
-          Between busy schedules, meal indecision, and confusing nutrition info,
-          most people end up skipping meals or rotating the same few dishes.
-        </p>
-
-        <ul class="pains text-reveal">
-          <li><strong>Decision fatigue</strong>: What to cook every day?</li>
-          <li><strong>Time pressure</strong>: Planning takes effort.</li>
-          <li><strong>Nutrition fog</strong>: Hard to track macros.</li>
-          <li><strong>Waste & cost</strong>: Ingredients go unused.</li>
-        </ul>
-      </article>
-
-    </section>
-
-
-
-    <!-- APPROACH SECTION -->
-    <section id="approach" class="approach-section">
-      <header class="center">
-
-        <h2 class="text-reveal">Our Approach</h2>
-
-      </header>
-
-      <article class="approach-content">
-        <p class="text-reveal">
-          DailyBites transforms how people organize their meals.
-          Instead of overwhelming choices, users receive guided plans built on preferences, nutrition, and available
-          ingredients.
-        </p>
-
-        <p class="text-reveal">
-          With real-time recipe discovery, ingredient-based ideas, and nutrition breakdowns,
-          DailyBites makes healthy eating enjoyable and achievable.
-        </p>
-      </article>
-    </section>
-
-    <!-- HOW IT WORKS SECTION -->
-<section id="how-it-works" class="how-it-works">
-  <header class="center">
-    <h2 class="text-reveal">How It Works</h2>
-  </header>
-
-  <section class="steps-grid">
-    <article class="step-card reveal text-reveal">
-      <img src="../assets/icon1.png" alt="Step 1" class="step-img">
-      <h3>Choose Your Preferences</h3>
-      <p>Select your diet, favorite foods, and ingredients you already have.</p>
-    </article>
-
-    <article class="step-card reveal text-reveal">
-      <img src="../assets/icon2.png" alt="Step 2" class="step-img">
-      <h3>Get Smart Suggestions</h3>
-      <p>DailyBites generates meal plans and recipes tailored to your choices.</p>
-    </article>
-
-    <article class="step-card reveal text-reveal">
-      <img src="../assets/icon3.png" alt="Step 3" class="step-img">
-      <h3>Cook & Track</h3>
-      <p>Follow easy recipes, track nutrition, and auto-generate shopping lists.</p>
-    </article>
-  </section>
-</section>
-
-
-
-
-    <!-- SUBSCRIPTION SECTION -->
-    <section id="subs" class="subs">
-      <header class="center">
-
-        <h2 class="text-reveal">Go Further with DailyBites</h2>
-
-      </header>
-
-      <section class="plans">
-        <article class="plan reveal text-reveal">
-          <h3>Starter</h3>
-          <p class="price">$4.99 / month</p>
-          <ul class="features">
-            <li>Weekly meal planner</li>
-            <li>Recipe search & filters</li>
-            <li>Save favorites</li>
-          </ul>
-        </article>
-
-        <article class="plan reveal text-reveal">
-          <h3>Plus</h3>
-          <p class="price">$6.99 / month</p>
-          <ul class="features">
-            <li>Unlimited favorites</li>
-            <li>Ingredient-based ideas</li>
-            <li>Nutrition panel</li>
-          </ul>
-        </article>
-
-        <article class="plan reveal text-reveal">
-          <h3>Pro</h3>
-          <p class="price">$12.99 / month</p>
-          <ul class="features">
-            <li>Auto-generate plans</li>
-            <li>Advanced diet presets</li>
-            <li>Smart shopping list</li>
-          </ul>
-        </article>
       </section>
-    </section>
 
 
 
-    <!-- REVIEWS SECTION -->
-    <section id="reviews" class="reviews">
-      <header class="center">
+      <!-- AUDIENCE SECTION -->
+      <section id="audience" class="audience-section">
+        <div class="center">
+          <h2 class="text-reveal">Who Is DailyBites Made For</h2>
+          <p>We design tools for real lives—whether you're a student, a parent, or a health-focused professional.</p>
+        </div>
 
-        <h2 class="text-reveal">What Our Users Say</h2>
+        <section class="audience-grid">
+          <article class="audience-card reveal text-reveal">
+            <h3 class="persona"><strong>Students & New Cooks</strong></h3>
+            <p class="tagline">Simple, fast, and frustration-free</p>
+            <blockquote>
+              Discover easy recipes, save your favorites, and build a weekly plan in minutes—no guesswork.
+            </blockquote>
+          </article>
 
-      </header>
+          <article class="audience-card reveal text-reveal">
+            <h3 class="persona"><strong>Busy Professionals</strong></h3>
+            <p class="tagline">Smart tools for tight schedules</p>
+            <blockquote>
+              Use ingredient-based suggestions, reduce waste, and stay on track with nutrition goals.
+            </blockquote>
+          </article>
 
-      <section class="review-grid">
-        <article class="review reveal text-reveal">
-          <blockquote>“I finally stopped asking ‘what’s for dinner?’ Planning takes five minutes.”</blockquote>
-          <p class="reviewer"><span class="stars">★★★★★</span> Lina — Student</p>
-        </article>
-
-        <article class="review reveal text-reveal">
-          <blockquote>“Ingredient suggestions use what’s already in my fridge. Less waste.”</blockquote>
-          <p class="reviewer"><span class="stars">★★★★★</span> Karim — Young Professional</p>
-        </article>
-
-        <article class="review reveal text-reveal">
-          <blockquote>“The nutrition panel helped us hit family goals without overthinking.”</blockquote>
-          <p class="reviewer"><span class="stars">★★★★☆</span> Rania — Parent</p>
-        </article>
+          <article class="audience-card reveal text-reveal">
+            <h3 class="persona"><strong>Families & Meal Planners</strong></h3>
+            <p class="tagline">Structure meets flexibility</p>
+            <blockquote>
+              Auto-generate plans, customize diet presets, and streamline your shopping list for the whole household.
+            </blockquote>
+          </article>
+        </section>
       </section>
-    </section>
 
-  </main>
+    </main>
 
-  <script src="../js/about.js"></script>
+    <script src="../js/about.js"></script>
 </body>
 
 </html>

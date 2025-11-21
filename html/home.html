@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../base.css">
     <script defer src="../inject.js"></script>
     <link rel="stylesheet" href="/css/home.css">
+    <script src="../js/home.js" defer></script>
 </head>
 <body>
   <!-- <nav aria-label="Main">
@@ -163,6 +164,48 @@
       </div>
     </section>
 
+  <!-- SUBSCRIPTION mn aya -->
+  <section id="subs" class="subs">
+      <header class="center">
+
+        <h2 class="text-reveal">Go Further with DailyBites</h2>
+
+      </header>
+
+      <section class="plans">
+        <article class="plan reveal text-reveal">
+          <h3>Starter</h3>
+          <p class="price">$4.99 / month</p>
+          <ul class="features">
+            <li>Weekly meal planner</li>
+            <li>Recipe search & filters</li>
+            <li>Save favorites</li>
+          </ul>
+        </article>
+
+        <article class="plan reveal text-reveal">
+          <h3>Plus</h3>
+          <p class="price">$6.99 / month</p>
+          <ul class="features">
+            <li>Unlimited favorites</li>
+            <li>Ingredient-based ideas</li>
+            <li>Nutrition panel</li>
+          </ul>
+        </article>
+
+        <article class="plan reveal text-reveal">
+          <h3>Pro</h3>
+          <p class="price">$12.99 / month</p>
+          <ul class="features">
+            <li>Auto-generate plans</li>
+            <li>Advanced diet presets</li>
+            <li>Smart shopping list</li>
+          </ul>
+        </article>
+      </section>
+    </section>
+
+
     <section class="cta-band" id="get-started" aria-labelledby="cta-title">
       <div class="wrap cta-box">
         <h2 id="cta-title">Ready to Transform Your Eating Habits?</h2>
@@ -177,7 +220,22 @@
   </main>
   <div data-include="footer"></div>
   </div>
+  <!-- Subscribe modal -->
+  <div class="modal-backdrop" id="subscribe-modal" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="subscribe-modal-title">
+      <button class="modal-close" type="button" aria-label="Close">&times;</button>
 
+      <h3 id="subscribe-modal-title">Subscribe to Starter</h3>
+      <p class="muted" id="subscribe-modal-text">
+        Leave your email and we’ll contact you with details.
+      </p>
+
+      <form class="modal-form">
+        <input type="email" placeholder="Your email" required>
+        <button type="submit" class="btn primary">Subscribe</button>
+      </form>
+    </div>
+  </div>
   <!-- <footer>
     <div class="wrap">
       <div class="fcols">

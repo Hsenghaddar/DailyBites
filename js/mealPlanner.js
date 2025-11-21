@@ -1,43 +1,12 @@
-let navbar = document.getElementById("navbar");
-let toggle = document.getElementById("menu-toggle");
-let links = document.getElementById("primary-navigation");
+
 let overlay = document.querySelector(".overlay");
 let closeBtn = document.querySelector(".close");
-
-function setMenu(open) {
-  if (!links || !toggle) return;
-  links.classList.toggle("show", open);
-  toggle.setAttribute("aria-expanded", String(open));
-  document.body.classList.toggle("menu-open", open);
-}
-
-toggle?.addEventListener("click", () => {
-  setMenu(!links.classList.contains("show"));
-});
-
-links?.querySelectorAll("a").forEach((a) => {
-  a.addEventListener("click", () => setMenu(false));
-});
-
-window.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") setMenu(false);
-});
-
-window
-  .matchMedia("(min-width: 861px)")
-  .addEventListener("change", () => setMenu(false));
-
 closeBtn.addEventListener("click", () => {
   overlay.style.display = "none";
   document.querySelector("body").classList.remove("overlayOpen");
 });
 
-closeBtn.addEventListener("click", () => {
-  overlay.style.display = "none"
-  document.querySelector("body").classList.remove("overlayOpen")
-})
-
-let main = document.querySelector("main > div")
+let main = document.querySelector("main > div");
 
 function getThisWeek() {
   let today = new Date();
@@ -67,6 +36,7 @@ let recipesContainer = document.querySelector(".recipes");
 let modalTitle = document.querySelector(".modal-title");
 let clearBtn = document.getElementById("clear-plan");
 let generateBtn = document.getElementById("generate-plan");
+let exportBtn = document.getElementById("export-plan");
 
 clearBtn.addEventListener("click", () => {
   let confirmed = confirm("Clear your entire weekly plan?");
@@ -80,34 +50,128 @@ generateBtn.addEventListener("click", () => {
     return;
   }
 
-  const existing = JSON.parse(localStorage.getItem("mealPlanner")) || {};
-  if (
-    Object.keys(existing).length > 0 &&
-    !confirm("This will replace your current weekly plan with a random one. Continue?")
-  ) {
-    return;
-  }
-  const newPlan = {};
-  const sections = document.querySelectorAll("main section.day-section");
+  let plan = JSON.parse(localStorage.getItem("mealPlanner")) || {};
+
+  let sections = document.querySelectorAll("main section.day-section");
+  let createdCount = 0;
 
   sections.forEach((section) => {
-    const day = section.getAttribute("data-day");
-
+    let day = section.getAttribute("data-day");
     mealNames.forEach((mealType) => {
-      if (mealType === "Notes") return;
-      const randomMeal =
-        recipes[Math.floor(Math.random() * recipes.length)];
-
-      newPlan[`${day}-${mealType}`] = {
+      if (mealType === "Notes") return; 
+      let key = `${day}-${mealType}`;
+      if (plan[key]) return;
+      let randomMeal = recipes[Math.floor(Math.random() * recipes.length)];
+      plan[key] = {
         name: randomMeal.name,
         image: randomMeal.image,
       };
+      createdCount++;
     });
   });
 
-  localStorage.setItem("mealPlanner", JSON.stringify(newPlan));
+  if (createdCount === 0) {
+    alert("All meal slots are already filled. Nothing to generate.");
+    return;
+  }
+
+  localStorage.setItem("mealPlanner", JSON.stringify(plan));
   loadSavedMeals();
 });
+
+exportBtn.addEventListener("click", () => {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert("PDF library (jsPDF) failed to load.");
+    return;
+  }
+
+  let saved = JSON.parse(localStorage.getItem("mealPlanner") || "{}");
+
+  if (!Object.keys(saved).length) {
+    alert("You don't have any meals in your plan yet.");
+    return;
+  }
+
+  let { jsPDF } = window.jspdf;
+  let doc = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a4",
+  });
+
+  let pageWidth = doc.internal.pageSize.getWidth();
+  let y = 20;
+  let lineHeight = 6;
+  let leftMargin = 15;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.text("Weekly Meal Plan", pageWidth / 2, 12, { align: "center" });
+
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "normal");
+  let start = thisWeek[0];
+  let end = thisWeek[thisWeek.length - 1];
+  let dateRangeText = `${months[start.getMonth()]} ${start.getDate()} – ${months[end.getMonth()]} ${end.getDate()}`;
+  doc.text(dateRangeText, pageWidth / 2, 18, { align: "center" });
+
+  function ensureSpace() {
+    let pageHeight = doc.internal.pageSize.getHeight();
+    if (y > pageHeight - 15) {
+      doc.addPage();
+      y = 15;
+    }
+  }
+
+  thisWeek.forEach((d) => {
+    let dayName = days[d.getDay()];
+    let dateLabel = `${months[d.getMonth()]} ${d.getDate()}`;
+
+    let hasContent = false;
+    for (let mealType of mealNames) {
+      let key = `${dayName}-${mealType}`;
+      if (saved[key]) {
+        hasContent = true;
+        break;
+      }
+    }
+    if (!hasContent) return;
+
+    ensureSpace();
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text(`${dayName} (${dateLabel})`, leftMargin, y);
+    y += lineHeight;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+
+    mealNames.forEach((mealType) => {
+      let key = `${dayName}-${mealType}`;
+      let data = saved[key];
+      if (!data) return;
+
+      ensureSpace();
+
+      if (mealType === "Notes") {
+        let noteText = typeof data === "string" ? data : data.name;
+        doc.text(`Note: ${noteText}`, leftMargin + 4, y);
+        y += lineHeight;
+      } else {
+        let name = typeof data === "string" ? data : data.name;
+        doc.text(`${mealType}: ${name}`, leftMargin + 4, y);
+        y += lineHeight;
+      }
+    });
+
+    y += lineHeight;
+  });
+
+  doc.save("weekly-meal-plan.pdf");
+});
+
+
+
 function renderRecipeCard(meal) {
   return `
     <div class="recipe-item" 
@@ -142,14 +206,7 @@ function fetchAllRecipes() {
     .then((data) => (recipes = data.recipes))
     .catch(() => console.error("error fetching"));
 }
-
-function fetchAllRecipes() {
-  fetch("../js/data.json")
-    .then((res) => res.json())
-    .then((data) => (recipes = data.recipes))
-    .catch(() => console.error("error fetching"))
-}
-fetchAllRecipes()
+fetchAllRecipes();
 
 function renderLayout() {
   let html = "";
@@ -162,7 +219,7 @@ function renderLayout() {
       <div class="day-info">
         <p>${dayName}</p>
         <p>${dateLabel}</p>
-      </div>`
+      </div>`;
 
     mealNames.forEach((mealType) => {
       html += `

@@ -124,7 +124,7 @@ function render(){
         viewBtn.setAttribute('data-action', 'view')
         viewBtn.setAttribute('data-id', String(r.id))
 
-        viewBtn.addEventListener("click", ()=>{ openModal(r);}) 
+        viewBtn.addEventListener("click", ()=>{ console.log(r); openModal(r);}) 
 
         footer.appendChild(viewBtn)
         body.append(h3, meta, p, footer)

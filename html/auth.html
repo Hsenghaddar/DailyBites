@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/auth.css">
+    <script src="https://code.jquery.com/jquery-4.0.0-rc.1.js"></script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css"
         integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g=="
@@ -19,9 +20,12 @@
 
         </section>
         <section class="auth login">
-            <img src="../assets/logo.png" alt="DailyBites">
+            <img src="../assets/firstLogo.png" alt="DailyBites">
             <h2>Welcome Back to DailyBites</h2>
-            <p class="txt">Dont have an account? <button class="signupPageBtn">Sign up</button></p>
+            <div class="auth-toggle">
+                <button class="toggle-btn loginTab active">Login</button>
+                <button class="toggle-btn signupTab">Sign up</button>
+            </div>
             <form class="loginForm">
                 <div class="input-group">
                     <i class="bi bi-envelope"></i>
@@ -40,11 +44,16 @@
                     </span>
                 </button>
             </form>
+            <p class="txt">Dont have an account? <button class="signupPageBtn">Sign up</button></p>
         </section>
         <section class="auth signup">
-            <img src="../assets/logo.png" alt="DailyBites">
+            <img src="../assets/firstLogo.png" alt="DailyBites">
             <h2>Create an Account</h2>
-            <p class="txt">Already have an account? <button class="loginPageBtn">Log in</button></p>
+            <div class="auth-toggle">
+                <button class="toggle-btn loginTab active">Login</button>
+                <button class="toggle-btn signupTab">Sign up</button>
+            </div>  
+            
             <form class="signupForm">
                 <div class="input-group">
                     <i class="bi bi-person"></i>
@@ -67,6 +76,7 @@
                     </span>
                 </button>
             </form>
+            <p class="txt">Already have an account? <button class="loginPageBtn">Log in</button></p>
         </section>
     </main>
 </body>
