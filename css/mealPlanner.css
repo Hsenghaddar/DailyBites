@@ -442,13 +442,13 @@ main>div {
 }
 
 .saved-meal.note {
-  background: #fff;
+  background: transparent;
   color: var(--secondary-color);
   font-style: italic;
-  display: flex;
-  align-items: center;
+  display: block;
+  padding: 4px 0 0;
+  border-radius: 0;
 }
-
 
 .overlay {
   position: fixed;
