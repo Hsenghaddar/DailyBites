@@ -65,27 +65,27 @@
 
             </section>
 
-<section class="filter-summary">
+            <section class="filter-summary">
 
-    <span class="icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-             stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z"/>
-        </svg>
-    </span>
+                <span class="icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
+                    </svg>
+                </span>
 
-    <span id="filterCount">0 filters applied</span>
-
-  
+                <span id="filterCount">0 filters applied</span>
 
 
 
-    
-
-</section>
 
 
-</section>
+
+
+            </section>
+
+
+        </section>
 
 
 
@@ -98,39 +98,56 @@
         <ul id="recipes" class="recipes"></ul>
 
         <!--TEMPLATE-->
-        <template id="card">
-            <li>
-                <article class="card">
+<template id="card">
+    <li>
+        <article class="card">
 
-                    <figure class="thumb">
-                        <picture>
-                            <img alt="" loading="lazy">
-                        </picture>
-                        <button type="button" class="fav" title="Save">&#9825;</button>
-                        <span class="badge"></span>
-                    </figure>
+            <figure class="thumb">
+                <img alt="" loading="lazy">
+                <button type="button" class="fav" title="Save">&#9825;</button>
+                <span class="badge"></span>
+            </figure>
 
-                    <section class="content">
-                        <h3 class="title"></h3>
-                        <p class="desc"></p>
+            <section class="content">
+                <h3 class="title"></h3>
+                <p class="desc"></p>
 
-                        <ul class="meta">
-                            <li title="Total time">⏱ <time></time></li>
-                            <li title="Calories">🔥 <output></output> cal</li>
-                            <li title="Rating">⭐ <output></output></li>
-                        </ul>
+                <ul class="meta">
+                    <li>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
+                        </svg>
+                        <time></time>
+                    </li>
 
-                        <nav class="tags"></nav>
-                    </section>
+                    <li>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 2C12 2 7 8 7 12a5 5 0 0010 0c0-4-5-10-5-10z"></path>
+                        </svg>
+                        <output></output> cal
+                    </li>
 
-                    <footer class="actions">
-                        <a href="#" rel="recipe" class="primary">View Recipe</a>
-                        <button type="button" class="ghost">Add to Plan</button>
-                    </footer>
+                    <li>
+                        <svg class="icon star" viewBox="0 0 24 24">
+                            <polygon points="12 2 15 9 22 9 17 13 19 20 12 16 5 20 7 13 2 9 9 9"></polygon>
+                        </svg>
+                        <output></output>
+                    </li>
+                </ul>
 
-                </article>
-            </li>
-        </template>
+                <nav class="tags"></nav>
+            </section>
+
+            <footer class="actions">
+                <a href="#" rel="recipe" class="primary">View Recipe</a>
+                <button type="button" class="ghost">Add to Plan</button>
+            </footer>
+
+        </article>
+    </li>
+</template>
+
 
         <!--MODAL -->
         <dialog id="modal">
@@ -179,10 +196,14 @@
 
             </section>
         </dialog>
-
+        <dialog id="tagDialog" class="tag-dialog">
+            <h3>All Tags</h3>
+            <section id="tagDialogContent"></section>
+            <button id="tagDialogClose">Close</button>
+        </dialog>
     </main>
 
-    <script src="../js/recipe.js" defer></script>
+    <script type="module" src="../js/recipe.js" defer></script>
 </body>
 
 </html>

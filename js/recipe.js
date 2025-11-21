@@ -11,7 +11,7 @@ async function fetchAllRecipes() {
 }
 
 let RECIPES = await fetchAllRecipes();
-
+console.log(RECIPES)
 let FAVORITES = JSON.parse(localStorage.getItem("FAV_RECIPES") || "[]")
 
 function saveFavs() {
@@ -130,13 +130,51 @@ function renderRecipes() {
         outs[0].value = r.calories;
         outs[1].value = r.rating;
 
-        let tags = node.querySelector(".tags");
-        tags.innerHTML = "";
-        [r.meal_category, r.diet_category, ...(r.tags||[])].slice(0, 4).forEach(t => {
+        let tagsBox = node.querySelector(".tags");
+        tagsBox.innerHTML = "";
+
+        let allTags = [r.meal_category, r.diet_category, ...(r.tags || [])];
+
+        // show first 3 tags only
+        let preview = allTags.slice(0, 3);
+        let hidden = allTags.slice(3);
+
+        // create preview tags
+        preview.forEach(t => {
+        let s = document.createElement("span");
+        s.textContent = t;
+        tagsBox.appendChild(s);
+        });
+
+        // if extras → show "+X more" button
+        if (hidden.length > 0) {
+        let moreBtn = document.createElement("span");
+        moreBtn.className = "more-toggle";
+        moreBtn.textContent = `+${hidden.length} more`;
+        moreBtn.style.cursor = "pointer";
+        moreBtn.style.background = "#e2e8f0";
+        moreBtn.style.padding = "6px 12px";
+        moreBtn.style.borderRadius = "12px";
+        moreBtn.style.fontSize = "12px";
+
+        tagsBox.appendChild(moreBtn);
+
+        moreBtn.onclick = () => {
+            let dialog = document.getElementById("tagDialog");
+            let box = document.getElementById("tagDialogContent");
+
+            // clear & fill
+            box.innerHTML = "";
+            allTags.forEach(t => {
             let s = document.createElement("span");
             s.textContent = t;
-            tags.appendChild(s);
-        });
+            box.appendChild(s);
+            });
+
+            dialog.showModal();
+        };
+        }
+
 
         node.querySelector(".primary").onclick = e => { e.preventDefault(); openModal(r); };
 
@@ -153,6 +191,10 @@ function renderRecipes() {
         list.appendChild(node);
     });
 }
+document.getElementById("tagDialogClose").onclick = () => {
+    document.getElementById("tagDialog").close();
+};
+
 
 /* =============================
    MODAL

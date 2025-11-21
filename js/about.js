@@ -49,3 +49,4 @@ let observer = new IntersectionObserver(entries => {
 }, { threshold: 0.3 });
 
 reveals.forEach(r => observer.observe(r));
+

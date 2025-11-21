@@ -5,6 +5,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>About • DailyBites</title>
+  <script src="../inject.js" defer></script>
+  <link rel="stylesheet" href="../base.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="../css/about.css" />
@@ -13,7 +15,7 @@
 <body>
 
   <!-- NAVBAR -->
-  <header id="navbar">
+  <!-- <header id="navbar">
     <nav class="nav-inner" aria-label="Primary">
       <a href="index.html" class="nav-logo" aria-label="DailyBites Home">
         <img src="../assets/logo.png" alt="DailyBites Logo">
@@ -36,8 +38,8 @@
         <span></span><span></span><span></span>
       </button>
     </nav>
-  </header>
-
+  </header> -->
+<div data-include="nav"></div> 
   <main>
 
     <!-- HERO SECTION -->
@@ -101,7 +103,6 @@
       <header class="center">
 
         <h2 class="text-reveal">Our Approach</h2>
-        <p class="muted text-reveal">Turning planning into a seamless, smart flow.</p>
 
       </header>
 
@@ -119,6 +120,34 @@
       </article>
     </section>
 
+    <!-- HOW IT WORKS SECTION -->
+<section id="how-it-works" class="how-it-works">
+  <header class="center">
+    <h2 class="text-reveal">How It Works</h2>
+  </header>
+
+  <section class="steps-grid">
+    <article class="step-card reveal text-reveal">
+      <img src="../assets/icon1.png" alt="Step 1" class="step-img">
+      <h3>Choose Your Preferences</h3>
+      <p>Select your diet, favorite foods, and ingredients you already have.</p>
+    </article>
+
+    <article class="step-card reveal text-reveal">
+      <img src="../assets/icon2.png" alt="Step 2" class="step-img">
+      <h3>Get Smart Suggestions</h3>
+      <p>DailyBites generates meal plans and recipes tailored to your choices.</p>
+    </article>
+
+    <article class="step-card reveal text-reveal">
+      <img src="../assets/icon3.png" alt="Step 3" class="step-img">
+      <h3>Cook & Track</h3>
+      <p>Follow easy recipes, track nutrition, and auto-generate shopping lists.</p>
+    </article>
+  </section>
+</section>
+
+
 
 
     <!-- SUBSCRIPTION SECTION -->
@@ -126,7 +155,6 @@
       <header class="center">
 
         <h2 class="text-reveal">Go Further with DailyBites</h2>
-        <p class="muted text-reveal">Unlock advanced features that help you stay consistent.</p>
 
       </header>
 
@@ -170,7 +198,6 @@
       <header class="center">
 
         <h2 class="text-reveal">What Our Users Say</h2>
-        <p class="muted text-reveal">Real stories from people planning better with DailyBites.</p>
 
       </header>
 
