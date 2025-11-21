@@ -24,10 +24,17 @@ function currentUserId(){
 let curId = currentUserId()
 
 function getUser(userid){
-    
+    fetch("../js/data.json")
+    .then(res => res.json())
+    .then(data => {
+      let users = data.users || [];
+      let user = users.find(u => String(u.id) === String(userId));
+
+      let username = user.username
+    })
 }
 
-who.textContent = `Welcome ${curId} !`
+who.textContent = `Welcome ${username} !`
 
 let KEY = "MyRecipes"
 
