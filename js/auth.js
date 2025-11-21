@@ -18,8 +18,8 @@ $(function () {
   let loginError = $(".login .error")
   let signupError = $(".signup .error")
 
-  let showPassButtons = $(".show-pass")
-  let hidePassButtons = $(".hide-pass")
+  let showPass = $(".show-pass")
+  let hidePass = $(".hide-pass")
 
   signupPageButton.on("click", function () {
     loginSection.css("display", "none")
@@ -90,7 +90,7 @@ $(function () {
   })
 
   // Show password
-  showPassButtons.on("click", function () {
+  showPass.on("click", function () {
     let btn = $(this)
     let input = btn.siblings("input").first()
 
@@ -99,8 +99,8 @@ $(function () {
     btn.siblings(".hide-pass").show()
   })
 
-  // Hide password (fixed to toggle correctly, symmetric with show)
-  hidePassButtons.on("click", function () {
+  // Hide password
+  hidePass.on("click", function () {
     let btn = $(this)
     let input = btn.siblings("input").first()
 
