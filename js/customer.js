@@ -23,19 +23,19 @@ function currentUserId(){
 
 let curId = currentUserId()
 
-function getUser(userid){
-    fetch("../js/data.json")
-    .then(res => res.json())
-    .then(data => {
-      let users = data.users || [];
-      let user = users.find(u => String(u.id) === String(userId));
+async function getUser(userid) {
+  let res = await fetch("../js/data.json");
+  let data = await res.json();
 
-      let username = user.username
-    })
+  let users = data.users || [];
+  let user  = users.find(u => String(u.id) === String(userid));
+
+  return user?.username || userid;
 }
-getUser(curId)
 
-who.textContent = `Welcome ${username} !`
+getUser(curId).then(username => {
+  who.textContent = `Welcome ${username} !`;
+});
 
 let KEY = "MyRecipes"
 
