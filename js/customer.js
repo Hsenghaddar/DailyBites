@@ -23,6 +23,10 @@ function currentUserId(){
 
 let curId = currentUserId()
 
+function getUser(userid){
+    
+}
+
 who.textContent = `Welcome ${curId} !`
 
 let KEY = "MyRecipes"
