@@ -1,44 +1,51 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const navbar = document.getElementById('navbar');
-  const toggle = document.getElementById('menu-toggle');
-  const links  = document.getElementById('primary-navigation');
+  document.addEventListener('DOMContentLoaded', () => {
+    let navbar = document.getElementById('navbar');
 
-  // quick sanity checks in the console
-  if (!toggle) console.warn('[DailyBites] #menu-toggle not found');
-  if (!links)  console.warn('[DailyBites] #primary-navigation not found');
+    let onScroll = () => {
+      if (window.scrollY > 60) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    };
 
-  // header style on scroll (optional)
-  const onScroll = () => {
-    if (window.scrollY > 60) navbar?.classList.add('scrolled');
-    else navbar?.classList.remove('scrolled');
-  };
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
-  // open/close mobile menu
-  function setMenu(open){
-    if (!links || !toggle) return;
-    links.classList.toggle('show', open);
-    toggle.setAttribute('aria-expanded', String(open));
-    document.body.classList.toggle('menu-open', open);
-  }
+    let toggle = document.getElementById('menu-toggle');
+    window.addEventListener('scroll', onScroll);
 
-  // toggle click
-  toggle?.addEventListener('click', () => {
-    setMenu(!links.classList.contains('show'));
+    let links = document.querySelector('.nav-links');
+
+    if (toggle && links) {
+      toggle.addEventListener('click', () => {
+        let open = links.classList.toggle('show');
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        let id = a.getAttribute('href');
+        let el = document.querySelector(id);
+        if (!el) return;
+
+        e.preventDefault();
+        let top = el.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight;
+        window.scrollTo({ top, behavior: 'smooth' });
+
+        links.classList.remove('show');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
   });
 
-  // close on link click (mobile)
-  links?.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => setMenu(false));
-  });
+  let reveals = document.querySelectorAll('.reveal, .text-reveal');
 
-  // close on Escape
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') setMenu(false);
-  });
+  let observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      } else {
+        entry.target.classList.remove('active');
+      }
+    });
+  }, { threshold: 0.3 });
 
-  // close if resized to desktop
-  window.matchMedia('(min-width: 861px)').addEventListener('change', () => setMenu(false));
-});
-
+  reveals.forEach(r => observer.observe(r));
