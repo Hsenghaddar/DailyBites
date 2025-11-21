@@ -1,128 +1,130 @@
 $(function () {
-  const $signupPageButton = $(".signupPageBtn");
-  const $loginPageButton = $(".loginPageBtn");
-  const $loginButton = $(".loginBtn");
-  const $loginForm = $(".loginForm");
-  const $signupForm = $(".signupForm");
+  let signupPageButton = $(".signupPageBtn")
+  let loginPageButton = $(".loginPageBtn")
+  let loginButton = $(".loginBtn")
+  let loginForm = $(".loginForm")
+  let signupForm = $(".signupForm")
 
-  const $loginSection = $(".login");
-  const $signupSection = $(".signup");
+  let loginSection = $(".login")
+  let signupSection = $(".signup")
 
-  const $loginEmailInput = $(".login .email");
-  const $loginPasswordInput = $(".login .password");
+  let loginEmailInput = $(".login .email")
+  let loginPasswordInput = $(".login .password")
 
-  const $signupEmailInput = $(".signup .email");
-  const $username = $(".username");
-  const $signPasswordInput = $(".signup .password");
+  let signupEmailInput = $(".signup .email")
+  let usernameInput = $(".username")
+  let signupPasswordInput = $(".signup .password")
 
-  const $loginError = $(".login .error");
-  const $signupError = $(".signup .error");
+  let loginError = $(".login .error")
+  let signupError = $(".signup .error")
 
-  const $showPass = $(".show-pass");
-  const $hidePass = $(".hide-pass");
+  let showPassButtons = $(".show-pass")
+  let hidePassButtons = $(".hide-pass")
 
-  $signupPageButton.on("click", function () {
-    $loginSection.css("display", "none");
-    $signupSection.css("display", "flex");
-    $loginError.hide();
-  });
+  signupPageButton.on("click", function () {
+    loginSection.css("display", "none")
+    signupSection.css("display", "flex")
+    loginError.hide()
+  })
 
-  $loginPageButton.on("click", function () {
-    $loginSection.css("display", "flex");
-    $signupSection.css("display", "none");
-    $signupError.hide();
-  });
+  loginPageButton.on("click", function () {
+    loginSection.css("display", "flex")
+    signupSection.css("display", "none")
+    signupError.hide()
+  })
 
-  $loginForm.on("submit", function (e) {
-    e.preventDefault();
+  loginForm.on("submit", function (e) {
+    e.preventDefault()
 
-    if (
-      $loginEmailInput.val() === "" ||
-      $loginPasswordInput.val() === ""
-    ) {
-      $loginError.text("Please enter all required fields!").show();
-      return;
+    if (loginEmailInput.val() === "" || loginPasswordInput.val() === "") {
+      loginError.text("Please enter all required fields!").show()
+      return
     }
-    $loginButton.prop("disabled", true).addClass("loading");
+
+    loginButton.prop("disabled", true).addClass("loading")
+
     $.getJSON("../js/data.json")
       .done(function (data) {
-        const users = data.users || [];
-        const foundUser = users.find(
+        let users = data.users || []
+        let foundUser = users.find(
           (user) =>
-            user.email === $loginEmailInput.val() &&
-            user.password === $loginPasswordInput.val()
-        );
+            user.email === loginEmailInput.val() &&
+            user.password === loginPasswordInput.val()
+        )
 
         if (foundUser) {
-           sessionStorage.setItem("userId", foundUser.id);
-          window.location.href = "../html/home.html";
+          sessionStorage.setItem("userId", foundUser.id)
+          window.location.href = "../html/home.html"
         } else {
-          $loginError.text("Incorrect email or password!").show();
-          $loginEmailInput.val("");
-          $loginPasswordInput.val("");
+          loginError.text("Incorrect email or password!").show()
+          loginEmailInput.val("")
+          loginPasswordInput.val("")
         }
       })
       .fail(function (err) {
-        console.error("error fetching users:", err);
+        console.error("error fetching users:", err)
       })
       .always(function () {
-        $loginButton.prop("disabled", false).removeClass("loading");
-      });
-  });
+        loginButton.prop("disabled", false).removeClass("loading")
+      })
+  })
 
-  $signupForm.on("submit", function (e) {
-    e.preventDefault();
+  signupForm.on("submit", function (e) {
+    e.preventDefault()
 
     if (
-      $.trim($username.val()) === "" ||
-      $.trim($signupEmailInput.val()) === "" ||
-      $.trim($signPasswordInput.val()) === ""
+      $.trim(usernameInput.val()) === "" ||
+      $.trim(signupEmailInput.val()) === "" ||
+      $.trim(signupPasswordInput.val()) === ""
     ) {
-      $signupError.text("Please enter all required fields!").show();
-      return;
+      signupError.text("Please enter all required fields!").show()
+      return
     }
 
-    if ($signPasswordInput.val().length < 8) {
-      $signupError.text("Password must be at least 8 characters").show();
-      return;
+    if (signupPasswordInput.val().length < 8) {
+      signupError.text("Password must be at least 8 characters").show()
+      return
     }
 
-    window.location.href = "../html/home.html";
-  });
+    window.location.href = "../html/home.html"
+  })
 
-  $showPass.on("click", function () {
-    const $btn = $(this);
-    const $input = $btn.prev("input");
+  // Show password
+  showPassButtons.on("click", function () {
+    let btn = $(this)
+    let input = btn.siblings("input").first()
 
-    $input.attr("type", "text");
-    $btn.hide();
-    $btn.next(".hide-pass").show();
-  });
-  $hidePass.on("click", function () {
-    const $btn = $(this);
-    const $input = $btn.prev().prev("input");
+    input.attr("type", "text")
+    btn.hide()
+    btn.siblings(".hide-pass").show()
+  })
 
-    $input.attr("type", "password");
-    $btn.hide();
-    $btn.prev(".show-pass").show();
-  });
+  // Hide password (fixed to toggle correctly, symmetric with show)
+  hidePassButtons.on("click", function () {
+    let btn = $(this)
+    let input = btn.siblings("input").first()
 
-  const $loginTab = $(".loginTab");
-  const $signupTab = $(".signupTab");
+    input.attr("type", "password")
+    btn.hide()
+    btn.siblings(".show-pass").show()
+  })
 
-  $signupTab.on("click", function () {
-    $signupTab.addClass("active");
-    $loginTab.removeClass("active");
+  let loginTab = $(".loginTab")
+  let signupTab = $(".signupTab")
 
-    $signupSection.addClass("show");
-    $loginSection.hide(); 
-  });
+  signupTab.on("click", function () {
+    signupTab.addClass("active")
+    loginTab.removeClass("active")
 
-  $loginTab.on("click", function () {
-    $loginTab.addClass("active");
-    $signupTab.removeClass("active");
+    signupSection.addClass("show")
+    loginSection.hide()
+  })
 
-    $loginSection.show();
-    $signupSection.removeClass("show");
-  });
-});
+  loginTab.on("click", function () {
+    loginTab.addClass("active")
+    signupTab.removeClass("active")
+
+    loginSection.show()
+    signupSection.removeClass("show")
+  })
+})
