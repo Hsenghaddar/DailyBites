@@ -1,4 +1,3 @@
-
 let overlay = document.querySelector(".overlay");
 let closeBtn = document.querySelector(".close");
 closeBtn.addEventListener("click", () => {
