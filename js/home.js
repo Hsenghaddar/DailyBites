@@ -21,7 +21,7 @@ document.querySelectorAll('#subs .plan .btn').forEach(btn => {
         let card = btn.closest('.plan');
         let planName = card.querySelector('h3')?.textContent.trim() || 'this plan';
         let price = card.querySelector('.price')?.textContent.trim() || '';
-        openModal(planName, price)
+        openModal(planName, price);
     });
 });
 function openModal(planName, price) {
