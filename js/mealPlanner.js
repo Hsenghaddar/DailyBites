@@ -1,4 +1,3 @@
-
 let overlay = document.querySelector(".overlay");
 let closeBtn = document.querySelector(".close");
 closeBtn.addEventListener("click", () => {
@@ -236,8 +235,9 @@ function renderLayout() {
 
   main.innerHTML = html;
 
-  loadSavedMeals();
   setSlotListeners();
+  loadSavedMeals();
+  
 }
 
 searchInput.addEventListener("input", () => {

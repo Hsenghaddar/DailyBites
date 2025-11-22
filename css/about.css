@@ -99,12 +99,15 @@
     padding-bottom:100px ;
   }
 
-
   .approach-section {
     background: #f0fdf4;
     padding: 64px 4%;
     border-top: 1px solid #dcfce7;
     border-bottom: 1px solid #dcfce7;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
   }
 
   .approach-content {
@@ -250,6 +253,10 @@
     background: var(--sky-bg);
     border-top: 1px solid #bae6fd;
     border-bottom: 1px solid #bae6fd;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .center {
@@ -312,6 +319,10 @@
     background: var(--rose-bg);
     border-top: 1px solid #fecdd3;
     border-bottom: 1px solid #fecdd3;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .audience-grid {

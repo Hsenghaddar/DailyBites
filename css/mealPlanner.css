@@ -54,90 +54,6 @@ body>h1::after {
   opacity: 0.8;
 }
 
-
-#navbar a {
-  text-decoration: none;
-  color: inherit;
-}
-
-#navbar button {
-  font: inherit;
-  background: none;
-}
-
-#navbar {
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
-  position: fixed;
-  inset: 0 0 auto 0;
-  z-index: 10;
-  height: 72px;
-  background: #fff;
-  border-bottom: 1px solid var(--ring);
-  box-shadow: 0 6px 20px rgba(2, 8, 23, 0.06);
-  transition: box-shadow 0.18s ease, background 0.18s ease, padding 0.18s ease;
-}
-
-.nav-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  height: 72px;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.nav-logo img {
-  height: 48px;
-  width: auto;
-  display: block;
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  z-index: 100;
-  gap: 36px;
-}
-
-.nav-links a {
-  color: var(--ink);
-  font-weight: 600;
-  font-size: 1.05rem;
-  padding: 8px 2px;
-  position: relative;
-  transition: color 0.18s ease;
-}
-
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -8px;
-  height: 2px;
-  background: transparent;
-  border-radius: 2px;
-  transform: scaleX(0);
-  transition: background 0.18s ease, transform 0.18s ease;
-}
-
-.nav-links a:hover {
-  color: var(--green);
-}
-
-.nav-links a:hover::after,
-.nav-links a.active::after {
-  background: var(--green);
-  transform: scaleX(1);
-}
-
-.nav-links a.active {
-  color: var(--green);
-}
-
 .btn {
   -webkit-appearance: none;
   appearance: none;
@@ -184,11 +100,6 @@ body>h1::after {
   background: #f7fff9;
 }
 
-.nav-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
 
 #menu-toggle {
   display: none;
@@ -224,9 +135,18 @@ body>h1::after {
   flex-wrap: wrap;
   gap: 12px;
 }
-.planner-bar button{
+
+.planner-bar button {
   white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px) scale(0.97);
+  animation: planner-btn-in 0.35s var(--ease) forwards;
 }
+
+.planner-bar button:nth-child(1) { animation-delay: 0.05s; }
+.planner-bar button:nth-child(2) { animation-delay: 0.15s; }
+.planner-bar button:nth-child(3) { animation-delay: 0.25s; }
+
 .export-plan-btn {
   display: inline-flex;
   align-items: center;
@@ -240,7 +160,7 @@ body>h1::after {
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+  transition: all 0.12s ease;
 }
 
 .export-plan-btn i {
@@ -250,7 +170,7 @@ body>h1::after {
 .export-plan-btn:hover {
   background: #f7fff9;
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.3) !important;
 }
 
 .generate-plan-btn {
@@ -267,7 +187,7 @@ body>h1::after {
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 8px 18px rgba(22, 163, 74, 0.22);
-  transition: filter 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+  transition: filter 0.12s ease, transform 0.42s ease, box-shadow 0.12s ease;
 }
 
 .generate-plan-btn i {
@@ -275,7 +195,8 @@ body>h1::after {
 }
 
 .generate-plan-btn:hover {
-  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.3) !important;
+
 }
 
 .clear-plan-btn {
@@ -291,7 +212,7 @@ body>h1::after {
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+  transition: all 0.2s ease;
 }
 
 .clear-plan-btn i {
@@ -299,9 +220,8 @@ body>h1::after {
 }
 
 .clear-plan-btn:hover {
-  background: #f7fff9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+  background: #f7fff9 !important;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.3) !important;
 }
 
 main {
@@ -328,6 +248,10 @@ main>div {
   flex-direction: column;
   gap: 10px;
   flex: 1;
+
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: day-row-in 0.45s var(--ease) forwards;
 }
 
 .day-info p:first-child {
@@ -392,8 +316,10 @@ main>div {
   width: 100%;
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-end;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
   color: var(--secondary-color);
   border-radius: 14px;
   font-weight: 500;
@@ -402,8 +328,18 @@ main>div {
   cursor: pointer;
 }
 
+/* dim overlay over the image */
+.saved-meal.saved-meal-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
 .saved-meal-thumb {
   width: 100%;
+  position: absolute;
+  inset: 0;
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 4px;
@@ -411,26 +347,32 @@ main>div {
 
 .saved-meal-thumb img {
   width: 100%;
-  height: 70px;
+  height: 70%;
   object-fit: cover;
   display: block;
   border-radius: 10px;
 }
 
+.saved-meal-text {
+  position: relative;
+  z-index: 1;
+  padding: 4px 6px;
+}
+
 .saved-meal-text h4 {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #0f172a;
+  color: #384053;
 }
 
 .saved-meal.note {
-  background: #fff;
+  background: transparent;
   color: var(--secondary-color);
   font-style: italic;
-  display: flex;
-  align-items: center;
+  display: block;
+  padding: 4px 0 0;
+  border-radius: 0;
 }
-
 
 .overlay {
   position: fixed;
@@ -700,9 +642,6 @@ body.overlayOpen {
   overflow-y: hidden;
 }
 
-
-
-
 @media screen and (max-width: 1250px) {
   .day-section {
     min-width: 150px;
@@ -716,6 +655,40 @@ body.overlayOpen {
 }
 
 @media screen and (max-width: 1030px) {
+  .meal-slot {
+    height: auto;
+    min-height: 90px;
+  }
+
+
+  .meal-body {
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  .saved-meal {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    gap: 8px;
+  }
+
+  .saved-meal-thumb {
+    width: fit-content;
+    height: 100px;
+    margin-bottom: 0;
+  }
+
+  .saved-meal-thumb img {
+    min-width: 200px;
+    height: 100%;
+    border-radius: 8px;
+  }
+
+  .saved-meal-text h4 {
+    font-size: 1rem;
+  }
   main>div {
     flex-direction: column;
   }
@@ -725,47 +698,11 @@ body.overlayOpen {
   }
 }
 
-@media (max-width: 940px) {
-  .nav-actions {
-    display: none;
-  }
 
-  .nav-links {
-    display: none;
-  }
-
-  #menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .nav-links.show {
-    z-index: 1400;
-    display: flex;
-    position: fixed;
-    top: 72px;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    gap: 16px;
-    background: #fff;
-    padding: 16px 0;
-    text-align: center;
-    border-bottom: 1px solid var(--ring);
-    box-shadow: 0 14px 30px rgba(2, 8, 23, 0.08);
-  }
-
-  .nav-links.show a {
-    padding: 12px 0;
-    font-weight: 700;
-    font-size: 1.05rem;
-    color: var(--ink);
-  }
-}
-footer a{
+footer a {
   color: #5b6b7d;
 }
+
 #pdf-layout {
   position: fixed;
   top: 0;
@@ -875,3 +812,36 @@ footer a{
   padding-top: 4px;
   border-top: 1px dashed #e2e8f0;
 }
+
+@keyframes day-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes planner-btn-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.95);
+    filter: blur(1.5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+main > div .day-section:nth-child(1) { animation-delay: 0.35s; }
+main > div .day-section:nth-child(2) { animation-delay: 0.45s; }
+main > div .day-section:nth-child(3) { animation-delay: 0.55s; }
+main > div .day-section:nth-child(4) { animation-delay: 0.65s; }
+main > div .day-section:nth-child(5) { animation-delay: 0.75s; }
+main > div .day-section:nth-child(6) { animation-delay: 0.85s; }
+main > div .day-section:nth-child(7) { animation-delay: 0.95s; }

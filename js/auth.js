@@ -77,9 +77,9 @@ $(function () {
     e.preventDefault()
 
     if (
-      $.trim(usernameInput.val()) === "" ||
-      $.trim(signupEmailInput.val()) === "" ||
-      $.trim(signupPasswordInput.val()) === ""
+      usernameInput.val().trim() === "" ||
+      signupEmailInput.val().trim() === "" ||
+      signupPasswordInput.val().trim() === ""
     ) {
       signupError.text("Please enter all required fields!").show()
       return

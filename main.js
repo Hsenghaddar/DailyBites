@@ -1,6 +1,7 @@
 let hamburger = document.querySelector('.hamburger')
 let navLinks = document.querySelector('.nav-links')
 let navActions = document.querySelector('.nav-actions')
+let navInner=document.querySelector(".nav-inner")
 let breakpoint = 992
 
 function toggleMenu() {
@@ -34,16 +35,36 @@ function toggleMenu() {
     // CLOSE (delegate to the animated closer)
     closeMenu();
 }
+const logoutBtn = document.querySelector('.logout-btn');
 
-function closeMenu() {
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', (e) => {
+    e.preventDefault(); 
+    sessionStorage.removeItem('userId');
+    window.location.href = logoutBtn.href;
+  });
+}
+function closeMenu({ instant = false } = {}) {
     // navLinks.classList.remove('open')
     // document.body.classList.remove('no-scroll')
     // let navRow = document.getElementById('nav-desc')
     // if (navActions.parentNode !== navRow) navRow.appendChild(navActions)
     // hamburger.setAttribute('aria-expanded', 'false')
-      if (!navLinks.classList.contains('open')) return;
+    if (!navLinks.classList.contains('open')) return;
 
-    // run the closing keyframes
+    // If we're on desktop or explicitly asked to, reset instantly (no animation)
+    if (instant || window.innerWidth > breakpoint) {
+        navLinks.classList.remove('closing');
+        navLinks.classList.remove('open');
+        document.body.classList.remove('no-scroll');
+        hamburger.setAttribute('aria-expanded', 'false');
+
+        let navRow = document.getElementById('nav-desc');
+        if (navRow && navActions.parentNode !== navRow) navInner.appendChild(navActions);
+        return;
+    }
+
+    // run the closing keyframes (mobile)
     navLinks.classList.add('closing');
     hamburger.setAttribute('aria-expanded', 'false');
 
@@ -55,14 +76,17 @@ function closeMenu() {
 
         // move actions back after it fully closes
         let navRow = document.getElementById('nav-desc');
-        if (navActions.parentNode !== navRow) navRow.appendChild(navActions);
+        if (navActions.parentNode !== navRow) navInner.appendChild(navActions);
     }, { once: true });
 }
 
 hamburger.addEventListener('click', toggleMenu)
 
 window.addEventListener('resize', () => {
-    if (window.innerWidth > breakpoint) closeMenu()
+    if (window.innerWidth > breakpoint) {
+        // When jumping to desktop, force menu back to normal state
+        closeMenu({ instant: true })
+    }
 })
 
 document.addEventListener('click', (e) => {
