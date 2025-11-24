@@ -85,7 +85,6 @@ exportBtn.addEventListener("click", () => {
   }
 
   let saved = JSON.parse(localStorage.getItem("mealPlanner") || "{}");
-
   if (!Object.keys(saved).length) {
     alert("You don't have any meals in your plan yet.");
     return;
@@ -99,75 +98,256 @@ exportBtn.addEventListener("click", () => {
   });
 
   let pageWidth = doc.internal.pageSize.getWidth();
-  let y = 20;
-  let lineHeight = 6;
-  let leftMargin = 15;
+  let pageHeight = doc.internal.pageSize.getHeight();
+
+  let marginX = 10;
+  let marginY = 15;
+  let lineHeight = 7;
+
+  // ---- Title ----
+  let start = thisWeek[0];
+  let end = thisWeek[thisWeek.length - 1];
+  let dateRange = `${months[start.getMonth()]} ${start.getDate()} - ${
+    months[end.getMonth()]
+  } ${end.getDate()}`;
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
-  doc.text("Weekly Meal Plan", pageWidth / 2, 12, { align: "center" });
+  doc.text("Weekly Meal Plan", pageWidth / 2, marginY, { align: "center" });
 
-  doc.setFontSize(11);
   doc.setFont("helvetica", "normal");
-  let start = thisWeek[0];
-  let end = thisWeek[thisWeek.length - 1];
-  let dateRangeText = `${months[start.getMonth()]} ${start.getDate()} – ${months[end.getMonth()]} ${end.getDate()}`;
-  doc.text(dateRangeText, pageWidth / 2, 18, { align: "center" });
+  doc.setFontSize(11);
+  doc.text(dateRange, pageWidth / 2, marginY + 6, { align: "center" });
 
-  function ensureSpace() {
-    let pageHeight = doc.internal.pageSize.getHeight();
-    if (y > pageHeight - 15) {
-      doc.addPage();
-      y = 15;
-    }
+  // ---- Table layout ----
+  let headers = ["Day", "Breakfast", "Lunch", "Dinner", "Notes"];
+  let tableTop = marginY + 15;
+  let tableWidth = pageWidth - marginX * 2;
+  let colWidthDay = 30;
+  let colWidthOther = (tableWidth - colWidthDay) / (headers.length - 1);
+  let rowHeight = 20;
+
+  function drawHeaderRow(y) {
+    let x = marginX;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+
+    headers.forEach((header, i) => {
+      let w = i === 0 ? colWidthDay : colWidthOther;
+      doc.rect(x, y, w, rowHeight);
+      doc.text(header, x + 2, y + rowHeight / 2 + 3);
+      x += w;
+    });
   }
+
+  let y = tableTop;
+  drawHeaderRow(y);
+  y += rowHeight;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
 
   thisWeek.forEach((d) => {
     let dayName = days[d.getDay()];
     let dateLabel = `${months[d.getMonth()]} ${d.getDate()}`;
 
-    let hasContent = false;
-    for (let mealType of mealNames) {
-      let key = `${dayName}-${mealType}`;
-      if (saved[key]) {
-        hasContent = true;
-        break;
-      }
-    }
-    if (!hasContent) return;
-
-    ensureSpace();
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
-    doc.text(`${dayName} (${dateLabel})`, leftMargin, y);
-    y += lineHeight;
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(11);
+    let row = { Breakfast: "", Lunch: "", Dinner: "", Notes: "" };
 
     mealNames.forEach((mealType) => {
       let key = `${dayName}-${mealType}`;
       let data = saved[key];
       if (!data) return;
-
-      ensureSpace();
-
-      if (mealType === "Notes") {
-        let noteText = typeof data === "string" ? data : data.name;
-        doc.text(`Note: ${noteText}`, leftMargin + 4, y);
-        y += lineHeight;
-      } else {
-        let name = typeof data === "string" ? data : data.name;
-        doc.text(`${mealType}: ${name}`, leftMargin + 4, y);
-        y += lineHeight;
-      }
+      let text = typeof data === "string" ? data : data.name;
+      if (mealType === "Notes") row.Notes = text;
+      else row[mealType] = text;
     });
 
-    y += lineHeight;
+    // Skip empty days
+    if (!row.Breakfast && !row.Lunch && !row.Dinner && !row.Notes) return;
+
+    // Page break
+    if (y + rowHeight > pageHeight - marginY) {
+      doc.addPage();
+      y = marginY;
+      drawHeaderRow(y);
+      y += rowHeight;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+    }
+
+    let x = marginX;
+
+    // Day cell (with date)
+    let w = colWidthDay;
+    doc.rect(x, y, w, rowHeight);
+    doc.text(dayName, x + 2, y + 4);
+    doc.text(dateLabel, x + 2, y + 8);
+    x += w;
+
+    function drawCell(text) {
+      let w = colWidthOther;
+      doc.rect(x, y, w, rowHeight);
+      if (text) {
+        doc.text(String(text), x + 2, y + rowHeight / 2 + 3, {
+          maxWidth: w - 4,
+        });
+      }
+      x += w;
+    }
+
+    drawCell(row.Breakfast);
+    drawCell(row.Lunch);
+    drawCell(row.Dinner);
+    drawCell(row.Notes);
+
+    y += rowHeight;
   });
+
+  // ---- Grocery list page(s) ----
+  let groceryItems = buildGroceryList(saved);
+
+  if (groceryItems.length) {
+    doc.addPage();
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("Weekly Grocery List", pageWidth / 2, marginY, {
+      align: "center",
+    });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+
+    let gy = marginY + 8;
+    groceryItems.forEach((item) => {
+      if (gy > pageHeight - marginY) {
+        doc.addPage();
+        gy = marginY;
+      }
+      doc.text(`• ${item}`, marginX, gy);
+      gy += lineHeight;
+    });
+  }
 
   doc.save("weekly-meal-plan.pdf");
 });
+
+function buildGroceryList(saved) {
+  if (!recipes || !recipes.length) return [];
+
+  let counts = new Map();
+
+  // units we will ignore (we only care about item name)
+  let measurementUnits = new Set([
+    "g",
+    "gram",
+    "grams",
+    "kg",
+    "ml",
+    "l",
+    "liter",
+    "liters",
+    "cup",
+    "cups",
+    "tbsp",
+    "tablespoon",
+    "tablespoons",
+    "tsp",
+    "teaspoon",
+    "teaspoons",
+  ]);
+
+  Object.keys(saved).forEach((key) => {
+    if (key.endsWith("-Notes")) return; // ignore notes
+
+    let entry = saved[key];
+    if (!entry) return;
+
+    let mealName = typeof entry === "string" ? entry : entry.name;
+    if (!mealName) return;
+
+    let recipe = recipes?.find((r) => r.name === mealName);
+    if (!recipe || !recipe.ingredients) return;
+
+    recipe.ingredients.forEach((rawIng) => {
+      if (!rawIng) return;
+
+      // Ingredient string
+      let ingStr =
+        typeof rawIng === "string"
+          ? rawIng
+          : rawIng.name || rawIng.item || "";
+      if (!ingStr) return;
+
+      let s = ingStr.toLowerCase();
+
+      // remove (...) and commas
+      s = s.replace(/\([^)]*\)/g, "").replace(/,/g, " ").trim();
+
+      let qty = 1;
+      let namePart = s;
+
+      // pattern: "2 cup rice", "200 g chicken"
+      let m = s.match(/^(\d+(?:\.\d+)?)\s+([a-z]+)\s+(.*)$/);
+      if (m) {
+        let num = parseFloat(m[1]);
+        let unit = m[2];
+        let rest = m[3];
+        let isMeasureUnit = measurementUnits.has(unit.replace(/s$/, ""));
+
+        // if it's a measurement unit (g/ml/cup/...), treat as "1 portion per recipe"
+        qty = isMeasureUnit || isNaN(num) ? 1 : num;
+        namePart = rest;
+      } else {
+        // pattern: "1 onion", "2 tomatoes"
+        let m2 = s.match(/^(\d+(?:\.\d+)?)\s+(.*)$/);
+        if (m2) {
+          let num = parseFloat(m2[1]);
+          qty = isNaN(num) ? 1 : num;
+          namePart = m2[2];
+        }
+      }
+
+      // drop leading adjectives: "large onion" -> "onion"
+      let words = namePart.split(/\s+/);
+      let adjectives = new Set([
+        "small",
+        "medium",
+        "large",
+        "fresh",
+        "chopped",
+        "diced",
+        "minced",
+        "sliced",
+      ]);
+      while (words.length > 1 && adjectives.has(words[0])) {
+        words.shift();
+      }
+
+      let name = words.join(" ").trim(); // final ingredient name (no units)
+      if (!name) return;
+
+      let current = counts.get(name) || 0;
+      counts.set(name, current + qty);
+    });
+  });
+
+  let result = [];
+  for (let [name, qty] of counts.entries()) {
+    let rounded = Math.round(qty * 100) / 100;
+
+    if (rounded === 1) {
+      result.push(`1 ${name}`);
+    } else {
+      // simple plural
+      let pluralName = name;
+      if (!pluralName.endsWith("s")) pluralName += "s";
+      result.push(`${rounded} ${pluralName}`);
+    }
+  }
+
+  // sort alphabetically
+  return result.sort((a, b) => a.localeCompare(b));
+}
 
 function renderRecipeCard(meal) {
   return `
@@ -293,6 +473,9 @@ function attachRecipeClickListeners() {
       let mealName = recipeDiv.dataset.name;
       let mealImage = recipeDiv.dataset.image;
 
+      // Find full recipe object so we can keep its ingredients
+      let selectedRecipe = recipes?.find((r) => r.name === mealName);
+
       let openSection = document.querySelector("section.day-section.active-slot");
       if (!openSection) return;
 
@@ -302,7 +485,11 @@ function attachRecipeClickListeners() {
       let mealIndex = mealDivs.indexOf(activeSlot);
       let mealType = mealNames[mealIndex];
 
-      let mealData = { name: mealName, image: mealImage };
+      let mealData = {
+        name: mealName,
+        image: mealImage,
+        ingredients: selectedRecipe?.ingredients || []
+      };
 
       saveMeal(day, mealType, mealData);
 

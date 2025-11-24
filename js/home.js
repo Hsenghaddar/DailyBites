@@ -15,31 +15,32 @@ function closeModal() {
     if (lastFocusedElement) lastFocusedElement.focus();
 }
 
-// Open modal on subscription buttons
-document.querySelectorAll('#subs .plan .btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        let card = btn.closest('.plan');
-        let planName = card.querySelector('h3')?.textContent.trim() || 'this plan';
-        let price = card.querySelector('.price')?.textContent.trim() || '';
-        openModal(planName, price);
-    });
-});
+function openModal(planName, price) {
+            console.log("openmod")
 
-// Replace the button click handler in your DOMContentLoaded
+    lastFocusedElement = document.activeElement;
+
+    modalTitle.textContent = 'Subscribe to ' + planName;
+    modalText.textContent =
+        'Leave your email and we’ll contact you about the ' +
+        planName +
+        (price ? ' (' + price + ')' : '') +
+        '.';
+
+    modal.classList.add('is-open');
+    document.body.classList.add('no-scroll');
+    emailInput.focus();
+}
+
+// Open modal on subscription buttons
 document.querySelectorAll('.subs .plan .btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
+        console.log("clicked")
         let card = btn.closest('.plan');
         let planName = card.querySelector('h3')?.textContent.trim() || 'this plan';
         let price = card.querySelector('.price')?.textContent.trim() || '';
-        
-        let plans = document.querySelectorAll('.plan')
-        // Highlight the selected plan
-        plans.forEach(p => p.classList.remove('selected'));
-        card.classList.add('selected');
-        
-        openModal(planName, price);
+        openModal(planName, price)
     });
 });
 
@@ -217,21 +218,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollAnimations();
 });
 
-
-function openModal(planName, price) {
-    lastFocusedElement = document.activeElement;
-
-    modalTitle.textContent = 'Subscribe to ' + planName;
-    modalText.textContent =
-        'Leave your email and we’ll contact you about the ' +
-        planName +
-        (price ? ' (' + price + ')' : '') +
-        '.';
-
-    modal.classList.add('is-open');
-    document.body.classList.add('no-scroll');
-    emailInput.focus();
-}
 // Close actions
 closeBtn.addEventListener('click', closeModal);
 
