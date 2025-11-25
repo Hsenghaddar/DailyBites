@@ -9,7 +9,8 @@ let currentFilters = {
     dietTypes: [],
     difficulty: null,
     quickFilter: null,
-    ingredients: [] 
+    ingredients: [],
+    favoritesOnly: false
 };
 
 // Debounce function for search performance
@@ -79,47 +80,6 @@ async function loadAllRecipes() {
     }
 }
 
-// // Fallback recipes in case data.json fails
-// function getFallbackRecipes() {
-//     return [
-//         {
-//             id: 1,
-//             name: "Classic Grilled Chicken Salad",
-//             description: "A fresh and healthy grilled chicken salad with mixed greens, avocado, and lemon dressing.",
-//             image: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23f1f5f9'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='%2394a3b8'>Grilled Chicken Salad</text></svg>",
-//             prep_time: 15,
-//             cook_time: 10,
-//             calories: 350,
-//             protein: 25,
-//             carbs: 15,
-//             rating: 4.8,
-//             servings: 4,
-//             difficulty: "Easy",
-//             meal_category: "Lunch",
-//             diet_category: "High Protein",
-//             tags: ["Quick & Easy", "Healthy", "Low Carb"],
-//             ingredients: [
-//                 "2 chicken breasts",
-//                 "4 cups mixed greens",
-//                 "1 avocado, sliced",
-//                 "1 cup cherry tomatoes",
-//                 "1/4 red onion, thinly sliced",
-//                 "2 tbsp olive oil",
-//                 "1 lemon, juiced",
-//                 "Salt and pepper to taste"
-//             ],
-//             instructions: [
-//                 "Season chicken breasts with salt and pepper",
-//                 "Grill chicken for 5-7 minutes per side until cooked through",
-//                 "Let chicken rest for 5 minutes, then slice",
-//                 "Combine mixed greens, avocado, tomatoes, and red onion in a large bowl",
-//                 "Whisk together olive oil and lemon juice for dressing",
-//                 "Top salad with sliced chicken and drizzle with dressing"
-//             ]
-//         }
-//     ];
-// }
-
 // Enhanced search matching with better scoring
 function matchesSearchTerm(recipe) {
     if (!currentFilters.search) return true;
@@ -163,6 +123,9 @@ function matchesQuickFilter(recipe) {
 
 // Enhanced recipe filtering
 function shouldShowRecipe(recipe) {
+    if (currentFilters.favoritesOnly && !favoriteRecipes.includes(recipe.id)) {
+        return false;
+    }
     if (!matchesSearchTerm(recipe)) return false;
     if (!matchesQuickFilter(recipe)) return false;
 
@@ -206,6 +169,7 @@ function updateFilterSummary() {
     if (currentFilters.mealType) activeFilters.push(currentFilters.mealType);
     if (currentFilters.dietTypes.length) activeFilters.push(...currentFilters.dietTypes);
     if (currentFilters.difficulty) activeFilters.push(currentFilters.difficulty);
+    if (currentFilters.favoritesOnly) activeFilters.push("Favorites");
 
     if (activeFilters.length > 0) {
         summaryElement.textContent = `${activeFilters.length} filters: ${activeFilters.join(", ")}`;
@@ -243,8 +207,8 @@ function createStarRating(rating) {
 
 /* ===== Helpers to integrate with Meal Planner page ===== */
 
-const plannerDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-const plannerMealTypes = ["Breakfast","Lunch","Dinner"]; // same idea as in planner (no Notes here)
+let plannerDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+let plannerMealTypes = ["Breakfast","Lunch","Dinner"]; // same idea as in planner (no Notes here)
 
 function saveMealToPlanner(day, mealType, recipe) {
     let plan = JSON.parse(localStorage.getItem("mealPlanner") || "{}");
@@ -346,6 +310,7 @@ function displayRecipes() {
         `Found ${filteredRecipes.length} recipes out of ${allRecipes.length} total`;
 
     updateFilterSummary();
+    updateClearFiltersButton(); 
 
     if (filteredRecipes.length === 0) {
         recipesContainer.innerHTML = `
@@ -793,6 +758,46 @@ function setupFilters() {
     ).join('');
 }
 
+// Favorite filter function
+function toggleFavoriteFilter() {
+    let favoriteFilterBtn = document.getElementById('favoriteFilter');
+    
+    if (currentFilters.favoritesOnly) {
+        // Turn off favorite filter
+        currentFilters.favoritesOnly = false;
+        favoriteFilterBtn.classList.remove("active");
+        showNotification('Showing all recipes', 'info');
+    } else {
+        // Turn on favorite filter
+        currentFilters.favoritesOnly = true;
+        favoriteFilterBtn.classList.add("active");
+        
+        // Remove active class from other quick pills
+        document.querySelectorAll(".quick-pill").forEach(btn => {
+            if (btn !== favoriteFilterBtn) {
+                btn.classList.remove("active");
+            }
+        });
+        
+        // Clear other quick filters
+        currentFilters.quickFilter = null;
+        
+        let favoriteCount = favoriteRecipes.length;
+        if (favoriteCount > 0) {
+            showNotification(`Showing ${favoriteCount} favorite recipes`, 'success');
+        } else {
+            showNotification('No favorite recipes yet!', 'info');
+        }
+    }
+    
+    displayRecipes();
+}
+document.addEventListener('DOMContentLoaded', function() {
+    let favoriteFilterBtn = document.getElementById('favoriteFilter');
+    if (favoriteFilterBtn) {
+        favoriteFilterBtn.addEventListener('click', toggleFavoriteFilter);
+    }
+});
 // Enhanced notification system
 function showNotification(message, type = 'info') {
     document.querySelectorAll('.notification').forEach(n => n.remove())
@@ -955,6 +960,84 @@ document.addEventListener('mousemove', (e) => {
     tagDialog.close();
   }
 });
+
+// ===== CLEAR FILTERS FUNCTIONALITY =====
+
+// Enhanced function to check if any filters are active
+function hasActiveFilters() {
+    return currentFilters.search !== "" ||
+           currentFilters.mealType !== null ||
+           currentFilters.dietTypes.length > 0 ||
+           currentFilters.difficulty !== null ||
+           currentFilters.quickFilter !== null ||
+           currentFilters.ingredients.length > 0;
+           currentFilters.favoritesOnly; 
+}
+
+// Enhanced function to update filter button visibility
+function updateClearFiltersButton() {
+    let filterActions = document.getElementById('filterActions');
+    
+    if (hasActiveFilters()) {
+        filterActions.style.display = 'flex';
+        // Add a little bounce effect when appearing
+        filterActions.style.animation = 'fadeInUp 0.3s ease-out';
+    } else {
+        filterActions.style.display = 'none';
+    }
+}
+
+// Enhanced clear all filters function
+function clearAllFilters() {
+    // Reset all filter states
+    currentFilters = {
+        search: "",
+        mealType: null,
+        dietTypes: [],
+        difficulty: null,
+        quickFilter: null,
+        ingredients: [],
+        favoritesOnly: false
+    };
+
+    // Clear search input
+    document.getElementById("searchInput").value = "";
+
+    // Remove active classes from quick pills
+    document.querySelectorAll(".quick-pill").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    // Remove active classes from dropdown items
+    document.querySelectorAll(".dd-item").forEach(item => {
+        item.classList.remove("active");
+    });
+
+    // Close all dropdown panels
+    document.querySelectorAll(".dd-panel").forEach(panel => {
+        panel.style.display = "none";
+    });
+
+    // Hide the clear button
+    updateClearFiltersButton();
+    
+    // Refresh the display
+    displayRecipes();
+    
+    // Show confirmation
+    showNotification('All filters cleared', 'info');
+}
+
+// Add event listener for the clear filters button
+document.addEventListener('DOMContentLoaded', function() {
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', clearAllFilters);
+    }
+});
+
+// Also update the displayRecipes function to call updateClearFiltersButton
+// Find your existing displayRecipes function and add this line:
 
 
 // Enhanced initialization

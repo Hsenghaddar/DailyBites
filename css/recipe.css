@@ -361,6 +361,27 @@ main {
   color: var(--accent-ink);
 }
 
+
+.quick-pill svg {
+    width: 16px;
+    height: 16px;
+}
+
+.quick-pill.active svg {
+    stroke: currentColor;
+}
+
+#favoriteFilter.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+}
+
+#favoriteFilter.active svg {
+    fill: currentColor;
+    stroke: currentColor;
+}
+
 .content {
   padding: 18px 24px 0;
   display: flex;
@@ -1247,4 +1268,53 @@ body.modal-open {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+}
+
+
+/* Clear Filters Button */
+.filter-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.clear-filters-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 40px;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.clear-filters-btn:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #475569;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.clear-filters-btn:active {
+    transform: translateY(0);
+}
+
+/* Animation for button appearance */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
