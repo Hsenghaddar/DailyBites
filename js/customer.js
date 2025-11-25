@@ -16,11 +16,13 @@ let pMedia = document.getElementById('pMedia'), pPH = document.getElementById('p
 
 // id saved in session storage from log in page
 function currentUserId(){
-    let  id = sessionStorage.getItem('userId') 
-    if(!id){ alert('No userId in sessionStorage. Set it at login.')  }
-    return id || 'anonymous' 
+    let id = sessionStorage.getItem('userId');
+    if (!id) {
+        console.log('No userId in sessionStorage. Using anonymous mode.');
+        return 'anonymous';
+    }
+    return id;
 }
-
 let curId = currentUserId()
 
 async function getUser(userid) {
