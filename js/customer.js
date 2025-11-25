@@ -40,53 +40,163 @@ getUser(curId).then(username => {
 });
 
 let KEY = "MyRecipes"
-
 let userKEY = `${curId}: ${KEY}`
-
 let myRecipes = JSON.parse(localStorage.getItem(userKEY)) || []
 
 function save(){ localStorage.setItem(userKEY, JSON.stringify(myRecipes)) }
 
-/*function updatePreview(){
-    let  nm = nameEl.value.trim() 
-    pTitle.textContent = nm || '—' 
-    pDesc.textContent = descriptionEl.value.trim() 
-    let  totalMin = (+prepEl.value||0) + (+cookEl.value||0) 
-    pTime.textContent = totalMin + 'm' 
-    pKcal.textContent = ((+calEl.value)||0) + ' kcal' 
-    let  tagStr = (tagsEl.value||'').split(',').map(s=>s.trim()).filter(Boolean).slice(0,3).join(' • ') 
-    pTags.textContent = tagStr 
 
-    let  url = imageEl.value.trim() 
-    pMedia.innerHTML = '' 
-    if(url){
-        let img = new Image()
-        img.src = url  
-        img.alt = nm 
-        img.onload = ()=>{}  
-        img.onerror = ()=>{} 
-        img.style.maxWidth='100%'  
-        img.style.maxHeight='100%'  
-        img.style.objectFit='cover'
-        let media = document.createElement('div')  
-        media.className='media' 
-        media.appendChild(img)  
-        pMedia.replaceWith(media) 
-        pMedia = media
-        media.id = 'pMedia' 
-    }else{
-        let  media = document.createElement('div')  
-        media.className='media' 
-        let  ph = document.createElement('div')  
-        ph.className='placeholder'  
-        ph.textContent = placeholderInitials(nm) 
-        media.appendChild(ph)  
-        pMedia.replaceWith(media)  
-        pMedia = media
-        media.id = 'pMedia' 
+// ------------------- INLINE VALIDATION HELPERS -------------------
+
+function ensureErrorContainer(field) {
+  const label = field.closest('label');
+  if (!label) return null;
+
+  let err = label.querySelector('.field-error');
+  if (!err) {
+    err = document.createElement('div');
+    err.className = 'field-error';
+    label.appendChild(err);
+  }
+  return err;
+}
+
+function showFieldError(field, message) {
+  const err = ensureErrorContainer(field);
+  if (!err) return;
+  field.classList.add('invalid');
+  field.setAttribute('aria-invalid', 'true');
+  err.textContent = message;
+}
+
+function clearFieldError(field) {
+  const label = field.closest('label');
+  if (!label) return;
+  const err = label.querySelector('.field-error');
+  if (err) err.textContent = '';
+  field.classList.remove('invalid');
+  field.removeAttribute('aria-invalid');
+}
+
+function isValidUrl(str) {
+  try {
+    new URL(str);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function validateField(field) {
+  const id = field.id;
+  const raw = field.value;
+  const value = raw.trim();
+
+  // clear previous error first
+  clearFieldError(field);
+
+  // basic rules per field
+  switch (id) {
+    case 'name':
+      if (!value) {
+        showFieldError(field, 'Name is required.');
+      } else if (value.length < 3) {
+        showFieldError(field, 'Name should be at least 3 characters.');
+      }
+      break;
+
+    case 'description':
+      if (!value) {
+        showFieldError(field, 'Description is required.');
+      } else if (value.length < 10) {
+        showFieldError(field, 'Description should be at least 10 characters.');
+      }
+      break;
+
+    case 'ingredients':
+      if (!value) {
+        showFieldError(field, 'Add at least one ingredient.');
+      }
+      break;
+
+    case 'instructions':
+      if (!value) {
+        showFieldError(field, 'Add at least one step.');
+      }
+      break;
+
+    case 'image':
+      if (value && !isValidUrl(value)) {
+        showFieldError(field, 'Please enter a valid image URL.');
+      }
+      break;
+
+    case 'servings': {
+      let n = +raw;
+      if (!raw || isNaN(n) || n < 1) {
+        showFieldError(field, 'Servings must be at least 1.');
+      }
+      break;
     }
-}*/
 
+    case 'prep_time':
+    case 'cook_time':
+    case 'calories':
+    case 'protein':
+    case 'carbs':
+    case 'fat':
+    case 'fiber':
+    case 'sodium': {
+      if (raw !== '') {
+        let n = +raw;
+        if (isNaN(n) || n < 0) {
+          showFieldError(field, 'Value cannot be negative.');
+        }
+      }
+      break;
+    }
+
+    case 'extraMicro':
+      if (value) {
+        try {
+          JSON.parse(value);
+        } catch {
+          showFieldError(field, 'Must be valid JSON, e.g. {"iron":"3mg"}.');
+        }
+      }
+      break;
+
+    // other fields (tags, difficulty, etc.) are flexible, no strict rules
+  }
+}
+
+// list of fields we validate
+const validatableFields = [
+  nameEl,
+  descriptionEl,
+  ingEl,
+  instEl,
+  imageEl,
+  prepEl,
+  cookEl,
+  servingsEl,
+  calEl,
+  protEl,
+  carbEl,
+  fatEl,
+  fiberEl,
+  sodiumEl,
+  extraMicroEl
+];
+
+// live validation (blur = validate, input = clear error)
+validatableFields.forEach(f => {
+  if (!f) return;
+  f.addEventListener('blur', () => validateField(f));
+  f.addEventListener('input', () => clearFieldError(f));
+});
+
+// ------------------- RENDERING CARDS / MODAL (UNCHANGED) -------------------
 
 let grid = document.querySelector('.grid')
 
@@ -268,9 +378,7 @@ function openModal(recipe){
         </div>
     </div>
     `;
-
 }
-
 
 modal.addEventListener('click', (e)=>{
   if (e.target.matches('[data-close]') || e.target.hasAttribute('data-close')) {
@@ -279,8 +387,6 @@ modal.addEventListener('click', (e)=>{
     document.body.style.overflow = ''
   }
 })
-
-
 
 function placeholderInitials(s){
     return (String(s||'').trim().split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase()) || 'R'
@@ -292,6 +398,12 @@ document.getElementById('resetForm').addEventListener('click', () => {
         myRecipes = []
         save()
         render() 
+
+        // clear validation states too
+        validatableFields.forEach(f => {
+          if (!f) return;
+          clearFieldError(f);
+        });
     }
 })
 
@@ -307,10 +419,10 @@ function createRecipe(){
     if(sodiumEl.value) micronutrients.sodium = +sodiumEl.value
     if(vitCEl.value) micronutrients.vitaminC = vitCEl.value
     if(extraMicroEl.value){
-    try{ Object.assign(micronutrients, JSON.parse(extraMicroEl.value)) }catch{}
+      try{ Object.assign(micronutrients, JSON.parse(extraMicroEl.value)) }catch{}
     }
 
-    // id: keep numeric like your file use timestamp to avoid collision
+    // id
     let id = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000
     console.log("added ",id)
 
@@ -338,16 +450,29 @@ function createRecipe(){
     }
 }
 
+// --- SUBMIT WITH VALIDATION ---
 form.addEventListener('submit', e=>{
     e.preventDefault()
-    if(!nameEl.value.trim()){ nameEl.focus(); return }
+
+    // run validation on all key fields
+    validatableFields.forEach(f => f && validateField(f))
+
+    // if any error, focus the first one and stop
+    let firstError = form.querySelector('.invalid')
+    if (firstError) {
+        firstError.focus()
+        return
+    }
+
     let recipe = createRecipe()
     myRecipes.push(recipe)
     save()
     render()
     confirm('Saved to My Recipes for this user.')
+
+    // clear form & error states
     form.reset() 
+    validatableFields.forEach(f => f && clearFieldError(f))
 })
 
 document.addEventListener('DOMContentLoaded',render)
-

@@ -260,8 +260,8 @@ textarea{
 }
 
 .kv{ 
-    display:grid; 
-    grid-template-columns:1fr 1fr 1fr 1fr; 
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px 12px;
 }
 
@@ -521,7 +521,25 @@ textarea{
   background: color-mix(in oklab, currentColor 6%, transparent);
   opacity: .95;
 }
+.field-error {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  color: #dc2626; /* red-600 */
+}
 
+input.invalid,
+textarea.invalid,
+select.invalid {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.1);
+}
+
+input.invalid:focus,
+textarea.invalid:focus,
+select.invalid:focus {
+  outline: 2px solid rgba(220, 38, 38, 0.7);
+  outline-offset: 1px;
+}
 /* Tighten section layout on small screens */
 @media (max-width: 480px) {
   #modal .msec { padding: 10px 12px; }
