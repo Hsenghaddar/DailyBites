@@ -37,10 +37,38 @@ let clearBtn = document.getElementById("clear-plan");
 let generateBtn = document.getElementById("generate-plan");
 let exportBtn = document.getElementById("export-plan");
 
+// to hsen: made mealplanner in local storrage user specific
+
+// id saved in session storage from log in page
+function currentUserId() {
+    let id = sessionStorage.getItem('userId');
+    if (!id) {
+        console.log('No userId in sessionStorage. User is anonymous.');
+        return 'anonymous';
+    }
+    return id;
+}
+
+let curId = currentUserId()
+
+async function getUser(userid) {
+  let res = await fetch("../js/data.json");
+  let data = await res.json();
+
+  let users = data.users || [];
+  let user  = users.find(u => String(u.id) === String(userid));
+
+  return user?.username || userid;
+}
+let KEY;
+getUser(curId).then(username => {
+  KEY = `${username}: mealPlanner`
+});
+
 clearBtn.addEventListener("click", () => {
   let confirmed = confirm("Clear your entire weekly plan?");
   if (!confirmed) return;
-  localStorage.removeItem("mealPlanner");
+  localStorage.removeItem(KEY);
   renderLayout();
 });
 generateBtn.addEventListener("click", () => {
@@ -49,7 +77,7 @@ generateBtn.addEventListener("click", () => {
     return;
   }
 
-  let plan = JSON.parse(localStorage.getItem("mealPlanner")) || {};
+  let plan = JSON.parse(localStorage.getItem(KEY)) || {};
 
   let sections = document.querySelectorAll("main section.day-section");
   let createdCount = 0;
@@ -74,7 +102,7 @@ generateBtn.addEventListener("click", () => {
     return;
   }
 
-  localStorage.setItem("mealPlanner", JSON.stringify(plan));
+  localStorage.setItem(KEY, JSON.stringify(plan));
   loadSavedMeals();
 });
 
@@ -84,7 +112,7 @@ exportBtn.addEventListener("click", () => {
     return;
   }
 
-  let saved = JSON.parse(localStorage.getItem("mealPlanner") || "{}");
+  let saved = JSON.parse(localStorage.getItem(KEY) || "{}");
   if (!Object.keys(saved).length) {
     alert("You don't have any meals in your plan yet.");
     return;
@@ -507,7 +535,7 @@ function attachRecipeClickListeners() {
 }
 
 function loadSavedMeals() {
-  let saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
+  let saved = JSON.parse(localStorage.getItem(KEY)) || {};
 
   let sections = document.querySelectorAll("main section.day-section");
 
@@ -627,15 +655,15 @@ function setSlotListeners() {
 }
 
 function saveMeal(day, mealType, mealData) {
-  let saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
+  let saved = JSON.parse(localStorage.getItem(KEY)) || {};
   saved[`${day}-${mealType}`] = mealData;
-  localStorage.setItem("mealPlanner", JSON.stringify(saved));
+  localStorage.setItem(KEY, JSON.stringify(saved));
 }
 
 function removeMeal(day, mealType) {
-  let saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
+  let saved = JSON.parse(localStorage.getItem(KEY)) || {};
   delete saved[`${day}-${mealType}`];
-  localStorage.setItem("mealPlanner", JSON.stringify(saved));
+  localStorage.setItem(KEY, JSON.stringify(saved));
 }
 
 overlay.addEventListener("click", (e) => {
