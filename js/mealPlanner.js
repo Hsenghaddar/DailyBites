@@ -37,38 +37,16 @@ let clearBtn = document.getElementById("clear-plan");
 let generateBtn = document.getElementById("generate-plan");
 let exportBtn = document.getElementById("export-plan");
 
-// to hsen: made mealplanner in local storrage user specific
-
-// id saved in session storage from log in page
-function currentUserId() {
-    let id = sessionStorage.getItem('userId');
-    if (!id) {
-        console.log('No userId in sessionStorage. User is anonymous.');
-        return 'anonymous';
-    }
-    return id;
+function getMealPlannerKey() {
+  let id = sessionStorage.getItem("userId");
+  let currentUserId = id || "anonymous";
+  return `${currentUserId}: MealPlanner`;
 }
-
-let curId = currentUserId()
-
-async function getUser(userid) {
-  let res = await fetch("../js/data.json");
-  let data = await res.json();
-
-  let users = data.users || [];
-  let user  = users.find(u => String(u.id) === String(userid));
-
-  return user?.username || userid;
-}
-let KEY;
-getUser(curId).then(username => {
-  KEY = `${username}: mealPlanner`
-});
 
 clearBtn.addEventListener("click", () => {
   let confirmed = confirm("Clear your entire weekly plan?");
   if (!confirmed) return;
-  localStorage.removeItem(KEY);
+  localStorage.removeItem(getMealPlannerKey());
   renderLayout();
 });
 generateBtn.addEventListener("click", () => {
@@ -77,7 +55,7 @@ generateBtn.addEventListener("click", () => {
     return;
   }
 
-  let plan = JSON.parse(localStorage.getItem(KEY)) || {};
+  let plan = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {};
 
   let sections = document.querySelectorAll("main section.day-section");
   let createdCount = 0;
@@ -102,7 +80,7 @@ generateBtn.addEventListener("click", () => {
     return;
   }
 
-  localStorage.setItem(KEY, JSON.stringify(plan));
+  localStorage.setItem(getMealPlannerKey(), JSON.stringify(plan));
   loadSavedMeals();
 });
 
@@ -112,7 +90,7 @@ exportBtn.addEventListener("click", () => {
     return;
   }
 
-  let saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey()) || "{}");
   if (!Object.keys(saved).length) {
     alert("You don't have any meals in your plan yet.");
     return;
@@ -144,6 +122,7 @@ exportBtn.addEventListener("click", () => {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(11);
   doc.text(dateRange, pageWidth / 2, marginY + 6, { align: "center" });
+
   let headers = ["Day", "Breakfast", "Lunch", "Dinner", "Notes"];
   let tableTop = marginY + 15;
   let tableWidth = pageWidth - marginX * 2;
@@ -388,11 +367,12 @@ function renderRecipeCard(meal) {
   `;
 }
 
+
 function getUserMyRecipes() {
-    let id = sessionStorage.getItem("userId");
-    let currentUserId=id || "anonymous"
-    let parsed = JSON.parse(localStorage.getItem(`${currentUserId}: MyRecipes`)) || [];
-    return Array.isArray(parsed) ? parsed : [];
+  let id = sessionStorage.getItem("userId");
+  let currentUserId = id || "anonymous"
+  let parsed = JSON.parse(localStorage.getItem(`${currentUserId}: MyRecipes`)) || [];
+  return Array.isArray(parsed) ? parsed : [];
 }
 
 function fetchAllRecipes() {
@@ -439,7 +419,6 @@ function renderLayout() {
   loadSavedMeals();
 
 }
-
 searchInput.addEventListener("input", () => {
   let query = searchInput.value.toLowerCase();
   recipesContainer.innerHTML = "";
@@ -500,7 +479,7 @@ function attachRecipeClickListeners() {
 }
 
 function loadSavedMeals() {
-  let saved = JSON.parse(localStorage.getItem(KEY)) || {};
+  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {};
 
   let sections = document.querySelectorAll("main section.day-section");
 
@@ -620,15 +599,15 @@ function setSlotListeners() {
 }
 
 function saveMeal(day, mealType, mealData) {
-  let saved = JSON.parse(localStorage.getItem(KEY)) || {};
+  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {};
   saved[`${day}-${mealType}`] = mealData;
-  localStorage.setItem(KEY, JSON.stringify(saved));
+  localStorage.setItem(getMealPlannerKey(), JSON.stringify(saved));
 }
 
 function removeMeal(day, mealType) {
-  let saved = JSON.parse(localStorage.getItem(KEY)) || {};
+  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {};
   delete saved[`${day}-${mealType}`];
-  localStorage.setItem(KEY, JSON.stringify(saved));
+  localStorage.setItem(getMealPlannerKey(), JSON.stringify(saved));
 }
 
 overlay.addEventListener("click", (e) => {

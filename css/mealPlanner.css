@@ -1,3 +1,4 @@
+
 * {
   margin: 0;
   padding: 0;
@@ -801,5 +802,3 @@ main > div .day-section:nth-child(4) { animation-delay: 0.65s; }
 main > div .day-section:nth-child(5) { animation-delay: 0.75s; }
 main > div .day-section:nth-child(6) { animation-delay: 0.85s; }
 main > div .day-section:nth-child(7) { animation-delay: 0.95s; }
-
-
