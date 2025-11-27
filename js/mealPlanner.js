@@ -16,7 +16,7 @@ function getThisWeek() {
   monday.setDate(today.getDate() + diff)
 
   let week = []
-  for (let i = 0 ;i < 7; i++) {
+  for (let i = 0; i < 7; i++) {
     let d = new Date()
     d.setDate(monday.getDate() + i)
     week.push(d)
@@ -495,6 +495,8 @@ function loadSavedMeals() {
       let body = div.querySelector(".meal-body")
       if (!body) return
 
+      div.classList.remove("has-meal")
+
       if (savedMeal) {
         if (mealType === "Notes") {
           let noteText = typeof savedMeal === "string" ? savedMeal : savedMeal.name
@@ -506,20 +508,23 @@ function loadSavedMeals() {
           let img = data.image || ""
 
           body.innerHTML = `
-            <div class="saved-meal saved-meal-card">
-              <div class="saved-meal-thumb">
-                <img src="${img}" alt="${data.name}">
-              </div>
-              <div class="saved-meal-text">
-                <h4>${data.name}</h4>
-              </div>
-            </div>
-          `
+        <div class="saved-meal saved-meal-card">
+          <div class="saved-meal-thumb">
+            <img src="${img}" alt="${data.name}">
+          </div>
+          <div class="saved-meal-text">
+            <h4>${data.name}</h4>
+          </div>
+        </div>
+      `
+
+          div.classList.add("has-meal")
         }
       } else {
         body.innerHTML = `<span class="meal-placeholder">+</span>`
       }
     })
+
   })
 
   document.querySelectorAll(".saved-meal").forEach((mealEl) => {
@@ -542,6 +547,7 @@ function loadSavedMeals() {
       if (confirm("Remove this recipe?")) {
         removeMeal(day, mealType)
         body.innerHTML = `<span class="meal-placeholder">+</span>`
+        parentSlot.classList.remove("has-meal")
       }
     })
   })

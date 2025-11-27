@@ -7,7 +7,7 @@
     let name = slot.getAttribute('data-include')
 
     try {
-      let res = await fetch(`/${name}.html`, { cache: 'no-cache' })
+      let res = await fetch(`../../layout/html/${name}.html`, { cache: 'no-cache' })
       if (!res.ok) throw new Error(res.status)
       let html = await res.text()
       // replace the placeholder with fetched HTML
@@ -39,7 +39,7 @@
   // ensure shared behavior runs AFTER injection:
   if (!document.querySelector('script[data-main]')) {
     let s = document.createElement('script')
-    s.src = '/main.js'
+    s.src = '../../layout/js/main.js'
     s.dataset.main = 'true'
     document.body.appendChild(s)
   }

@@ -338,6 +338,44 @@ main>div {
   z-index: 20;
   background-color: rgba(15, 23, 42, 0.45);
 }
+.meal-slot.has-meal {
+  position: relative;
+  overflow: hidden;
+}
+
+.meal-slot.has-meal:hover {
+  border-color: #fecaca;           
+  background: #fff7f7;
+  box-shadow: 0 8px 18px rgba(248, 113, 113, 0.15);
+}
+.meal-slot.has-meal::before {
+  content: "Click to remove";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fee2e2;             
+  color: #b91c1c;                 
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 0.18s var(--ease),
+    transform 0.18s var(--ease);
+  z-index: 1000;
+}
+
+.meal-slot.has-meal:hover::before {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 .model {
   width: min(1100px, 90vw);

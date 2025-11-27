@@ -306,7 +306,7 @@ nav .btn {
 
 @font-face {
   font-family: 'Diella-Regular';
-  src: url('../fonts/Diella-Regular.woff2') format('woff2');
+  src: url('../../fonts/Diella-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -443,7 +443,7 @@ nav > .hamburger {
 /* Footer */
 footer {
   border-top: 1px solid var(--line);
-  padding: 28px 0;
+  padding: 28px 20px;
   padding-left: 8%;
   color: var(--muted);
   background-color: white;
@@ -635,7 +635,7 @@ section[id] { scroll-margin-top: 84px; }
 
 footer {
   border-top: 1px solid var(--line);
-  padding: 28px 0 20px;
+  padding: 28px 20px;
   color: var(--muted);
   background: white;
   position: relative;
