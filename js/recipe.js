@@ -1,8 +1,6 @@
-// Enhanced Recipe Collection JavaScript
 let allRecipes = [];
-let favoriteRecipes = JSON.parse(localStorage.getItem("savedRecipes") || "[]");
+let favoriteRecipes = JSON.parse(localStorage.getItem(getStorageKey('favorites')) || "[]");
 
-// Enhanced filters with better structure
 let currentFilters = {
     search: "",
     mealType: null,
@@ -13,7 +11,21 @@ let currentFilters = {
     favoritesOnly: false
 };
 
-// Debounce function for search performance
+
+async function initializeApp() {
+    try {
+        allRecipes = await loadAllRecipes();
+        console.log('Loaded recipes:', allRecipes.length);
+        setupFilters();
+        displayRecipes();
+        showNotification('Recipes loaded successfully!', 'success');
+    } catch (error) {
+        console.error('Failed to initialize app:', error);
+        showNotification('Failed to load recipes', 'e rror');
+    }
+}
+
+
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -26,53 +38,39 @@ function debounce(func, wait) {
     };
 }
 
-// note to aya: made the favorites user specific
-
-// id saved in session storage from log in page
-function currentUserId() {
-    let id = sessionStorage.getItem('userId');
-    if (!id) {
-        console.log('No userId in sessionStorage. User is anonymous.');
-        return 'anonymous';
+function getStorageKey(type) {
+    let userId = sessionStorage.getItem('userId');
+    if (!userId) {
+        return 'anonymous:' + type;
     }
-    return id;
+    return userId + ':' + type;
 }
 
-let curId = currentUserId()
-
-let KEY = `${curId}: favorites`
-let anotherKey = `${curId}: MealPlanner`
-
-// Enhanced save favorites with validation
 function saveFavorites() {
     try {
-        localStorage.setItem(KEY, JSON.stringify(favoriteRecipes));
+        localStorage.setItem(getStorageKey('favorites'), JSON.stringify(favoriteRecipes));
     } catch (error) {
         console.error('Failed to save favorites:', error);
         showNotification('Failed to save favorites', 'error');
     }
 }
 
-// Enhanced recipe loading with fallback
 async function loadAllRecipes() {
     try {
         let response = await fetch('../js/data.json');
         if (!response.ok) throw new Error('Network response was not ok');
-        
+
         let data = await response.json();
         return data.recipes || [];
     } catch (error) {
         console.error('Error loading recipes:', error);
-        
-        // Provide fallback sample data
         return getFallbackRecipes();
     }
 }
 
-// Enhanced search matching with better scoring
 function matchesSearchTerm(recipe) {
     if (!currentFilters.search) return true;
-    
+
     let searchTerm = currentFilters.search.toLowerCase();
     let searchableText = `
         ${recipe.name}
@@ -87,13 +85,12 @@ function matchesSearchTerm(recipe) {
     return searchableText.includes(searchTerm);
 }
 
-// Enhanced filter matching
 function matchesQuickFilter(recipe) {
     if (!currentFilters.quickFilter) return true;
 
     let filter = currentFilters.quickFilter;
     let totalTime = recipe.prep_time + recipe.cook_time;
-    
+
     switch (filter) {
         case "Quick & Easy":
             return recipe.difficulty === "Easy" && totalTime <= 30;
@@ -110,7 +107,6 @@ function matchesQuickFilter(recipe) {
     }
 }
 
-// Enhanced recipe filtering
 function shouldShowRecipe(recipe) {
     if (currentFilters.favoritesOnly && !favoriteRecipes.includes(recipe.id)) {
         return false;
@@ -136,7 +132,7 @@ function shouldShowRecipe(recipe) {
 
     if (currentFilters.dietTypes.length > 0) {
         let recipeDiet = recipe.diet_category.toLowerCase();
-        let hasMatchingDiet = currentFilters.dietTypes.some(diet => 
+        let hasMatchingDiet = currentFilters.dietTypes.some(diet =>
             diet.toLowerCase() === recipeDiet
         );
         if (!hasMatchingDiet) return false;
@@ -149,7 +145,6 @@ function shouldShowRecipe(recipe) {
     return true;
 }
 
-// Enhanced filter summary
 function updateFilterSummary() {
     let summaryElement = document.getElementById("filterCount");
     let activeFilters = [];
@@ -161,7 +156,7 @@ function updateFilterSummary() {
     if (currentFilters.favoritesOnly) activeFilters.push("Favorites");
 
     if (activeFilters.length > 0) {
-        summaryElement.textContent = `${activeFilters.length} filters: ${activeFilters.join(", ")}`;
+        summaryElement.textContent = activeFilters.length + ' filters: ' + activeFilters.join(", ");
         summaryElement.parentElement.style.display = 'flex';
     } else {
         summaryElement.textContent = "No filters applied";
@@ -169,45 +164,42 @@ function updateFilterSummary() {
     }
 }
 
-// Enhanced star rating with accessibility
 function createStarRating(rating) {
     let numberRating = parseFloat(rating);
     let fullStars = Math.floor(numberRating);
     let hasHalfStar = numberRating % 1 >= 0.5;
 
     let starsHTML = '<span class="stars" role="img" aria-label="Rating: ' + numberRating + ' out of 5 stars">';
-    
+
     for (let i = 0; i < fullStars; i++) {
         starsHTML += '<svg class="star" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="#fbbf24" stroke="#f59e0b"/></svg>';
     }
-    
+
     if (hasHalfStar) {
         starsHTML += '<svg class="star" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><defs><linearGradient id="half"><stop offset="50%" stop-color="#fbbf24"/><stop offset="50%" stop-color="transparent"/></linearGradient></defs><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="url(#half)" stroke="#f59e0b"/></svg>';
     }
-    
+
     let starsShown = fullStars + (hasHalfStar ? 1 : 0);
     for (let i = starsShown; i < 5; i++) {
         starsHTML += '<svg class="star" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="#d1d5db" stroke-width="2"/></svg>';
     }
-    
-    starsHTML += ` <span style="margin-left: 4px;">${numberRating}</span></span>`;
+
+    starsHTML += ' <span style="margin-left: 4px;">' + numberRating + '</span></span>';
     return starsHTML;
 }
 
-/* ===== Helpers to integrate with Meal Planner page ===== */
-
-let plannerDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-let plannerMealTypes = ["Breakfast","Lunch","Dinner"]; // same idea as in planner (no Notes here)
+let plannerDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+let plannerMealTypes = ["Breakfast", "Lunch", "Dinner"];
 
 function saveMealToPlanner(day, mealType, recipe) {
-    let plan = JSON.parse(localStorage.getItem(anotherKey) || "{}");
-    let key = `${day}-${mealType}`;
+    let plan = JSON.parse(localStorage.getItem(getStorageKey('MealPlanner')) || "{}");
+    let key = day + '-' + mealType;
 
     let existing = plan[key];
     if (existing) {
         let existingName = typeof existing === "string" ? existing : existing.name;
         let overwrite = confirm(
-            `You already have "${existingName}" planned for ${day} ${mealType}.\nReplace it with "${recipe.name}"?`
+            'You already have "' + existingName + '" planned for ' + day + ' ' + mealType + '.\nReplace it with "' + recipe.name + '"?'
         );
         if (!overwrite) {
             showNotification("Kept your existing meal.", "info");
@@ -216,12 +208,11 @@ function saveMealToPlanner(day, mealType, recipe) {
     }
 
     plan[key] = { name: recipe.name, image: recipe.image };
-    localStorage.setItem(anotherKey, JSON.stringify(plan));
-    showNotification(`Added "${recipe.name}" to ${day} ${mealType}`, "success");
+    localStorage.setItem(getStorageKey('MealPlanner'), JSON.stringify(plan));
+    showNotification('Added "' + recipe.name + '" to ' + day + ' ' + mealType, "success");
 }
 
 function openAddToPlanModal(recipe) {
-    // remove any old modal
     document.querySelectorAll(".add-plan-modal-backdrop").forEach(m => m.remove());
 
     let backdrop = document.createElement("div");
@@ -236,13 +227,13 @@ function openAddToPlanModal(recipe) {
           <label>
             <span>Day</span>
             <select class="add-plan-day">
-              ${plannerDays.map(d => `<option value="${d}">${d}</option>`).join("")}
+              ${plannerDays.map(d => '<option value="' + d + '">' + d + '</option>').join("")}
             </select>
           </label>
           <label>
             <span>Meal</span>
             <select class="add-plan-meal">
-              ${plannerMealTypes.map(m => `<option value="${m}">${m}</option>`).join("")}
+              ${plannerMealTypes.map(m => '<option value="' + m + '">' + m + '</option>').join("")}
             </select>
           </label>
         </div>
@@ -284,22 +275,19 @@ function openAddToPlanModal(recipe) {
     });
 }
 
-/* ======== Recipe display ========= */
-
-// Enhanced recipe display with better performance
 function displayRecipes() {
     let recipesContainer = document.getElementById("recipes");
     let recipeTemplate = document.getElementById("card");
-    
+
     recipesContainer.innerHTML = "";
 
     let filteredRecipes = allRecipes.filter(shouldShowRecipe);
 
-    document.getElementById("count").textContent = 
-        `Found ${filteredRecipes.length} recipes out of ${allRecipes.length} total`;
+    document.getElementById("count").textContent =
+        'Found ' + filteredRecipes.length + ' recipes out of ' + allRecipes.length + ' total';
 
     updateFilterSummary();
-    updateClearFiltersButton(); 
+    updateClearFiltersButton();
 
     if (filteredRecipes.length === 0) {
         recipesContainer.innerHTML = `
@@ -353,16 +341,13 @@ function displayRecipes() {
                 seen.add(key);
                 allRecipeTags.push(tag);
             }
-        });        
+        });
 
         let visibleTags, hiddenTags;
-        // math stuff where in 1 line 3 tags bse3o => more than 4 more takes place of the last
         if (allRecipeTags.length <= 3) {
-            // 0–4 tags → show all, no "+ more"
             visibleTags = allRecipeTags;
             hiddenTags = [];
         } else {
-            // 5+ tags → 3 visible + "+X more"
             visibleTags = allRecipeTags.slice(0, 2);
             hiddenTags = allRecipeTags.slice(2);
         }
@@ -376,14 +361,14 @@ function displayRecipes() {
         if (hiddenTags.length > 0) {
             let moreButton = document.createElement("span");
             moreButton.className = "more-toggle";
-            moreButton.textContent = `+${hiddenTags.length} more`;
-            
+            moreButton.textContent = '+' + hiddenTags.length + ' more';
+
             moreButton.addEventListener('mousemove', (e) => {
                 e.stopPropagation()
 
                 let tagDialog = document.getElementById("tagDialog");
                 let tagContent = document.getElementById("tagDialogContent");
-                
+
                 tagContent.innerHTML = "";
                 allRecipeTags.forEach(tag => {
                     let tagElement = document.createElement("span");
@@ -391,9 +376,9 @@ function displayRecipes() {
                     tagContent.appendChild(tagElement);
                 });
                 let rect = moreButton.getBoundingClientRect();
-                 tagDialog.style.position = "absolute";
-                tagDialog.style.top  = `${rect.bottom + window.scrollY - 20}px`;
-                tagDialog.style.left = `${rect.left + window.scrollX + 80}px`;
+                tagDialog.style.position = "absolute";
+                tagDialog.style.top = (rect.bottom + window.scrollY - 20) + 'px';
+                tagDialog.style.left = (rect.left + window.scrollX + 80) + 'px';
 
                 tagDialog.show()
             });
@@ -435,7 +420,6 @@ function displayRecipes() {
         hoverButtons.appendChild(addToPlanBtn);
         recipeCard.querySelector(".thumb").appendChild(hoverButtons);
 
-        // Footer "Add to Plan" button from the template
         let footerAddBtn = recipeCard.querySelector(".ghost");
         if (footerAddBtn) {
             footerAddBtn.addEventListener("click", (e) => {
@@ -445,17 +429,17 @@ function displayRecipes() {
             });
         }
 
-        recipeCard.querySelector(".primary").addEventListener('click', e => { 
-            e.preventDefault(); 
-            showRecipeDetails(recipe); 
+        recipeCard.querySelector(".primary").addEventListener('click', e => {
+            e.preventDefault();
+            showRecipeDetails(recipe);
         });
 
         let favoriteBtn = recipeCard.querySelector(".fav");
         favoriteBtn.classList.toggle("active", favoriteRecipes.includes(recipe.id));
-        
+
         favoriteBtn.addEventListener('click', () => {
             favoriteBtn.classList.toggle("active");
-            
+
             if (favoriteRecipes.includes(recipe.id)) {
                 favoriteRecipes = favoriteRecipes.filter(id => id !== recipe.id);
                 showNotification('Removed from favorites', 'info');
@@ -463,7 +447,7 @@ function displayRecipes() {
                 favoriteRecipes.push(recipe.id);
                 showNotification('Added to favorites!', 'success');
             }
-            
+
             saveFavorites();
         });
 
@@ -471,16 +455,15 @@ function displayRecipes() {
     });
 }
 
-// Enhanced modal functionality
 function showRecipeDetails(recipe) {
     let modal = document.getElementById("modal");
-    
+
     document.body.classList.add('modal-open');
     modal.showModal();
 
     document.getElementById("mTitle").textContent = recipe.name;
     document.getElementById("mDesc").textContent = recipe.description;
-    
+
     let modalImage = document.getElementById("mImg");
     modalImage.src = recipe.image;
     modalImage.alt = recipe.name;
@@ -495,7 +478,6 @@ function showRecipeDetails(recipe) {
     document.getElementById("mServ").textContent = recipe.servings + " servings";
     document.getElementById("mServingsCount").textContent = recipe.servings;
 
-    // Extra fields (rating, views, meal, diet, difficulty)
     let ratingEl = document.getElementById("mRating");
     if (ratingEl) {
         let ratingNumber = Number(recipe.rating);
@@ -524,7 +506,6 @@ function showRecipeDetails(recipe) {
     let diffEl = document.getElementById("mDiff");
     if (diffEl) diffEl.textContent = recipe.difficulty || "—";
 
-    // Nutrition (macros + micronutrients)
     let protEl = document.getElementById("mProt");
     if (protEl && recipe.protein != null) protEl.textContent = recipe.protein + " g";
 
@@ -542,13 +523,12 @@ function showRecipeDetails(recipe) {
                 let li = document.createElement("li");
                 let label = key.replace(/([A-Z])/g, " $1");
                 label = label.charAt(0).toUpperCase() + label.slice(1);
-                li.textContent = `${label}:   ${value}`;
+                li.textContent = label + ':   ' + value;
                 microsList.appendChild(li);
             });
         }
     }
 
-    // Tags inside modal
     let modalTags = document.getElementById("mTags");
     if (modalTags) {
         modalTags.innerHTML = "";
@@ -561,32 +541,31 @@ function showRecipeDetails(recipe) {
         });
     }
 
-
     let ingredientsList = document.getElementById("mIngr");
     ingredientsList.innerHTML = "";
-    
+
     recipe.ingredients.forEach(ingredient => {
         let li = document.createElement("li");
         li.textContent = ingredient;
-        
-        li.addEventListener('click', function() {
+
+        li.addEventListener('click', function () {
             this.classList.toggle('checked');
         });
-        
+
         ingredientsList.appendChild(li);
     });
 
     let instructionsList = document.getElementById("mInstr");
     instructionsList.innerHTML = "";
-    
+
     if (recipe.instructions && recipe.instructions.length > 0) {
         recipe.instructions.forEach(instruction => {
             let li = document.createElement("li");
-            
+
             let instructionText = document.createElement("div");
             instructionText.className = "instruction-text";
             instructionText.textContent = instruction;
-            
+
             li.appendChild(instructionText);
             instructionsList.appendChild(li);
         });
@@ -597,7 +576,7 @@ function showRecipeDetails(recipe) {
         instructionText.textContent = "No specific instructions provided. Use your best judgment for preparation!";
         instructionText.style.fontStyle = "italic";
         instructionText.style.color = "#64748b";
-        
+
         li.appendChild(instructionText);
         instructionsList.appendChild(li);
     }
@@ -612,7 +591,6 @@ function showRecipeDetails(recipe) {
     let isCurrentlySaved = favoriteRecipes.includes(recipe.id);
 
     function updateFavoriteUI(isSaved) {
-        // Update text button state
         if (saveBtn) {
             if (isSaved) {
                 saveBtn.innerHTML =
@@ -629,20 +607,17 @@ function showRecipeDetails(recipe) {
             }
         }
 
-        // Update heart inside modal header
         if (modalFav) {
             modalFav.classList.toggle("active", isSaved);
-            modalFav.innerHTML = isSaved ? "&#9829;" : "&#9825;"; // ♥ / ♡
+            modalFav.innerHTML = isSaved ? "&#9829;" : "&#9825;";
         }
 
-        // Update corresponding card heart
-        let cardFavoriteBtn = document.querySelector(`[data-id="${recipe.id}"] .fav`);
+        let cardFavoriteBtn = document.querySelector('[data-id="' + recipe.id + '"] .fav');
         if (cardFavoriteBtn) {
             cardFavoriteBtn.classList.toggle("active", isSaved);
         }
     }
 
-    // Initial state
     updateFavoriteUI(isCurrentlySaved);
 
     function toggleFavorite() {
@@ -666,11 +641,10 @@ function showRecipeDetails(recipe) {
 
     if (modalFav) {
         modalFav.onclick = (e) => {
-            e.stopPropagation(); // don't close modal
+            e.stopPropagation();
             toggleFavorite();
         };
     }
-
 
     let shareBtn = document.querySelector(".share-btn");
     shareBtn.onclick = async () => {
@@ -685,14 +659,14 @@ function showRecipeDetails(recipe) {
                 await navigator.share(shareData);
             } else {
                 await navigator.clipboard.writeText(window.location.href);
-                
+
                 let originalHTML = shareBtn.innerHTML;
                 shareBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Copied!';
                 shareBtn.style.background = "#dcfce7";
                 shareBtn.style.borderColor = "#16a34a";
                 shareBtn.style.color = "#166534";
                 showNotification('Link copied to clipboard!', 'success');
-                
+
                 setTimeout(() => {
                     shareBtn.innerHTML = originalHTML;
                     shareBtn.style.background = "white";
@@ -725,75 +699,61 @@ function showRecipeDetails(recipe) {
     });
 }
 
-// Enhanced filter setup
 function setupFilters() {
     let mealTypes = [...new Set(allRecipes.map(recipe => recipe.meal_category))].sort();
     let dietTypes = [...new Set(allRecipes.map(recipe => recipe.diet_category))].sort();
     let difficultyLevels = [...new Set(allRecipes.map(recipe => recipe.difficulty))].sort();
 
     let mealDropdown = document.querySelectorAll('.dd-panel')[0];
-    mealDropdown.innerHTML = mealTypes.map(meal => 
-        `<button class="dd-item">${meal}</button>`
+    mealDropdown.innerHTML = mealTypes.map(meal =>
+        '<button class="dd-item">' + meal + '</button>'
     ).join('');
 
     let dietDropdown = document.querySelectorAll('.dd-panel')[1];
-    dietDropdown.innerHTML = dietTypes.map(diet => 
-        `<button class="dd-item">${diet}</button>`
+    dietDropdown.innerHTML = dietTypes.map(diet =>
+        '<button class="dd-item">' + diet + '</button>'
     ).join('');
 
     let difficultyDropdown = document.querySelectorAll('.dd-panel')[2];
-    difficultyDropdown.innerHTML = difficultyLevels.map(level => 
-        `<button class="dd-item">${level}</button>`
+    difficultyDropdown.innerHTML = difficultyLevels.map(level =>
+        '<button class="dd-item">' + level + '</button>'
     ).join('');
 }
 
-// Favorite filter function
 function toggleFavoriteFilter() {
     let favoriteFilterBtn = document.getElementById('favoriteFilter');
-    
+
+    currentFilters.favoritesOnly = !currentFilters.favoritesOnly;
+    favoriteFilterBtn.classList.toggle("active", currentFilters.favoritesOnly);
+
     if (currentFilters.favoritesOnly) {
-        // Turn off favorite filter
-        currentFilters.favoritesOnly = false;
-        favoriteFilterBtn.classList.remove("active");
-        showNotification('Showing all recipes', 'info');
-    } else {
-        // Turn on favorite filter
-        currentFilters.favoritesOnly = true;
-        favoriteFilterBtn.classList.add("active");
-        
-        // Remove active class from other quick pills
         document.querySelectorAll(".quick-pill").forEach(btn => {
             if (btn !== favoriteFilterBtn) {
                 btn.classList.remove("active");
             }
         });
-        
-        // Clear other quick filters
+
         currentFilters.quickFilter = null;
-        
+
         let favoriteCount = favoriteRecipes.length;
         if (favoriteCount > 0) {
-            showNotification(`Showing ${favoriteCount} favorite recipes`, 'success');
+            showNotification('Showing ' + favoriteCount + ' favorite recipes', 'success');
         } else {
             showNotification('No favorite recipes yet!', 'info');
         }
+    } else {
+        showNotification('Showing all recipes', 'info');
     }
-    
+
     displayRecipes();
 }
-document.addEventListener('DOMContentLoaded', function() {
-    let favoriteFilterBtn = document.getElementById('favoriteFilter');
-    if (favoriteFilterBtn) {
-        favoriteFilterBtn.addEventListener('click', toggleFavoriteFilter);
-    }
-});
-// Enhanced notification system
+
 function showNotification(message, type = 'info') {
     document.querySelectorAll('.notification').forEach(n => n.remove())
     let notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
+    notification.className = 'notification notification-' + type;
     notification.textContent = message;
-    
+
     notification.style.cssText = `
         position: fixed;
         top: 10%;
@@ -806,16 +766,16 @@ function showNotification(message, type = 'info') {
         animation: slideIn 0.3s ease-out;
         max-width: 300px;
     `;
-    
-    let backgroundColor = '#16a34a'; // success - green
-    if (type === 'error') backgroundColor = '#dc2626'; // error - red
-    if (type === 'info') backgroundColor = '#2563eb'; // info - blue
-    if (type === 'warning') backgroundColor = '#d97706'; // warning - orange
-    
+
+    let backgroundColor = '#16a34a';
+    if (type === 'error') backgroundColor = '#dc2626';
+    if (type === 'info') backgroundColor = '#2563eb';
+    if (type === 'warning') backgroundColor = '#d97706';
+
     notification.style.background = backgroundColor;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease-in';
         setTimeout(() => {
@@ -826,7 +786,6 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-// Add notification animation styles
 let notificationStyles = document.createElement('style');
 notificationStyles.textContent = `
     @keyframes slideIn {
@@ -840,7 +799,6 @@ notificationStyles.textContent = `
 `;
 document.head.appendChild(notificationStyles);
 
-// Enhanced event handling
 document.addEventListener("click", event => {
     if (event.target.classList.contains("dd-btn")) {
         let dropdownPanel = event.target.nextElementSibling;
@@ -868,7 +826,7 @@ document.addEventListener("click", event => {
                 currentFilters.mealType = selectedValue;
                 allItems.forEach(item => item.classList.toggle("active", item === event.target));
             }
-        } 
+        }
         else if (dropdownLabel.includes("Diet")) {
             if (currentFilters.dietTypes.includes(selectedValue)) {
                 currentFilters.dietTypes = currentFilters.dietTypes.filter(item => item !== selectedValue);
@@ -898,11 +856,10 @@ document.addEventListener("click", event => {
     }
 });
 
-// Enhanced quick filter setup
 document.querySelectorAll(".quick-pill").forEach(button => {
     button.addEventListener('click', () => {
         document.querySelectorAll(".quick-pill").forEach(btn => btn.classList.remove("active"));
-        
+
         let filterValue = button.textContent.trim();
 
         if (currentFilters.quickFilter === filterValue) {
@@ -916,69 +873,60 @@ document.querySelectorAll(".quick-pill").forEach(button => {
     });
 });
 
-// Enhanced search with debouncing
 let debouncedDisplayRecipes = debounce(displayRecipes, 300);
 document.getElementById("searchInput").addEventListener('input', event => {
     let raw = event.target.value.trim().toLowerCase();
     let hasComma = raw.includes(",")
-    
-    if (hasComma){
-        currentFilters.ingredients = raw
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
 
-        currentFilters.search = "";          // disable normal text search in this mode
+    if (hasComma) {
+        currentFilters.ingredients = raw
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean);
+
+        currentFilters.search = "";
     }
     else {
-        currentFilters.search = raw.trim();   // use for full-text search
-        currentFilters.ingredients = [];      // disable ingredient filter
+        currentFilters.search = raw.trim();
+        currentFilters.ingredients = [];
     }
     debouncedDisplayRecipes();
 });
 
 document.addEventListener('mousemove', (e) => {
-  let tagDialog = document.getElementById('tagDialog');
-  if (!tagDialog || !tagDialog.open) return;
+    let tagDialog = document.getElementById('tagDialog');
+    if (!tagDialog || !tagDialog.open) return;
 
-  let overDialog = e.target.closest('#tagDialog');
-  let overToggle = e.target.closest('.more-toggle');
+    let overDialog = e.target.closest('#tagDialog');
+    let overToggle = e.target.closest('.more-toggle');
 
-  // if mouse is not over dialog and not over the "+X more" button → close
-  if (!overDialog && !overToggle) {
-    tagDialog.close();
-  }
+    if (!overDialog && !overToggle) {
+        tagDialog.close();
+    }
 });
 
-// ===== CLEAR FILTERS FUNCTIONALITY =====
-
-// Enhanced function to check if any filters are active
 function hasActiveFilters() {
     return currentFilters.search !== "" ||
-           currentFilters.mealType !== null ||
-           currentFilters.dietTypes.length > 0 ||
-           currentFilters.difficulty !== null ||
-           currentFilters.quickFilter !== null ||
-           currentFilters.ingredients.length > 0;
-           currentFilters.favoritesOnly; 
+        currentFilters.mealType !== null ||
+        currentFilters.dietTypes.length > 0 ||
+        currentFilters.difficulty !== null ||
+        currentFilters.quickFilter !== null ||
+        currentFilters.ingredients.length > 0 ||
+        currentFilters.favoritesOnly;
 }
 
-// Enhanced function to update filter button visibility
 function updateClearFiltersButton() {
     let filterActions = document.getElementById('filterActions');
-    
+
     if (hasActiveFilters()) {
         filterActions.style.display = 'flex';
-        // Add a little bounce effect when appearing
         filterActions.style.animation = 'fadeInUp 0.3s ease-out';
     } else {
         filterActions.style.display = 'none';
     }
 }
 
-// Enhanced clear all filters function
 function clearAllFilters() {
-    // Reset all filter states
     currentFilters = {
         search: "",
         mealType: null,
@@ -989,59 +937,37 @@ function clearAllFilters() {
         favoritesOnly: false
     };
 
-    // Clear search input
     document.getElementById("searchInput").value = "";
 
-    // Remove active classes from quick pills
     document.querySelectorAll(".quick-pill").forEach(btn => {
         btn.classList.remove("active");
     });
 
-    // Remove active classes from dropdown items
     document.querySelectorAll(".dd-item").forEach(item => {
         item.classList.remove("active");
     });
 
-    // Close all dropdown panels
     document.querySelectorAll(".dd-panel").forEach(panel => {
         panel.style.display = "none";
     });
 
-    // Hide the clear button
     updateClearFiltersButton();
-    
-    // Refresh the display
+
     displayRecipes();
-    
-    // Show confirmation
+
     showNotification('All filters cleared', 'info');
 }
 
-// Add event listener for the clear filters button
-document.addEventListener('DOMContentLoaded', function() {
-    const clearFiltersBtn = document.getElementById('clearFilters');
+document.addEventListener('DOMContentLoaded', function () {
+    let favoriteFilterBtn = document.getElementById('favoriteFilter');
+    if (favoriteFilterBtn) {
+        favoriteFilterBtn.addEventListener('click', toggleFavoriteFilter);
+    }
+
+    let clearFiltersBtn = document.getElementById('clearFilters');
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', clearAllFilters);
     }
 });
 
-// Also update the displayRecipes function to call updateClearFiltersButton
-// Find your existing displayRecipes function and add this line:
-
-
-// Enhanced initialization
-async function initializeApp() {
-    try {
-        allRecipes = await loadAllRecipes();
-        console.log('Loaded recipes:', allRecipes.length);
-        setupFilters();
-        displayRecipes();
-        showNotification('Recipes loaded successfully!', 'success');
-    } catch (error) {
-        console.error('Failed to initialize app:', error);
-        showNotification('Failed to load recipes', 'error');
-    }
-}
-
-// Start the application
 initializeApp();
