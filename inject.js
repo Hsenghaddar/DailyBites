@@ -38,8 +38,8 @@
   // ensure shared behavior runs AFTER injection:
   if (!document.querySelector('script[data-main]')) {
     let s = document.createElement('script')
-    s.src = '/main.js'
+    s.src = '../main.js'
     s.dataset.main = 'true'
-    document.body.appendChild(s)
+    document.head.appendChild(s)
   }
 })()
