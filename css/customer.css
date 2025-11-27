@@ -5,8 +5,14 @@
     --container: 80vw;
 }
 
+
+*{ 
+    box-sizing:border-box 
+}
+
 body{ 
     margin:0;
+    font:16px/1.5 system-ui,Segoe UI,Roboto,Arial; 
     background:var(--bg); 
     color:var(--ink) 
 }
@@ -15,7 +21,7 @@ body{
   justify-content: flex-start;
 }
 
-.site .wrap {
+.wrap {
   width: 100%;
   max-width: 1080px;
   min-width: 0;
