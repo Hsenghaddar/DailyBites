@@ -450,14 +450,11 @@ function createRecipe(){
     }
 }
 
-// --- SUBMIT WITH VALIDATION ---
 form.addEventListener('submit', e=>{
     e.preventDefault()
 
-    // run validation on all key fields
     validatableFields.forEach(f => f && validateField(f))
 
-    // if any error, focus the first one and stop
     let firstError = form.querySelector('.invalid')
     if (firstError) {
         firstError.focus()
@@ -470,7 +467,6 @@ form.addEventListener('submit', e=>{
     render()
     confirm('Saved to My Recipes for this user.')
 
-    // clear form & error states
     form.reset() 
     validatableFields.forEach(f => f && clearFieldError(f))
 })

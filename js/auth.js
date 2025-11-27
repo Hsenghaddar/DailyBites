@@ -72,10 +72,8 @@ $(function () {
       })
   })
 
-  // SIGNUP SUBMIT
   signupForm.on("submit", function (e) {
     e.preventDefault()
-
     if (
       usernameInput.val().trim() === "" ||
       signupEmailInput.val().trim() === "" ||
@@ -89,7 +87,6 @@ $(function () {
       signupError.text("Password must be at least 8 characters").show()
       return
     }
-
     window.location.href = "../html/home.html"
   })
 

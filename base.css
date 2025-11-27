@@ -440,6 +440,79 @@ nav > .hamburger {
   transition-delay: 30ms;
 }
 
+/* Footer */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 28px 0;
+  padding-left: 8%;
+  color: var(--muted);
+  background-color: white;
+}
+
+.fcols {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.fcol {
+  flex: 1 1 220px;
+  min-width: 200px;
+}
+
+.fcol h4 {
+  color: var(--txt);
+  margin: 0 0 8px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.fcol a {
+  display: block;
+  margin: 4px 0;
+}
+footer a {
+  color: #5b6b7d;
+}
+footer .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  flex: 1 1 160px;
+}
+
+footer .logo-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--logo);
+  transform: translateZ(0);
+  transition: transform var(--dur-sm) var(--ease);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  width: auto;
+  height: auto;
+  padding: 10px 12px;
+  background: #fff;
+  border: 2px solid var(--logo);
+  border-radius: 10px;
+  z-index: 1100;
+}
+
 /* Layout utilities */
 .section {
   padding-block: clamp(32px, 6vh, 64px);
