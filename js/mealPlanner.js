@@ -1,239 +1,239 @@
-let overlay = document.querySelector(".overlay");
-let closeBtn = document.querySelector(".close");
+let overlay = document.querySelector(".overlay")
+let closeBtn = document.querySelector(".close")
 closeBtn.addEventListener("click", () => {
-  overlay.style.display = "none";
-  document.querySelector("body").classList.remove("overlayOpen");
-});
+  overlay.style.display = "none"
+  document.querySelector("body").classList.remove("overlayOpen")
+})
 
-let main = document.querySelector("main > div");
+let main = document.querySelector("main > div")
 
 function getThisWeek() {
-  let today = new Date();
-  let day = today.getDay();
+  let today = new Date()
+  let day = today.getDay()
 
-  let monday = new Date();
-  let diff = day === 0 ? -6 : 1 - day;
-  monday.setDate(today.getDate() + diff);
+  let monday = new Date()
+  let diff = day === 0 ? -6 : 1 - day
+  monday.setDate(today.getDate() + diff)
 
-  let week = [];
-  for (let i = 0; i < 7; i++) {
-    let d = new Date();
-    d.setDate(monday.getDate() + i);
-    week.push(d);
+  let week = []
+  for (let i = 0 ;i < 7; i++) {
+    let d = new Date()
+    d.setDate(monday.getDate() + i)
+    week.push(d)
   }
-  return week;
+  return week
 }
 
-let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-let thisWeek = getThisWeek();
-let mealNames = ["Breakfast", "Lunch", "Dinner", "Notes"];
-let recipes;
-let searchInput = document.querySelector(".search");
-let recipesContainer = document.querySelector(".recipes");
-let modalTitle = document.querySelector(".modal-title");
-let clearBtn = document.getElementById("clear-plan");
-let generateBtn = document.getElementById("generate-plan");
-let exportBtn = document.getElementById("export-plan");
+let thisWeek = getThisWeek()
+let mealNames = ["Breakfast", "Lunch", "Dinner", "Notes"]
+let recipes
+let searchInput = document.querySelector(".search")
+let recipesContainer = document.querySelector(".recipes")
+let modalTitle = document.querySelector(".modal-title")
+let clearBtn = document.getElementById("clear-plan")
+let generateBtn = document.getElementById("generate-plan")
+let exportBtn = document.getElementById("export-plan")
 
 function getMealPlannerKey() {
-  let id = sessionStorage.getItem("userId");
-  let currentUserId = id || "anonymous";
-  return `${currentUserId}: MealPlanner`;
+  let id = sessionStorage.getItem("userId")
+  let currentUserId = id || "anonymous"
+  return `${currentUserId}: MealPlanner`
 }
 
 clearBtn.addEventListener("click", () => {
-  let confirmed = confirm("Clear your entire weekly plan?");
-  if (!confirmed) return;
-  localStorage.removeItem(getMealPlannerKey());
-  renderLayout();
-});
+  let confirmed = confirm("Clear your entire weekly plan?")
+  if (!confirmed) return
+  localStorage.removeItem(getMealPlannerKey())
+  renderLayout()
+})
 generateBtn.addEventListener("click", () => {
   if (!recipes || !recipes.length) {
-    alert("Recipes are still loading. Try again in a moment.");
-    return;
+    alert("Recipes are still loading. Try again in a moment.")
+    return
   }
 
-  let plan = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {};
+  let plan = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {}
 
-  let sections = document.querySelectorAll("main section.day-section");
-  let createdCount = 0;
+  let sections = document.querySelectorAll("main section.day-section")
+  let createdCount = 0
 
   sections.forEach((section) => {
-    let day = section.getAttribute("data-day");
+    let day = section.getAttribute("data-day")
     mealNames.forEach((mealType) => {
-      if (mealType === "Notes") return;
-      let key = `${day}-${mealType}`;
-      if (plan[key]) return;
-      let randomMeal = recipes[Math.floor(Math.random() * recipes.length)];
+      if (mealType === "Notes") return
+      let key = `${day}-${mealType}`
+      if (plan[key]) return
+      let randomMeal = recipes[Math.floor(Math.random() * recipes.length)]
       plan[key] = {
         name: randomMeal.name,
         image: randomMeal.image,
-      };
-      createdCount++;
-    });
-  });
+      }
+      createdCount++
+    })
+  })
 
   if (createdCount === 0) {
-    alert("All meal slots are already filled. Nothing to generate.");
-    return;
+    alert("All meal slots are already filled. Nothing to generate.")
+    return
   }
 
-  localStorage.setItem(getMealPlannerKey(), JSON.stringify(plan));
-  loadSavedMeals();
-});
+  localStorage.setItem(getMealPlannerKey(), JSON.stringify(plan))
+  loadSavedMeals()
+})
 
 exportBtn.addEventListener("click", () => {
   if (!window.jspdf || !window.jspdf.jsPDF) {
-    alert("PDF library (jsPDF) failed to load.");
-    return;
+    alert("PDF library (jsPDF) failed to load.")
+    return
   }
 
-  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey()) || "{}");
+  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey()) || "{}")
   if (!Object.keys(saved).length) {
-    alert("You don't have any meals in your plan yet.");
-    return;
+    alert("You don't have any meals in your plan yet.")
+    return
   }
 
-  let { jsPDF } = window.jspdf;
+  let { jsPDF } = window.jspdf
   let doc = new jsPDF({
     orientation: "landscape",
     unit: "mm",
     format: "a4",
-  });
+  })
 
-  let pageWidth = doc.internal.pageSize.getWidth();
-  let pageHeight = doc.internal.pageSize.getHeight();
+  let pageWidth = doc.internal.pageSize.getWidth()
+  let pageHeight = doc.internal.pageSize.getHeight()
 
-  let marginX = 10;
-  let marginY = 15;
-  let lineHeight = 7;
+  let marginX = 10
+  let marginY = 15
+  let lineHeight = 7
 
-  let start = thisWeek[0];
-  let end = thisWeek[thisWeek.length - 1];
+  let start = thisWeek[0]
+  let end = thisWeek[thisWeek.length - 1]
   let dateRange = `${months[start.getMonth()]} ${start.getDate()} - ${months[end.getMonth()]
-    } ${end.getDate()}`;
+    } ${end.getDate()}`
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(18);
-  doc.text("Weekly Meal Plan", pageWidth / 2, marginY, { align: "center" });
+  doc.setFont("helvetica", "bold")
+  doc.setFontSize(18)
+  doc.text("Weekly Meal Plan", pageWidth / 2, marginY, { align: "center" })
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(11);
-  doc.text(dateRange, pageWidth / 2, marginY + 6, { align: "center" });
+  doc.setFont("helvetica", "normal")
+  doc.setFontSize(11)
+  doc.text(dateRange, pageWidth / 2, marginY + 6, { align: "center" })
 
-  let headers = ["Day", "Breakfast", "Lunch", "Dinner", "Notes"];
-  let tableTop = marginY + 15;
-  let tableWidth = pageWidth - marginX * 2;
-  let colWidthDay = 30;
-  let colWidthOther = (tableWidth - colWidthDay) / (headers.length - 1);
-  let rowHeight = 20;
+  let headers = ["Day", "Breakfast", "Lunch", "Dinner", "Notes"]
+  let tableTop = marginY + 15
+  let tableWidth = pageWidth - marginX * 2
+  let colWidthDay = 30
+  let colWidthOther = (tableWidth - colWidthDay) / (headers.length - 1)
+  let rowHeight = 20
 
   function drawHeaderRow(y) {
-    let x = marginX;
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
+    let x = marginX
+    doc.setFont("helvetica", "bold")
+    doc.setFontSize(12)
 
     headers.forEach((header, i) => {
-      let w = i === 0 ? colWidthDay : colWidthOther;
-      doc.rect(x, y, w, rowHeight);
-      doc.text(header, x + 2, y + rowHeight / 2 + 3);
-      x += w;
-    });
+      let w = i === 0 ? colWidthDay : colWidthOther
+      doc.rect(x, y, w, rowHeight)
+      doc.text(header, x + 2, y + rowHeight / 2 + 3)
+      x += w
+    })
   }
 
-  let y = tableTop;
-  drawHeaderRow(y);
-  y += rowHeight;
+  let y = tableTop
+  drawHeaderRow(y)
+  y += rowHeight
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(11);
+  doc.setFont("helvetica", "normal")
+  doc.setFontSize(11)
 
   thisWeek.forEach((d) => {
-    let dayName = days[d.getDay()];
-    let dateLabel = `${months[d.getMonth()]} ${d.getDate()}`;
+    let dayName = days[d.getDay()]
+    let dateLabel = `${months[d.getMonth()]} ${d.getDate()}`
 
-    let row = { Breakfast: "", Lunch: "", Dinner: "", Notes: "" };
+    let row = { Breakfast: "", Lunch: "", Dinner: "", Notes: "" }
 
     mealNames.forEach((mealType) => {
-      let key = `${dayName}-${mealType}`;
-      let data = saved[key];
-      if (!data) return;
-      let text = typeof data === "string" ? data : data.name;
-      if (mealType === "Notes") row.Notes = text;
-      else row[mealType] = text;
-    });
+      let key = `${dayName}-${mealType}`
+      let data = saved[key]
+      if (!data) return
+      let text = typeof data === "string" ? data : data.name
+      if (mealType === "Notes") row.Notes = text
+      else row[mealType] = text
+    })
 
-    if (!row.Breakfast && !row.Lunch && !row.Dinner && !row.Notes) return;
+    if (!row.Breakfast && !row.Lunch && !row.Dinner && !row.Notes) return
 
     if (y + rowHeight > pageHeight - marginY) {
-      doc.addPage();
-      y = marginY;
-      drawHeaderRow(y);
-      y += rowHeight;
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(11);
+      doc.addPage()
+      y = marginY
+      drawHeaderRow(y)
+      y += rowHeight
+      doc.setFont("helvetica", "normal")
+      doc.setFontSize(11)
     }
 
-    let x = marginX;
+    let x = marginX
 
-    let w = colWidthDay;
-    doc.rect(x, y, w, rowHeight);
-    doc.text(dayName, x + 2, y + 4);
-    doc.text(dateLabel, x + 2, y + 8);
-    x += w;
+    let w = colWidthDay
+    doc.rect(x, y, w, rowHeight)
+    doc.text(dayName, x + 2, y + 4)
+    doc.text(dateLabel, x + 2, y + 8)
+    x += w
 
     function drawCell(text) {
-      let w = colWidthOther;
-      doc.rect(x, y, w, rowHeight);
+      let w = colWidthOther
+      doc.rect(x, y, w, rowHeight)
       if (text) {
         doc.text(String(text), x + 2, y + rowHeight / 2 + 3, {
           maxWidth: w - 4,
-        });
+        })
       }
-      x += w;
+      x += w
     }
 
-    drawCell(row.Breakfast);
-    drawCell(row.Lunch);
-    drawCell(row.Dinner);
-    drawCell(row.Notes);
+    drawCell(row.Breakfast)
+    drawCell(row.Lunch)
+    drawCell(row.Dinner)
+    drawCell(row.Notes)
 
-    y += rowHeight;
-  });
+    y += rowHeight
+  })
 
-  let groceryItems = buildGroceryList(saved);
+  let groceryItems = buildGroceryList(saved)
 
   if (groceryItems.length) {
-    doc.addPage();
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
+    doc.addPage()
+    doc.setFont("helvetica", "bold")
+    doc.setFontSize(16)
     doc.text("Weekly Grocery List", pageWidth / 2, marginY, {
       align: "center",
-    });
+    })
 
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal")
+    doc.setFontSize(11)
 
-    let gy = marginY + 8;
+    let gy = marginY + 8
     groceryItems.forEach((item) => {
       if (gy > pageHeight - marginY) {
-        doc.addPage();
-        gy = marginY;
+        doc.addPage()
+        gy = marginY
       }
-      doc.text(`• ${item}`, marginX, gy);
-      gy += lineHeight;
-    });
+      doc.text(`• ${item}`, marginX, gy)
+      gy += lineHeight
+    })
   }
 
-  doc.save("weekly-meal-plan.pdf");
-});
+  doc.save("weekly-meal-plan.pdf")
+})
 
 function buildGroceryList(saved) {
-  if (!recipes || !recipes.length) return [];
+  if (!recipes || !recipes.length) return []
 
-  let counts = new Map();
+  let counts = new Map()
 
   let measurementUnits = new Set([
     "g",
@@ -252,55 +252,55 @@ function buildGroceryList(saved) {
     "tsp",
     "teaspoon",
     "teaspoons",
-  ]);
+  ])
 
   Object.keys(saved).forEach((key) => {
-    if (key.endsWith("-Notes")) return;
+    if (key.endsWith("-Notes")) return
 
-    let entry = saved[key];
-    if (!entry) return;
+    let entry = saved[key]
+    if (!entry) return
 
-    let mealName = typeof entry === "string" ? entry : entry.name;
-    if (!mealName) return;
+    let mealName = typeof entry === "string" ? entry : entry.name
+    if (!mealName) return
 
-    let recipe = recipes?.find((r) => r.name === mealName);
-    if (!recipe || !recipe.ingredients) return;
+    let recipe = recipes?.find((r) => r.name === mealName)
+    if (!recipe || !recipe.ingredients) return
 
     recipe.ingredients.forEach((rawIng) => {
-      if (!rawIng) return;
+      if (!rawIng) return
 
       let ingStr =
         typeof rawIng === "string"
           ? rawIng
-          : rawIng.name || rawIng.item || "";
-      if (!ingStr) return;
+          : rawIng.name || rawIng.item || ""
+      if (!ingStr) return
 
-      let s = ingStr.toLowerCase();
+      let s = ingStr.toLowerCase()
 
-      s = s.replace(/\([^)]*\)/g, "").replace(/,/g, " ").trim();
+      s = s.replace(/\([^)]*\)/g, "").replace(/,/g, " ").trim()
 
-      let qty = 1;
-      let namePart = s;
+      let qty = 1
+      let namePart = s
 
-      let m = s.match(/^(\d+(?:\.\d+)?)\s+([a-z]+)\s+(.*)$/);
+      let m = s.match(/^(\d+(?:\.\d+)?)\s+([a-z]+)\s+(.*)$/)
       if (m) {
-        let num = parseFloat(m[1]);
-        let unit = m[2];
-        let rest = m[3];
-        let isMeasureUnit = measurementUnits.has(unit.replace(/s$/, ""));
+        let num = parseFloat(m[1])
+        let unit = m[2]
+        let rest = m[3]
+        let isMeasureUnit = measurementUnits.has(unit.replace(/s$/, ""))
 
-        qty = isMeasureUnit || isNaN(num) ? 1 : num;
-        namePart = rest;
+        qty = isMeasureUnit || isNaN(num) ? 1 : num
+        namePart = rest
       } else {
-        let m2 = s.match(/^(\d+(?:\.\d+)?)\s+(.*)$/);
+        let m2 = s.match(/^(\d+(?:\.\d+)?)\s+(.*)$/)
         if (m2) {
-          let num = parseFloat(m2[1]);
-          qty = isNaN(num) ? 1 : num;
-          namePart = m2[2];
+          let num = parseFloat(m2[1])
+          qty = isNaN(num) ? 1 : num
+          namePart = m2[2]
         }
       }
 
-      let words = namePart.split(/\s+/);
+      let words = namePart.split(/\s+/)
       let adjectives = new Set([
         "small",
         "medium",
@@ -310,33 +310,33 @@ function buildGroceryList(saved) {
         "diced",
         "minced",
         "sliced",
-      ]);
+      ])
       while (words.length > 1 && adjectives.has(words[0])) {
-        words.shift();
+        words.shift()
       }
 
-      let name = words.join(" ").trim();
-      if (!name) return;
+      let name = words.join(" ").trim()
+      if (!name) return
 
-      let current = counts.get(name) || 0;
-      counts.set(name, current + qty);
-    });
-  });
+      let current = counts.get(name) || 0
+      counts.set(name, current + qty)
+    })
+  })
 
-  let result = [];
+  let result = []
   for (let [name, qty] of counts.entries()) {
-    let rounded = Math.round(qty * 100) / 100;
+    let rounded = Math.round(qty * 100) / 100
 
     if (rounded === 1) {
-      result.push(`1 ${name}`);
+      result.push(`1 ${name}`)
     } else {
-      let pluralName = name;
-      if (!pluralName.endsWith("s")) pluralName += "s";
-      result.push(`${rounded} ${pluralName}`);
+      let pluralName = name
+      if (!pluralName.endsWith("s")) pluralName += "s"
+      result.push(`${rounded} ${pluralName}`)
     }
   }
 
-  return result.sort((a, b) => a.localeCompare(b));
+  return result.sort((a, b) => a.localeCompare(b))
 }
 
 function renderRecipeCard(meal) {
@@ -364,41 +364,41 @@ function renderRecipeCard(meal) {
     }
       </div>
     </div>
-  `;
+  `
 }
 
 
 function getUserMyRecipes() {
-  let id = sessionStorage.getItem("userId");
+  let id = sessionStorage.getItem("userId")
   let currentUserId = id || "anonymous"
-  let parsed = JSON.parse(localStorage.getItem(`${currentUserId}: MyRecipes`)) || [];
-  return Array.isArray(parsed) ? parsed : [];
+  let parsed = JSON.parse(localStorage.getItem(`${currentUserId}: MyRecipes`)) || []
+  return Array.isArray(parsed) ? parsed : []
 }
 
 function fetchAllRecipes() {
   fetch("../js/data.json")
     .then((res) => res.json())
     .then((data) => {
-      let baseRecipes = data.recipes || [];
-      let userRecipes = getUserMyRecipes();
-      recipes = baseRecipes.concat(userRecipes);
+      let baseRecipes = data.recipes || []
+      let userRecipes = getUserMyRecipes()
+      recipes = baseRecipes.concat(userRecipes)
     })
-    .catch(() => console.error("error fetching"));
+    .catch(() => console.error("error fetching"))
 }
-fetchAllRecipes();
+fetchAllRecipes()
 
 function renderLayout() {
-  let html = "";
+  let html = ""
 
   thisWeek.forEach((d) => {
-    let dayName = days[d.getDay()];
-    let dateLabel = `${months[d.getMonth()]} ${d.getDate()}`;
+    let dayName = days[d.getDay()]
+    let dateLabel = `${months[d.getMonth()]} ${d.getDate()}`
 
     html += `<section class="day-section" data-day="${dayName}">
       <div class="day-info">
         <p>${dayName}</p>
         <p>${dateLabel}</p>
-      </div>`;
+      </div>`
 
     mealNames.forEach((mealType) => {
       html += `
@@ -407,103 +407,103 @@ function renderLayout() {
           <div class="meal-body">
             <span class="meal-placeholder">+</span>
           </div>
-        </div>`;
-    });
+        </div>`
+    })
 
-    html += `</section>`;
-  });
+    html += `</section>`
+  })
 
-  main.innerHTML = html;
+  main.innerHTML = html
 
-  setSlotListeners();
-  loadSavedMeals();
+  setSlotListeners()
+  loadSavedMeals()
 
 }
 searchInput.addEventListener("input", () => {
-  let query = searchInput.value.toLowerCase();
-  recipesContainer.innerHTML = "";
+  let query = searchInput.value.toLowerCase()
+  recipesContainer.innerHTML = ""
 
   let filtered = !query.trim()
     ? recipes
-    : recipes?.filter((meal) => meal.name.toLowerCase().includes(query));
+    : recipes?.filter((meal) => meal.name.toLowerCase().includes(query))
 
   if (!filtered || filtered.length === 0) {
-    recipesContainer.innerHTML = `<p class="no-results">No recipes found</p>`;
-    return;
+    recipesContainer.innerHTML = `<p class="no-results">No recipes found</p>`
+    return
   }
 
   filtered.forEach((meal) => {
-    recipesContainer.innerHTML += renderRecipeCard(meal);
-  });
+    recipesContainer.innerHTML += renderRecipeCard(meal)
+  })
 
-  attachRecipeClickListeners();
-});
+  attachRecipeClickListeners()
+})
 
 function attachRecipeClickListeners() {
-  let recipeDivs = recipesContainer.querySelectorAll(".recipe-item");
+  let recipeDivs = recipesContainer.querySelectorAll(".recipe-item")
 
   recipeDivs.forEach((recipeDiv) => {
     recipeDiv.addEventListener("click", () => {
-      let mealName = recipeDiv.dataset.name;
-      let mealImage = recipeDiv.dataset.image;
+      let mealName = recipeDiv.dataset.name
+      let mealImage = recipeDiv.dataset.image
 
-      let selectedRecipe = recipes?.find((r) => r.name === mealName);
+      let selectedRecipe = recipes?.find((r) => r.name === mealName)
 
-      let openSection = document.querySelector("section.day-section.active-slot");
-      if (!openSection) return;
+      let openSection = document.querySelector("section.day-section.active-slot")
+      if (!openSection) return
 
-      let day = openSection.getAttribute("data-day");
-      let mealDivs = Array.from(openSection.querySelectorAll(".meal-slot"));
-      let activeSlot = openSection.querySelector(".meal-slot.active");
-      let mealIndex = mealDivs.indexOf(activeSlot);
-      let mealType = mealNames[mealIndex];
+      let day = openSection.getAttribute("data-day")
+      let mealDivs = Array.from(openSection.querySelectorAll(".meal-slot"))
+      let activeSlot = openSection.querySelector(".meal-slot.active")
+      let mealIndex = mealDivs.indexOf(activeSlot)
+      let mealType = mealNames[mealIndex]
 
       let mealData = {
         name: mealName,
         image: mealImage,
-      };
+      }
 
-      saveMeal(day, mealType, mealData);
+      saveMeal(day, mealType, mealData)
 
-      overlay.style.display = "none";
-      document.querySelector("body").classList.remove("overlayOpen");
-      if (searchInput) searchInput.value = "";
+      overlay.style.display = "none"
+      document.querySelector("body").classList.remove("overlayOpen")
+      if (searchInput) searchInput.value = ""
 
       document
         .querySelectorAll(".active-slot, .meal-slot.active")
-        .forEach((el) => el.classList.remove("active-slot", "active"));
+        .forEach((el) => el.classList.remove("active-slot", "active"))
 
-      loadSavedMeals();
-    });
-  });
+      loadSavedMeals()
+    })
+  })
 }
 
 function loadSavedMeals() {
-  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {};
+  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {}
 
-  let sections = document.querySelectorAll("main section.day-section");
+  let sections = document.querySelectorAll("main section.day-section")
 
   sections.forEach((section) => {
-    let day = section.getAttribute("data-day");
-    let mealDivs = section.querySelectorAll(".meal-slot");
+    let day = section.getAttribute("data-day")
+    let mealDivs = section.querySelectorAll(".meal-slot")
 
     mealDivs.forEach((div, index) => {
-      let mealType = mealNames[index];
-      let key = `${day}-${mealType}`;
-      let savedMeal = saved[key];
+      let mealType = mealNames[index]
+      let key = `${day}-${mealType}`
+      let savedMeal = saved[key]
 
-      let body = div.querySelector(".meal-body");
-      if (!body) return;
+      let body = div.querySelector(".meal-body")
+      if (!body) return
 
       if (savedMeal) {
         if (mealType === "Notes") {
-          let noteText = typeof savedMeal === "string" ? savedMeal : savedMeal.name;
-          body.innerHTML = `<p class="saved-meal note">${noteText}</p>`;
+          let noteText = typeof savedMeal === "string" ? savedMeal : savedMeal.name
+          body.innerHTML = `<p class="saved-meal note">${noteText}</p>`
         } else {
           let data =
-            typeof savedMeal === "string" ? { name: savedMeal, image: null } : savedMeal;
+            typeof savedMeal === "string" ? { name: savedMeal, image: null } : savedMeal
 
-          let img = data.image || "";
+          let img = data.image || ""
 
           body.innerHTML = `
             <div class="saved-meal saved-meal-card">
@@ -514,118 +514,118 @@ function loadSavedMeals() {
                 <h4>${data.name}</h4>
               </div>
             </div>
-          `;
+          `
         }
       } else {
-        body.innerHTML = `<span class="meal-placeholder">+</span>`;
+        body.innerHTML = `<span class="meal-placeholder">+</span>`
       }
-    });
-  });
+    })
+  })
 
   document.querySelectorAll(".saved-meal").forEach((mealEl) => {
-    let parentSlot = mealEl.closest(".meal-slot");
-    let body = parentSlot.querySelector(".meal-body");
+    let parentSlot = mealEl.closest(".meal-slot")
+    let body = parentSlot.querySelector(".meal-body")
 
     mealEl.addEventListener("click", (e) => {
-      e.stopPropagation();
-      let section = e.target.closest("section.day-section");
-      let day = section.getAttribute("data-day");
-      let mealDivs = Array.from(section.querySelectorAll(".meal-slot"));
-      let mealIndex = mealDivs.indexOf(parentSlot);
-      let mealType = mealNames[mealIndex];
+      e.stopPropagation()
+      let section = e.target.closest("section.day-section")
+      let day = section.getAttribute("data-day")
+      let mealDivs = Array.from(section.querySelectorAll(".meal-slot"))
+      let mealIndex = mealDivs.indexOf(parentSlot)
+      let mealType = mealNames[mealIndex]
 
       if (mealType === "Notes") {
-        openNoteModal(day);
-        return;
+        openNoteModal(day)
+        return
       }
 
       if (confirm("Remove this recipe?")) {
-        removeMeal(day, mealType);
-        body.innerHTML = `<span class="meal-placeholder">+</span>`;
+        removeMeal(day, mealType)
+        body.innerHTML = `<span class="meal-placeholder">+</span>`
       }
-    });
-  });
+    })
+  })
 }
 
 function setSlotListeners() {
-  let slots = document.querySelectorAll(".meal-slot");
+  let slots = document.querySelectorAll(".meal-slot")
 
   slots.forEach((slot) => {
-    slot.replaceWith(slot.cloneNode(true));
-  });
+    slot.replaceWith(slot.cloneNode(true))
+  })
 
-  slots = document.querySelectorAll(".meal-slot");
+  slots = document.querySelectorAll(".meal-slot")
 
   slots.forEach((slot) => {
     slot.addEventListener("click", () => {
-      let section = slot.closest("section.day-section");
-      let day = section.getAttribute("data-day");
-      let mealDivs = Array.from(section.querySelectorAll(".meal-slot"));
-      let mealIndex = mealDivs.indexOf(slot);
-      let mealType = mealNames[mealIndex];
+      let section = slot.closest("section.day-section")
+      let day = section.getAttribute("data-day")
+      let mealDivs = Array.from(section.querySelectorAll(".meal-slot"))
+      let mealIndex = mealDivs.indexOf(slot)
+      let mealType = mealNames[mealIndex]
 
       document
         .querySelectorAll(".active-slot, .meal-slot.active")
-        .forEach((el) => el.classList.remove("active-slot", "active"));
-      section.classList.add("active-slot");
-      slot.classList.add("active");
+        .forEach((el) => el.classList.remove("active-slot", "active"))
+      section.classList.add("active-slot")
+      slot.classList.add("active")
 
       if (mealType === "Notes") {
-        openNoteModal(day);
-        return;
+        openNoteModal(day)
+        return
       }
 
-      if (slot.querySelector(".saved-meal")) return;
+      if (slot.querySelector(".saved-meal")) return
 
       if (modalTitle) {
-        modalTitle.textContent = `Choose a recipe for ${day} ${mealType.toLowerCase()}`;
+        modalTitle.textContent = `Choose a recipe for ${day} ${mealType.toLowerCase()}`
       }
 
-      overlay.style.display = "flex";
-      document.querySelector("body").classList.add("overlayOpen");
-      recipesContainer.innerHTML = "";
+      overlay.style.display = "flex"
+      document.querySelector("body").classList.add("overlayOpen")
+      recipesContainer.innerHTML = ""
 
       if (!recipes) {
-        recipesContainer.innerHTML = `<p class="no-results">Loading recipes...</p>`;
+        recipesContainer.innerHTML = `<p class="no-results">Loading recipes...</p>`
       } else {
         recipes.forEach((meal) => {
-          recipesContainer.innerHTML += renderRecipeCard(meal);
-        });
+          recipesContainer.innerHTML += renderRecipeCard(meal)
+        })
       }
 
-      attachRecipeClickListeners();
-    });
-  });
+      attachRecipeClickListeners()
+    })
+  })
 }
 
 function saveMeal(day, mealType, mealData) {
-  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {};
-  saved[`${day}-${mealType}`] = mealData;
-  localStorage.setItem(getMealPlannerKey(), JSON.stringify(saved));
+  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {}
+  saved[`${day}-${mealType}`] = mealData
+  localStorage.setItem(getMealPlannerKey(), JSON.stringify(saved))
 }
 
 function removeMeal(day, mealType) {
-  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {};
-  delete saved[`${day}-${mealType}`];
-  localStorage.setItem(getMealPlannerKey(), JSON.stringify(saved));
+  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {}
+  delete saved[`${day}-${mealType}`]
+  localStorage.setItem(getMealPlannerKey(), JSON.stringify(saved))
 }
 
 overlay.addEventListener("click", (e) => {
   if (e.target.classList.contains("overlay")) {
-    e.target.style.display = "none";
-    document.querySelector("body").classList.remove("overlayOpen");
-    if (searchInput) searchInput.value = "";
+    e.target.style.display = "none"
+    document.querySelector("body").classList.remove("overlayOpen")
+    if (searchInput) searchInput.value = ""
     document
       .querySelectorAll(".active-slot, .meal-slot.active")
-      .forEach((el) => el.classList.remove("active-slot", "active"));
+      .forEach((el) => el.classList.remove("active-slot", "active"))
   }
-});
+})
 
-renderLayout();
+renderLayout()
 
 function openNoteModal(day) {
-  let modal = document.createElement("div");
-  modal.className = "note-modal";
+  let modal = document.createElement("div")
+  modal.className = "note-modal"
   modal.innerHTML = `
     <div class="note-box">
       <div class="note-header">
@@ -635,23 +635,23 @@ function openNoteModal(day) {
       <textarea placeholder="Write your note here..."></textarea>
       <button class="save-note">Save Note</button>
     </div>
-  `;
-  document.body.appendChild(modal);
+  `
+  document.body.appendChild(modal)
 
-  let closeNote = modal.querySelector(".close-note");
-  let saveNote = modal.querySelector(".save-note");
-  let textarea = modal.querySelector("textarea");
+  let closeNote = modal.querySelector(".close-note")
+  let saveNote = modal.querySelector(".save-note")
+  let textarea = modal.querySelector("textarea")
 
-  closeNote.addEventListener("click", () => modal.remove());
+  closeNote.addEventListener("click", () => modal.remove())
   modal.addEventListener("click", (e) => {
-    if (e.target.classList.contains("note-modal")) modal.remove();
-  });
+    if (e.target.classList.contains("note-modal")) modal.remove()
+  })
 
   saveNote.addEventListener("click", () => {
-    let note = textarea.value.trim();
-    if (!note) return alert("Please write something!");
-    saveMeal(day, "Notes", note);
-    modal.remove();
-    loadSavedMeals();
-  });
+    let note = textarea.value.trim()
+    if (!note) return alert("Please write something!")
+    saveMeal(day, "Notes", note)
+    modal.remove()
+    loadSavedMeals()
+  })
 }
