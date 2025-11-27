@@ -1,0 +1,83 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+     url('https://storage.bhs.cloud.ovh.net/v1/AUTH_67da374e12f7497491105aaeeebf4835/public/blog/Meal-Kits-2__3__.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+.text-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+}
+
+.welcome-text {
+    font-family: 'Sacramento', cursive;
+    font-weight: 500;
+    font-size: 10rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    line-height: 1;
+    margin-bottom: 10px;
+    color: beige;
+    filter: none !important;
+}
+
+.daily-bites {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 300;
+    font-size: 2.2rem;
+
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    line-height: 1;
+    font-style: italic;
+    color: beige;
+    filter: none !important; /* Ensure no blur on text */
+    margin-top: -35px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .welcome-text {
+        font-size: 3.5rem;
+    }
+    
+    .daily-bites {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-text {
+        font-size: 2.5rem;
+    }
+    
+    .daily-bites {
+        font-size: 1.2rem;
+    }
+}
