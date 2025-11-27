@@ -4,8 +4,12 @@ let navActions = document.querySelector('.nav-actions')
 let navInner = document.querySelector(".nav-inner")
 let breakpoint = 992
 
-let head = document.getElementsByTagName("head")[0]
-head.innerHTML += '<link rel="icon" type="image/png" href="../assets/plate.png">'
+let head =document.querySelector("head")
+let icon = document.createElement('link')
+icon.rel = 'icon'
+icon.type = 'image/png'
+icon.href = '../assets/plate.png'
+head.append(icon)
 
 function toggleMenu() {
   let isOpen = navLinks.classList.contains('open')
