@@ -1,16 +1,30 @@
+// inject.js
 (async function inject() {
   let slots = Array.from(document.querySelectorAll('[data-include]'))
+
+  // Base: directory where this script lives (e.g. .../layout/js/)
+  const scriptUrl = document.currentScript
+    ? document.currentScript.src
+    : window.location.href
+
+  // layout/html/ relative to inject.js
+  const partialsBase = new URL('../html/', scriptUrl)
+  // layout/js/main.js relative to inject.js
+  const mainJsUrl = new URL('main.js', scriptUrl)
 
   let load = async (slot) => {
     let name = slot.getAttribute('data-include')
 
     try {
-      let res = await fetch(`../../layout/html/${name}.html`, { cache: 'no-cache' })
+      const url = new URL(`${name}.html`, partialsBase)
+
+      let res = await fetch(url, { cache: 'no-cache' })
       if (!res.ok) throw new Error(res.status)
+
       let html = await res.text()
-      // replace the placeholder with fetched HTML
       let wrapper = document.createElement('div')
       wrapper.innerHTML = html.trim()
+
       let frag = document.createDocumentFragment()
       while (wrapper.firstChild) frag.appendChild(wrapper.firstChild)
       slot.replaceWith(frag)
@@ -25,8 +39,13 @@
   // mark active link in the nav
   document.querySelectorAll('nav a[href]').forEach((a) => {
     try {
-      let aPath = new URL(a.getAttribute('href'), location.origin).pathname.replace(/\/index\.html$/, '/')
-      let cPath = location.pathname.replace(/\/index\.html$/, '/')
+      // resolve hrefs relative to current page (works both locally + GH Pages)
+      let aPath = new URL(a.getAttribute('href'), window.location.href)
+        .pathname
+        .replace(/\/index\.html$/, '/')
+
+      let cPath = window.location.pathname.replace(/\/index\.html$/, '/')
+
       if (aPath === cPath) a.setAttribute('aria-current', 'page')
     } catch {}
   })
@@ -37,7 +56,7 @@
   // ensure shared behavior runs AFTER injection:
   if (!document.querySelector('script[data-main]')) {
     let s = document.createElement('script')
-    s.src = '../../layout/js/main.js'
+    s.src = mainJsUrl.href
     s.dataset.main = 'true'
     document.body.appendChild(s)
   }
