@@ -50,8 +50,10 @@ async function getUser(userid) {
   return user?.username || userid;
 }
 let KEY;
+let anotherKey;
 getUser(curId).then(username => {
   KEY = `${username}: favorites`
+  anotherKey =  `${username}: MealPlanner`
 });
 
 // Enhanced save favorites with validation
@@ -211,7 +213,7 @@ let plannerDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","
 let plannerMealTypes = ["Breakfast","Lunch","Dinner"]; // same idea as in planner (no Notes here)
 
 function saveMealToPlanner(day, mealType, recipe) {
-    let plan = JSON.parse(localStorage.getItem("mealPlanner") || "{}");
+    let plan = JSON.parse(localStorage.getItem(anotherKey) || "{}");
     let key = `${day}-${mealType}`;
 
     let existing = plan[key];
@@ -227,7 +229,7 @@ function saveMealToPlanner(day, mealType, recipe) {
     }
 
     plan[key] = { name: recipe.name, image: recipe.image };
-    localStorage.setItem("mealPlanner", JSON.stringify(plan));
+    localStorage.setItem(anotherKey, JSON.stringify(plan));
     showNotification(`Added "${recipe.name}" to ${day} ${mealType}`, "success");
 }
 

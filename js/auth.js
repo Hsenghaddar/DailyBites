@@ -57,7 +57,7 @@ $(function () {
 
         if (foundUser) {
           sessionStorage.setItem("userId", foundUser.id)
-          window.location.href = "../index.html"
+          window.location.href = "../html/home.html"
         } else {
           loginError.text("Incorrect email or password!").show()
           loginEmailInput.val("")
@@ -87,7 +87,7 @@ $(function () {
       signupError.text("Password must be at least 8 characters").show()
       return
     }
-    window.location.href = "../index.html"
+    window.location.href = "../html/home.html"
   })
 
   hidePass.on("click", function () {

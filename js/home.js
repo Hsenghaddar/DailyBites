@@ -15,7 +15,7 @@ function closeModal() {
     if (lastFocusedElement) lastFocusedElement.focus();
 }
 
-function openModal(planName, price) {
+function open(planName, price) {
             console.log("openmod")
 
     lastFocusedElement = document.activeElement;
@@ -36,11 +36,10 @@ function openModal(planName, price) {
 document.querySelectorAll('.subs .plan .btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log("clicked")
         let card = btn.closest('.plan');
         let planName = card.querySelector('h3')?.textContent.trim() || 'this plan';
         let price = card.querySelector('.price')?.textContent.trim() || '';
-        openModal(planName, price)
+        open(planName, price)
     });
 });
 

@@ -53,6 +53,7 @@ if (authBtn) {
       authBtn.textContent = 'Login'
       authBtn.classList.remove('logout-btn')
       authBtn.href = './../html/auth.html'
+      location.reload()
     })
   } else {
     authBtn.textContent = 'Login'
