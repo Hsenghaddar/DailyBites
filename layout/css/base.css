@@ -273,7 +273,7 @@ nav.scrolled {
 }
 
 .nav-logo img {
-  height: 58px;
+  height: 70px;
   width: auto;
   display: block;
 }
@@ -477,14 +477,17 @@ footer a {
 footer .logo {
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding-bottom: 100px;
   gap: 8px;
   font-weight: 600;
   flex: 1 1 160px;
+
 }
 
 footer .logo-mark {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 6px;
   background: var(--logo);
   transform: translateZ(0);
@@ -731,6 +734,9 @@ footer::after {
 footer .muted {
   font-size: 0.9rem;
   line-height: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Responsive footer */
