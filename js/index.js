@@ -13,9 +13,17 @@ document.addEventListener("DOMContentLoaded", function () {
             el.classList.add("fade-out");
         });
     }, 3000); // 1000 ms = 1 seconds
+    const scriptUrl = document.currentScript
+        ? document.currentScript.src
+        : window.location.href
 
-    // redirect
+    const htmlBase = new URL('../html/', scriptUrl)
+
+    function redirectToHome() {
+        const homeUrl = new URL('home.html', htmlBase)
+        window.location.href = homeUrl.href
+    }
     setTimeout(function () {
-        window.location.href = "../html/home.html";
+        redirectToHome()
     }, 3000 + 700); // 700ms matches CSS transition
 });
