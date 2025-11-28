@@ -144,6 +144,49 @@ let revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.08 })
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el))
 
+// pop up confirm notification
+window.appConfirm = async function appConfirm(message, okOnly = false) {
+  // create dialog once
+  if (!appConfirm.dialog) {
+    const dlg = document.createElement("dialog");
+    dlg.innerHTML = `
+      <form method="dialog" class="mini-confirm">
+        <p></p>
+        <menu>
+          <button value="cancel">Cancel</button>
+          <button value="ok">OK</button>
+        </menu>
+      </form>
+    `;
+    document.body.appendChild(dlg);
+
+    appConfirm.dialog  = dlg;
+    appConfirm.text  = dlg.querySelector("p");
+    appConfirm.cancelBtn = dlg.querySelector('button[value="cancel"]');
+  }
+
+  appConfirm.text.textContent = message;
+
+  // Show / hide Cancel depending on okOnly
+  if (okOnly) {
+    appConfirm.cancelBtn.style.display = "none";
+  } else {
+    appConfirm.cancelBtn.style.display = "";
+  }
+
+  appConfirm.dialog.showModal();
+
+  return new Promise((resolve) => {
+    appConfirm.dialog.onclose = () => {
+      if (okOnly) {
+        // In alert mode, just resolve true (there is only OK anyway)
+        resolve(true);
+      } else {
+        resolve(appConfirm.dialog.returnValue === "ok");
+      }
+    };
+  });
+};
 
 // ===== Modal System =====
 // Expected HTML:
