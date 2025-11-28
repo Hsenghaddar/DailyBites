@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
         pageElements.forEach(function (el) {
             el.classList.add("fade-out");
         });
-    }, 3000); 
+    }, 1000); 
     setTimeout(function () {
         window.location.href = "./html/home.html";
-    }, 3000 + 700); 
+    }, 1000 + 400); 
 });
