@@ -25,14 +25,12 @@ $(function () {
   showPass.hide()
 
   signupPageButton.on("click", function () {
-    loginSection.css("display", "none")
-    signupSection.css("display", "flex")
+    signupTab.trigger("click")    
     loginError.hide()
   })
 
   loginPageButton.on("click", function () {
-    loginSection.css("display", "flex")
-    signupSection.css("display", "none")
+    loginTab.trigger("click")     
     signupError.hide()
   })
 
