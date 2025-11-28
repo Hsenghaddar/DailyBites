@@ -419,6 +419,8 @@ function getUserMyRecipes() {
 }
 
 function fetchAllRecipes() {
+  setRecipesLoading(true)
+
   fetch("../js/data.json")
     .then((res) => res.json())
     .then((data) => {
@@ -426,7 +428,11 @@ function fetchAllRecipes() {
       let userRecipes = getUserMyRecipes()
       recipes = baseRecipes.concat(userRecipes)
     })
-    .catch(() => console.error("error fetching"))
+    .catch((e) => {
+      console.error("error fetching",e)
+      appConfirm("Couldn't load recipes. Please refresh the page.", true)
+    })
+    .finally(() => setRecipesLoading(false))
 }
 fetchAllRecipes()
 
@@ -703,4 +709,18 @@ function openNoteModal(day) {
     modal.remove()
     loadSavedMeals()
   })
+}
+
+// --- loading indicator (shown while fetching recipes) ---
+let recipesLoader = document.createElement("div")
+recipesLoader.className = "loading-indicator"
+recipesLoader.innerHTML = `
+  <span class="spinner"></span>
+  <span>Loading recipes...</span>
+`
+recipesLoader.style.display = "none"
+recipesContainer.parentNode.insertBefore(recipesLoader, recipesContainer)
+
+function setRecipesLoading(isLoading) {
+  recipesLoader.style.display = isLoading ? "flex" : "none"
 }

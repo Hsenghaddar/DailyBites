@@ -755,3 +755,29 @@ footer .muted {
   .fcols { grid-template-columns: 1fr; gap: 16px; }
   .fcol h4 { margin-bottom: 8px; }
 }
+
+/* loading */
+.loading-indicator {
+  display: none;              /* hidden by default */
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin: 0.5rem 0;
+}
+
+.loading-indicator .spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

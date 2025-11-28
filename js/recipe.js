@@ -11,9 +11,25 @@ let currentFilters = {
     favoritesOnly: false
 };
 
+// --- loading indicator for recipes page ---
+let recipesList = document.getElementById("recipes");
+let recipesLoader = document.createElement("div");
+recipesLoader.className = "loading-indicator";
+recipesLoader.innerHTML = `
+  <span class="spinner"></span>
+  <span>Loading recipes...</span>
+`;
+recipesLoader.style.display = "none";
+recipesList.parentNode.insertBefore(recipesLoader, recipesList);
+
+function setRecipesLoading(isLoading) {
+    recipesLoader.style.display = isLoading ? "flex" : "none";
+}
 
 async function initializeApp() {
     try {
+        setRecipesLoading(true);
+
         allRecipes = await loadAllRecipes();
         console.log('Loaded recipes:', allRecipes.length);
         setupFilters();
@@ -21,7 +37,9 @@ async function initializeApp() {
         showNotification('Recipes loaded successfully!', 'success');
     } catch (error) {
         console.error('Failed to initialize app:', error);
-        showNotification('Failed to load recipes', 'e rror');
+        showNotification('Failed to load recipes', 'error');
+    } finally {
+        setRecipesLoading(false);
     }
 }
 
