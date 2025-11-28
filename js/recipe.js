@@ -361,13 +361,18 @@ function displayRecipes() {
             }
         });
 
+        // 🔹 Show 2 tags on mobile, 3 on larger screens
+        let isMobile = window.matchMedia("(max-width: 640px)").matches;
+        // console.log(isMobile)
+        let maxVisibleTags = isMobile ? 2 : 3;
+
         let visibleTags, hiddenTags;
-        if (allRecipeTags.length <= 3) {
+        if (allRecipeTags.length <= maxVisibleTags) {
             visibleTags = allRecipeTags;
             hiddenTags = [];
         } else {
-            visibleTags = allRecipeTags.slice(0, 2);
-            hiddenTags = allRecipeTags.slice(2);
+            visibleTags = allRecipeTags.slice(0, maxVisibleTags -1);
+            hiddenTags = allRecipeTags.slice(maxVisibleTags -1);
         }
 
         visibleTags.forEach(tag => {
