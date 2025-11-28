@@ -50,10 +50,6 @@ body {
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
-/* Remove the shared page-transition class transitions */
-.page-transition {
-    /* No transitions here - they're applied individually */
-}
 
 /* Fade-out state with smooth slide-up */
 .page-transition.fade-out {
