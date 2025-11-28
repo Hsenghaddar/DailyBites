@@ -589,7 +589,7 @@ section[id] { scroll-margin-top: 84px; }
 }
 
 /* Mobile nav */
-@media (max-width: 992px) {
+@media (max-width: 1050px) {
   .nav-inner{ justify-content: space-between; }
 
   body.no-scroll { overflow: hidden; }

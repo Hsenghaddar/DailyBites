@@ -1,7 +1,6 @@
 let who = document.getElementById('who') 
 let form = document.getElementById('form') 
 
-// inputs
 let nameEl = document.getElementById('name'), imageEl = document.getElementById('image'), descriptionEl = document.getElementById('description') 
 let prepEl = document.getElementById('prep_time'), cookEl = document.getElementById('cook_time'), servingsEl = document.getElementById('servings') 
 let calEl = document.getElementById('calories'), protEl = document.getElementById('protein'), carbEl = document.getElementById('carbs'), fatEl = document.getElementById('fat') 
@@ -9,12 +8,9 @@ let tagsEl = document.getElementById('tags'), diffEl = document.getElementById('
 let ingEl = document.getElementById('ingredients'), instEl = document.getElementById('instructions') 
 let fiberEl = document.getElementById('fiber'), sodiumEl = document.getElementById('sodium'), vitCEl = document.getElementById('vitaminC'), extraMicroEl = document.getElementById('extraMicro') 
 
-// preview
 let pTitle = document.getElementById('pTitle'), pDesc = document.getElementById('pDesc'), pTime = document.getElementById('pTime'), pKcal = document.getElementById('pKcal'), pTags = document.getElementById('pTags') 
 let pMedia = document.getElementById('pMedia'), pPH = document.getElementById('pPH') 
 
-
-// id saved in session storage from log in page
 function currentUserId(){
     let id = sessionStorage.getItem('userId');
     if (!id) {
@@ -41,12 +37,24 @@ getUser(curId).then(username => {
 
 let KEY = "MyRecipes"
 let userKEY = `${curId}: ${KEY}`
-let myRecipes = JSON.parse(localStorage.getItem(userKEY)) || []
 
-function save(){ localStorage.setItem(userKEY, JSON.stringify(myRecipes)) }
+function isAnonymousUser() {
+  return curId === 'anonymous'
+}
 
+let storedRecipes = isAnonymousUser()
+  ? sessionStorage.getItem(userKEY)
+  : localStorage.getItem(userKEY)
 
-// ------------------- INLINE VALIDATION HELPERS -------------------
+let myRecipes = JSON.parse(storedRecipes || "[]")
+
+function save(){ 
+  if (isAnonymousUser()) {
+    sessionStorage.setItem(userKEY, JSON.stringify(myRecipes)) 
+  } else {
+    localStorage.setItem(userKEY, JSON.stringify(myRecipes)) 
+  }
+}
 
 function ensureErrorContainer(field) {
   const label = field.closest('label');
@@ -92,10 +100,8 @@ function validateField(field) {
   const raw = field.value;
   const value = raw.trim();
 
-  // clear previous error first
   clearFieldError(field);
 
-  // basic rules per field
   switch (id) {
     case 'name':
       if (!value) {
@@ -165,12 +171,9 @@ function validateField(field) {
         }
       }
       break;
-
-    // other fields (tags, difficulty, etc.) are flexible, no strict rules
   }
 }
 
-// list of fields we validate
 const validatableFields = [
   nameEl,
   descriptionEl,
@@ -189,14 +192,11 @@ const validatableFields = [
   extraMicroEl
 ];
 
-// live validation (blur = validate, input = clear error)
 validatableFields.forEach(f => {
   if (!f) return;
   f.addEventListener('blur', () => validateField(f));
   f.addEventListener('input', () => clearFieldError(f));
 });
-
-// ------------------- RENDERING CARDS / MODAL (UNCHANGED) -------------------
 
 let grid = document.querySelector('.grid')
 
@@ -269,7 +269,6 @@ function open(recipe){
     mTitle.textContent = recipe.name || 'Recipe Details'
     mDesc.textContent  = recipe.description || ''
 
-    // Image
     if (recipe.image) {
         mImg.src = recipe.image
         mImg.alt = recipe.name || ''
@@ -280,7 +279,6 @@ function open(recipe){
         mImg.style.display = 'none'
     }
 
-    // Compact meta line
     let mins = (recipe.prep_time||0) + (recipe.cook_time||0)
     let parts = [
         `${mins}m`,
@@ -300,7 +298,6 @@ function open(recipe){
 
     let totalMin = (recipe.prep_time||0) + (recipe.cook_time||0);
 
-    // build the whole modal body in one go
     mBody.innerHTML = `
     ${recipe.image ? `
         <img id="mImg" src="${recipe.image}" alt="${recipe.name||''}" />
@@ -399,7 +396,6 @@ document.getElementById('resetForm').addEventListener('click', async () => {
         save()
         render() 
 
-        // clear validation states too
         validatableFields.forEach(f => {
           if (!f) return;
           clearFieldError(f);
@@ -408,12 +404,10 @@ document.getElementById('resetForm').addEventListener('click', async () => {
 })
 
 function createRecipe(){
-    // arrays in single recipe object
     let  ingredients = (ingEl.value||'').split(/\n+/).map(s=>s.trim()).filter(Boolean)
     let  instructions = (instEl.value||'').split(/\n+/).map(s=>s.trim()).filter(Boolean)
     let  tags = (tagsEl.value||'').split(',').map(s=>s.trim()).filter(Boolean)
 
-    // micronutrients
     let  micronutrients = {}
     if(fiberEl.value) micronutrients.fiber = +fiberEl.value
     if(sodiumEl.value) micronutrients.sodium = +sodiumEl.value
@@ -422,9 +416,7 @@ function createRecipe(){
       try{ Object.assign(micronutrients, JSON.parse(extraMicroEl.value)) }catch{}
     }
 
-    // id
     let id = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000
-    // console.log("added ",id)
 
     return {
         id,

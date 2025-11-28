@@ -319,6 +319,8 @@ main>div {
 }
 
 .saved-meal.note {
+  width: fit-content !important;
+  height: fit-content !important;
   background: transparent;
   color: var(--secondary-color);
   font-style: italic;
