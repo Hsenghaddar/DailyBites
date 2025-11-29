@@ -14,6 +14,32 @@ function closeModal() {
     if (lastFocusedElement) lastFocusedElement.focus()
 }
 
+function trapFocusIn(element) {
+  function handleKeydown(e) {
+    if (e.key !== 'Tab') return
+
+    let focusable = element.querySelectorAll(
+      'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+    focusable = Array.from(focusable).filter(el => !el.disabled && el.offsetParent !== null)
+    if (!focusable.length) return
+
+    let first = focusable[0]
+    let last = focusable[focusable.length - 1]
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault()
+      last.focus()
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault()
+      first.focus()
+    }
+  }
+
+  element.addEventListener('keydown', handleKeydown)
+}
+trapFocusIn(modal)
+
 function open(planName, price) {
     lastFocusedElement = document.activeElement
 
@@ -210,13 +236,13 @@ document.addEventListener('DOMContentLoaded', () => {
 closeBtn.addEventListener('click', closeModal)
 
 modal.addEventListener('click', e => {
-if (e.target === modal) closeModal()
+    if (e.target === modal) closeModal()
 })
 
 document.addEventListener('keydown', e => {
-if (e.key === 'Escape' && modal.classList.contains('is-open')) {
-    closeModal()
-}
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+        closeModal()
+    }
 })
 
 form.addEventListener('submit', e => {
