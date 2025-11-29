@@ -172,13 +172,17 @@ function updateFilterSummary() {
     if (currentFilters.dietTypes.length) activeFilters.push(...currentFilters.dietTypes)
     if (currentFilters.difficulty) activeFilters.push(currentFilters.difficulty)
     if (currentFilters.favoritesOnly) activeFilters.push("Favorites")
+    // console.log("barra",activeFilters)
 
     if (activeFilters.length > 0) {
         summaryElement.textContent = activeFilters.length + ' filters: ' + activeFilters.join(", ")
         summaryElement.parentElement.style.display = 'flex'
+        // console.log("if jowa",activeFilters)
+
     } else {
         summaryElement.textContent = "No filters applied"
         summaryElement.parentElement.style.display = 'none'
+        // console.log(activeFilters)
     }
 }
 
@@ -757,8 +761,10 @@ function setupFilters() {
 
 function toggleFavoriteFilter() {
     let favoriteFilterBtn = document.getElementById('favoriteFilter')
+    // console.log("abl",currentFilters.favoritesOnly)
 
     currentFilters.favoritesOnly = !currentFilters.favoritesOnly
+    // console.log("ba3d",currentFilters.favoritesOnly)
     favoriteFilterBtn.classList.toggle("active", currentFilters.favoritesOnly)
 
     if (currentFilters.favoritesOnly) {
@@ -892,6 +898,9 @@ document.addEventListener("click", event => {
 })
 
 document.querySelectorAll(".quick-pill").forEach(button => {
+    // fav filter btn 3nda kameen .quick-pill class so aam tnzeed 2 times
+    if (button.id === "favoriteFilter") return //return eza l btn favfilter
+    
     button.addEventListener('click', () => {
         document.querySelectorAll(".quick-pill").forEach(btn => btn.classList.remove("active"))
 
