@@ -12,28 +12,28 @@ let pTitle = document.getElementById('pTitle'), pDesc = document.getElementById(
 let pMedia = document.getElementById('pMedia'), pPH = document.getElementById('pPH') 
 
 function currentUserId(){
-    let id = sessionStorage.getItem('userId');
+    let id = sessionStorage.getItem('userId')
     if (!id) {
-        console.log('No userId in sessionStorage. Using anonymous mode.');
-        return 'anonymous';
+        console.log('No userId in sessionStorage. Using anonymous mode.')
+        return 'anonymous'
     }
-    return id;
+    return id
 }
 let curId = currentUserId()
 
 async function getUser(userid) {
-  let res = await fetch("../js/data.json");
-  let data = await res.json();
+  let res = await fetch("../js/data.json")
+  let data = await res.json()
 
-  let users = data.users || [];
-  let user  = users.find(u => String(u.id) === String(userid));
+  let users = data.users || []
+  let user  = users.find(u => String(u.id) === String(userid))
 
-  return user?.username || userid;
+  return user?.username || userid
 }
 
 getUser(curId).then(username => {
-  who.textContent = `Welcome ${username} !`;
-});
+  who.textContent = `Welcome ${username} !`
+})
 
 let KEY = "MyRecipes"
 let userKEY = `${curId}: ${KEY}`
@@ -57,92 +57,92 @@ function save(){
 }
 
 function ensureErrorContainer(field) {
-  const label = field.closest('label');
-  if (!label) return null;
+  let label = field.closest('label')
+  if (!label) return null
 
-  let err = label.querySelector('.field-error');
+  let err = label.querySelector('.field-error')
   if (!err) {
-    err = document.createElement('div');
-    err.className = 'field-error';
-    label.appendChild(err);
+    err = document.createElement('div')
+    err.className = 'field-error'
+    label.appendChild(err)
   }
-  return err;
+  return err
 }
 
 function showFieldError(field, message) {
-  const err = ensureErrorContainer(field);
-  if (!err) return;
-  field.classList.add('invalid');
-  field.setAttribute('aria-invalid', 'true');
-  err.textContent = message;
+  let err = ensureErrorContainer(field)
+  if (!err) return
+  field.classList.add('invalid')
+  field.setAttribute('aria-invalid', 'true')
+  err.textContent = message
 }
 
 function clearFieldError(field) {
-  const label = field.closest('label');
-  if (!label) return;
-  const err = label.querySelector('.field-error');
-  if (err) err.textContent = '';
-  field.classList.remove('invalid');
-  field.removeAttribute('aria-invalid');
+  let label = field.closest('label')
+  if (!label) return
+  let err = label.querySelector('.field-error')
+  if (err) err.textContent = ''
+  field.classList.remove('invalid')
+  field.removeAttribute('aria-invalid')
 }
 
 function isValidUrl(str) {
   try {
-    new URL(str);
-    return true;
+    new URL(str)
+    return true
   } catch {
-    return false;
+    return false
   }
 }
 
 function validateField(field) {
-  const id = field.id;
-  const raw = field.value;
-  const value = raw.trim();
+  let id = field.id
+  let raw = field.value
+  let value = raw.trim()
 
-  clearFieldError(field);
+  clearFieldError(field)
 
   switch (id) {
     case 'name':
       if (!value) {
-        showFieldError(field, 'Name is required.');
+        showFieldError(field, 'Name is required.')
       } else if (value.length < 3) {
-        showFieldError(field, 'Name should be at least 3 characters.');
+        showFieldError(field, 'Name should be at least 3 characters.')
       }
-      break;
+      break
 
     case 'description':
       if (!value) {
-        showFieldError(field, 'Description is required.');
+        showFieldError(field, 'Description is required.')
       } else if (value.length < 10) {
-        showFieldError(field, 'Description should be at least 10 characters.');
+        showFieldError(field, 'Description should be at least 10 characters.')
       }
-      break;
+      break
 
     case 'ingredients':
       if (!value) {
-        showFieldError(field, 'Add at least one ingredient.');
+        showFieldError(field, 'Add at least one ingredient.')
       }
-      break;
+      break
 
     case 'instructions':
       if (!value) {
-        showFieldError(field, 'Add at least one step.');
+        showFieldError(field, 'Add at least one step.')
       }
-      break;
+      break
 
     case 'image':
       if (value && !isValidUrl(value)) {
-        showFieldError(field, 'Please enter a valid image URL.');
+        showFieldError(field, 'Please enter a valid image URL.')
       }
-      break;
+      break
 
     case 'servings': {
-      let n = +raw;
+      let n = +raw
       if (!raw || isNaN(n) || n < 1) {
-        showFieldError(field, 'Servings must be at least 1.');
+        showFieldError(field, 'Servings must be at least 1.')
       }
-      break;
+      break
     }
 
     case 'prep_time':
@@ -154,27 +154,27 @@ function validateField(field) {
     case 'fiber':
     case 'sodium': {
       if (raw !== '') {
-        let n = +raw;
+        let n = +raw
         if (isNaN(n) || n < 0) {
-          showFieldError(field, 'Value cannot be negative.');
+          showFieldError(field, 'Value cannot be negative.')
         }
       }
-      break;
+      break
     }
 
     case 'extraMicro':
       if (value) {
         try {
-          JSON.parse(value);
+          JSON.parse(value)
         } catch {
-          showFieldError(field, 'Must be valid JSON, e.g. {"iron":"3mg"}.');
+          showFieldError(field, 'Must be valid JSON, e.g. {"iron":"3mg"}.')
         }
       }
-      break;
+      break
   }
 }
 
-const validatableFields = [
+let validatableFields = [
   nameEl,
   descriptionEl,
   ingEl,
@@ -190,13 +190,13 @@ const validatableFields = [
   fiberEl,
   sodiumEl,
   extraMicroEl
-];
+]
 
 validatableFields.forEach(f => {
-  if (!f) return;
-  f.addEventListener('blur', () => validateField(f));
-  f.addEventListener('input', () => clearFieldError(f));
-});
+  if (!f) return
+  f.addEventListener('blur', () => validateField(f))
+  f.addEventListener('input', () => clearFieldError(f))
+})
 
 let grid = document.querySelector('.grid')
 
@@ -296,7 +296,7 @@ function open(recipe){
     modal.classList.add('open')
     document.body.style.overflow = 'hidden'
 
-    let totalMin = (recipe.prep_time||0) + (recipe.cook_time||0);
+    let totalMin = (recipe.prep_time||0) + (recipe.cook_time||0)
 
     mBody.innerHTML = `
     ${recipe.image ? `
@@ -374,7 +374,7 @@ function open(recipe){
 
         </div>
     </div>
-    `;
+    `
 }
 
 modal.addEventListener('click', (e)=>{
@@ -397,9 +397,9 @@ document.getElementById('resetForm').addEventListener('click', async () => {
         render() 
 
         validatableFields.forEach(f => {
-          if (!f) return;
-          clearFieldError(f);
-        });
+          if (!f) return
+          clearFieldError(f)
+        })
     }
 })
 

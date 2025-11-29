@@ -1,22 +1,21 @@
-// inject.js
 (async function inject() {
   let slots = Array.from(document.querySelectorAll('[data-include]'))
 
-  // Base: directory where this script lives (e.g. .../layout/js/)
-  const scriptUrl = document.currentScript
+  // getdirectory where this script lives
+  let scriptUrl = document.currentScript
     ? document.currentScript.src
     : window.location.href
 
   // layout/html/ relative to inject.js
-  const partialsBase = new URL('../html/', scriptUrl)
+  let partialsBase = new URL('../html/', scriptUrl)
   // layout/js/main.js relative to inject.js
-  const mainJsUrl = new URL('main.js', scriptUrl)
+  let mainJsUrl = new URL('main.js', scriptUrl)
 
   let load = async (slot) => {
     let name = slot.getAttribute('data-include')
 
     try {
-      const url = new URL(`${name}.html`, partialsBase)
+      let url = new URL(`${name}.html`, partialsBase)
 
       let res = await fetch(url, { cache: 'no-cache' })
       if (!res.ok) throw new Error(res.status)
@@ -39,7 +38,7 @@
   // mark active link in the nav
   document.querySelectorAll('nav a[href]').forEach((a) => {
     try {
-      // resolve hrefs relative to current page (works both locally + GH Pages)
+      // resolve hrefs relative to current page
       let aPath = new URL(a.getAttribute('href'), window.location.href)
         .pathname
         .replace(/\/index\.html$/, '/')

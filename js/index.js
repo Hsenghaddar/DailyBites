@@ -1,15 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let textContainer = document.querySelector(".text-container");
-    let pageElements = document.querySelectorAll(".page-transition");
+    let textContainer = document.querySelector(".text-container")
+    let pageElements = document.querySelectorAll(".page-transition")
     if (textContainer) {
-        textContainer.classList.add("show");
+        textContainer.classList.add("show")
     }
     setTimeout(function () {
         pageElements.forEach(function (el) {
-            el.classList.add("fade-out");
-        });
-    }, 1200); 
+            el.classList.add("fade-out")
+        })
+    }, 1200) 
     setTimeout(function () {
-        window.location.href = "./html/home.html";
-    }, 1200 + 400); 
-});
+        window.location.href = "../html/home.html"
+    }, 1200 + 400) 
+})
