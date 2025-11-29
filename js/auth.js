@@ -1,4 +1,9 @@
 $(function () {
+  let existingUserId = sessionStorage.getItem("userId")
+  if (existingUserId) {
+    window.location.href = "../html/home.html"
+    return
+  }
   let signupPageButton = $(".signupPageBtn")
   let loginPageButton = $(".loginPageBtn")
   let loginButton = $(".loginBtn")
@@ -25,12 +30,12 @@ $(function () {
   showPass.hide()
 
   signupPageButton.on("click", function () {
-    signupTab.trigger("click")    
+    signupTab.trigger("click")
     loginError.hide()
   })
 
   loginPageButton.on("click", function () {
-    loginTab.trigger("click")     
+    loginTab.trigger("click")
     signupError.hide()
   })
 
