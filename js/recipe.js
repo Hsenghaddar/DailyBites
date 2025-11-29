@@ -213,14 +213,14 @@ function isAnonymousUser() {
   return !sessionStorage.getItem("userId")
 }
 
-function saveMealToPlanner(day, mealType, recipe) {
+async function saveMealToPlanner(day, mealType, recipe) {
     let plan = JSON.parse(localStorage.getItem(getStorageKey('MealPlanner')) || "{}")
     let key = day + '-' + mealType
 
     let existing = plan[key]
     if (existing) {
         let existingName = typeof existing === "string" ? existing : existing.name
-        let overwrite = confirm(
+        let overwrite = await appConfirm(
             'You already have "' + existingName + '" planned for ' + day + ' ' + mealType + '.\nReplace it with "' + recipe.name + '"?'
         )
         if (!overwrite) {
@@ -790,16 +790,16 @@ function showNotification(message, type = 'info') {
     notification.textContent = message
 
     notification.style.cssText = `
-        position: fixed
-        top: 10%
-        right: 40%
-        padding: 12px 20px
-        border-radius: 8px
-        color: white
-        font-weight: 500
-        z-index: 1100
-        animation: slideIn 0.3s ease-out
-        max-width: 300px
+        position: fixed;
+        top: 10%;
+        right: 40%;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 1100;
+        animation: slideIn 0.3s ease-out;
+        max-width: 300px;
     `
 
     let backgroundColor = '#16a34a'
@@ -824,12 +824,12 @@ function showNotification(message, type = 'info') {
 let notificationStyles = document.createElement('style')
 notificationStyles.textContent = `
     @keyframes slideIn {
-        from { transform: translateY(100%) opacity: 0 }
-        to { transform: translateY(0) opacity: 1 }
+        from { transform: translateY(100%); opacity: 0 }
+        to { transform: translateY(0); opacity: 1 }
     }
     @keyframes slideOut {
-        from { transform: translateY(0) opacity: 1 }
-        to { transform: translateY(100%) opacity: 0 }
+        from { transform: translateY(0); opacity: 1 }
+        to { transform: translateY(100%); opacity: 0 }
     }
 `
 document.head.appendChild(notificationStyles)
