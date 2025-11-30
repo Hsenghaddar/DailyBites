@@ -58,6 +58,7 @@ function open(planName, price) {
 document.querySelector(".emailbox").addEventListener("submit", async e =>{
     e.preventDefault()
     await appConfirm('Thanks for joining us! you will recieve latest news.', true)
+    document.querySelector(".emailbox input[type='email']").textContent = ""
 })
 
 // opne modal on subscription buttons
