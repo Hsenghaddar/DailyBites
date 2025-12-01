@@ -57,7 +57,6 @@ body>h1::after {
   opacity: 0.8;
 }
 
-/* Button text */
 .generate-plan-btn,
 .clear-plan-btn,
 .export-plan-btn{
