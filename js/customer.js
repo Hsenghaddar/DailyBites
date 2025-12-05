@@ -11,6 +11,72 @@ let fiberEl = document.getElementById('fiber'), sodiumEl = document.getElementBy
 let pTitle = document.getElementById('pTitle'), pDesc = document.getElementById('pDesc'), pTime = document.getElementById('pTime'), pKcal = document.getElementById('pKcal'), pTags = document.getElementById('pTags') 
 let pMedia = document.getElementById('pMedia'), pPH = document.getElementById('pPH') 
 
+//edit reem l khatera
+let addTitle = document.getElementById('addTitle')
+let saveBtn  = document.querySelector('button.primary[form="form"]')
+let editingId = null
+
+function resetEditMode() {
+  editingId = null
+  if (addTitle) addTitle.textContent = 'Add a Recipe'
+  if (saveBtn)  saveBtn.textContent  = 'Save to My Recipes'
+}
+resetEditMode() //la nshte8el aa ndeef
+
+function startEdit(recipe) {
+  if (!recipe) return
+
+  editingId = recipe.id
+
+  if (addTitle) addTitle.textContent = 'Edit Recipe'
+  if (saveBtn)  saveBtn.textContent  = 'Update Recipe'
+
+  // clear old errors
+  validatableFields.forEach(f => f && clearFieldError(f))
+
+  // fill basic fields
+  nameEl.value        = recipe.name || ''
+  imageEl.value       = recipe.image || ''
+  descriptionEl.value = recipe.description || ''
+
+  prepEl.value     = recipe.prep_time ?? 0
+  cookEl.value     = recipe.cook_time ?? 0
+  servingsEl.value = recipe.servings ?? 1
+
+  calEl.value  = recipe.calories ?? 0
+  protEl.value = recipe.protein ?? 0
+  carbEl.value = recipe.carbs ?? 0
+  fatEl.value  = recipe.fat ?? 0
+
+  diffEl.value      = recipe.difficulty || 'Easy'
+  mealCatEl.value   = recipe.meal_category || 'Breakfast'
+  dietCatEl.value   = recipe.diet_category || 'Vegetarian'
+
+  ingEl.value  = Array.isArray(recipe.ingredients)  ? recipe.ingredients.join('\n')  : ''
+  instEl.value = Array.isArray(recipe.instructions) ? recipe.instructions.join('\n') : ''
+  tagsEl.value = Array.isArray(recipe.tags) ? recipe.tags.join(', ') : ''
+
+  // micronutrients back into the four fields
+  let micro = recipe.micronutrients || {}
+  fiberEl.value   = micro.fiber ?? ''
+  sodiumEl.value  = micro.sodium ?? ''
+  vitCEl.value    = micro.vitaminC ?? ''
+
+  // anything left over goes into extraMicro as JSON
+  let extra = { ...micro }
+  delete extra.fiber
+  delete extra.sodium
+  delete extra.vitaminC
+  extraMicroEl.value = Object.keys(extra).length ? JSON.stringify(extra) : ''
+
+  // optionally scroll to form
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+//bade 3awed aan kl l creative comments l 2amole henne :p
+//onzoro ela haza l ebtekar
+//wow a user-specific recipe storage system!
+//ya elahe
 function currentUserId(){
     let id = sessionStorage.getItem('userId')
     if (!id) {
@@ -250,7 +316,16 @@ function render(){
 
         viewBtn.addEventListener("click", ()=> open(r) ) 
 
+        let editBtn = document.createElement('button')
+        editBtn.type = 'button'
+        editBtn.textContent = 'Edit'
+        editBtn.setAttribute('data-action', 'edit')
+        editBtn.setAttribute('data-id', String(r.id))
+        editBtn.style.marginLeft = '8px'
+        editBtn.addEventListener('click', () => startEdit(r))
+
         footer.appendChild(viewBtn)
+        footer.appendChild(editBtn)
         body.append(h3, meta, p, footer)
         card.append(media, body)
 
@@ -400,10 +475,13 @@ document.getElementById('resetForm').addEventListener('click', async () => {
           if (!f) return
           clearFieldError(f)
         })
+
+        form.reset()
+        resetEditMode()
     }
 })
 
-function createRecipe(){
+function createRecipe(existingId){
     let  ingredients = (ingEl.value||'').split(/\n+/).map(s=>s.trim()).filter(Boolean)
     let  instructions = (instEl.value||'').split(/\n+/).map(s=>s.trim()).filter(Boolean)
     let  tags = (tagsEl.value||'').split(',').map(s=>s.trim()).filter(Boolean)
@@ -416,7 +494,7 @@ function createRecipe(){
       try{ Object.assign(micronutrients, JSON.parse(extraMicroEl.value)) }catch{}
     }
 
-    let id = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000
+    let id =  existingId ?? (Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000)
 
     return {
         id,
@@ -453,14 +531,25 @@ form.addEventListener('submit', async e=>{
         return
     }
 
-    let recipe = createRecipe()
-    myRecipes.push(recipe)
+    //check if we are editing an existing recipe
+    let idx = (editingId != null)
+      ? myRecipes.findIndex(r => r.id === editingId)
+      : -1
+
+    // if idx >= 0 we reuse the existing id; otherwise new recipe
+    let recipe = createRecipe(idx >= 0 ? editingId : undefined)
+    if (idx >= 0) myRecipes[idx] = recipe        // update existing
+    else myRecipes.push(recipe)         // create new
+
     save()
     render()
-    await appConfirm('Saved to My Recipes for this user.', true)
+    await appConfirm(idx >= 0
+        ? 'Recipe updated in My Recipes for this user.'
+        : 'Saved to My Recipes for this user.', true)
 
     form.reset() 
     validatableFields.forEach(f => f && clearFieldError(f))
+    resetEditMode() //dayman mnshte8e aa ndeef n7na
 })
 
 document.addEventListener('DOMContentLoaded',render)
