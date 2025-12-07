@@ -19,14 +19,11 @@
     <div data-include="nav"></div>
     <main>
 
-        <!-- filters -->
         <section class="filters">
 
-            <!-- search bar -->
             <input id="searchInput" class="search-bar" type="text"
                 placeholder="Search recipes or ingredients... (ie. carrot, onion)">
 
-            <!-- quick filter -->
             <section class="quick-row">
                 <button class="quick-pill">Quick & Easy</button>
                 <button class="quick-pill">Healthy</button>
@@ -42,32 +39,27 @@
                 </button>
             </section>
 
-            <!-- dropdown filters -->
             <section class="dropdown-row">
 
                 <section class="dd-box">
                     <button class="dd-btn">Meal Type ▾</button>
                     <section class="dd-panel">
-                        <!-- dynamically added -->
                     </section>
                 </section>
                 <section class="dd-box">
                     <button class="dd-btn">Dietary ▾</button>
                     <section class="dd-panel">
-                        <!-- dynamically aded -->
                     </section>
                 </section>
 
                 <section class="dd-box">
                     <button class="dd-btn">Time & Difficulty ▾</button>
                     <section class="dd-panel">
-                        <!-- dynamically added -->
                     </section>
                 </section>
 
             </section>
 
-            <!-- filter summary -->
             <section class="filter-actions" id="filterActions" style="display: none;">
                 <div class="filter-summary-row">
                     <section class="filter-summary">
@@ -92,13 +84,10 @@
 
         </section>
 
-        <!-- count -->
         <output id="count">Showing 0 of 0 recipes</output>
 
-        <!-- Recipes Grid -->
         <ul id="recipes" class="recipes"></ul>
 
-        <!-- Recipe Card Template -->
         <template id="card">
             <li>
                 <article class="card">
@@ -125,24 +114,19 @@
             </li>
         </template>
     </main>
-    <!-- Modal -->
     <dialog id="modal">
         <section class="modal-container">
-            <!-- Header with image -->
             <section class="modal-header">
                 <img id="mImg" alt="Recipe image">
                 <button type="button" class="fav modal-fav" title="Save">&#9825;</button>
                 <button id="mClose" class="modal-close">✕</button>
             </section>
 
-            <!-- Content -->
             <section class="modal-content">
-                <!-- Title and description -->
                 <h2 id="mTitle">Grilled Chicken Salad</h2>
                 <p id="mDesc" class="modal-desc">A fresh and healthy grilled chicken salad packed with greens,
                     avocado, and a tangy lemon dressing.</p>
 
-                <!-- Stats row -->
                 <section class="modal-stats">
                     <div class="stat-item">
                         <span class="stat-value" id="mTime">25 min</span>
@@ -158,7 +142,6 @@
                     </div>
                 </section>
 
-                <!-- Servings and actions -->
                 <section class="servings-actions">
                     <div class="servings-info">
                         <strong>Servings:</strong>
@@ -176,7 +159,7 @@
                         </button>
                     </div>
                 </section>
-                <!-- Extra recipe info -->
+
                 <section class="modal-extra-details">
                     <div class="detail-column">
                         <p><strong>Rating:</strong> <span id="mRating"></span></p>
@@ -189,7 +172,6 @@
                     </div>
                 </section>
 
-                <!-- Nutrition info -->
                 <section class="modal-nutrition">
                     <h3>Nutrition per serving</h3>
                     <div class="macro-row">
@@ -209,31 +191,26 @@
                     <ul id="mMicros" class="micro-list"></ul>
                 </section>
 
-                <!-- Tags -->
                 <section class="modal-tags">
                     <h3>Tags</h3>
                     <div id="mTags" class="tags"></div>
                 </section>
 
-                <!-- Ingredients section -->
                 <section class="ingredients-section">
                     <h3>Ingredients</h3>
                     <ul id="mIngr" class="ingredients-list">
-                        <!-- Ingredients will be populated here -->
                     </ul>
                 </section>
 
-                <!-- Instructions section -->
                 <section class="instructions-section">
                     <h3>Instructions</h3>
                     <ol id="mInstr" class="instructions-list">
-                        <!-- Instructions will be populated here -->
                     </ol>
                 </section>
             </section>
         </section>
     </dialog>
-    <!-- Tag Dialog -->
+
     <dialog id="tagDialog" class="tag-dialog">
         <section id="tagDialogContent"></section>
     </dialog>
